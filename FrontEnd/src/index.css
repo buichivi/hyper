@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    html {
+        font-family: 'Barlow', sans-serif;
+        scroll-behavior: smooth;
+        overflow-x: hidden;
+    }
+}
+
+/* Swiper js custom css */
+
+.swiper-pagination-bullet-active {
+    width: 48px;
+    background: #ffffff;
+}
+
+.text-limit-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1; /* number of lines to show */
+    line-clamp: 1;
+    -webkit-box-orient: vertical;
+}
+
+.swiper-button-disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+/* Custom scroll bar */
+/* width */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #ebeaea70;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #b8b8b8b6;
+    border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #b8b8b8;
+}
+
+/* custom input number */
+input[type='number'] {
+    -webkit-appearance: textfield;
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+}
+
+/* custom react-toastify */
+:root {
+    --toastify-color-success: #333;
+}
