@@ -9,7 +9,7 @@ const initialState = {
 export const userSlice = createSlice({
     name: 'user',
     initialState,
-    reducers: {
+    reducers: { // user reducers
         logIn: (state, action) => {
             state.isInitialized = true; // make animation
             state.isAuthenticated = true;

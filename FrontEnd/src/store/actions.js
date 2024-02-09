@@ -37,7 +37,10 @@ export const logOutUser = () => async (dispatch) => {
 };
 
 export const checkingLoginUser = () => async (dispatch) => {
-    request.get('/checking-login', { withCredentials: true }).then((res) => {
-        dispatch(checkLogin(res.data));
-    });
+    request
+        .get('/checking-login', { withCredentials: true })
+        .then((res) => {
+            dispatch(checkLogin(res.data));
+        })
+        .catch((err) => console.log(err));
 };
