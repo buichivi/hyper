@@ -2,11 +2,12 @@ import { useFormik } from 'formik';
 import { AnimatePresence } from 'framer-motion';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { DetailForm, RegisterForm } from '../../components';
 import { HiOutlineArrowLongLeft } from 'react-icons/hi2';
 import request from '../../utils/request';
+import { useSelector } from 'react-redux';
 
 const regexName =
     /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s\W|_]+$/;
@@ -16,6 +17,7 @@ const SignUp = () => {
     const [isFillingDetail, setIsFillingDetail] = useState(false);
     const [loginInfo, setLoginInfo] = useState({});
     const [existedEmails, setExistedEmails] = useState([]);
+    const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 
     useEffect(() => {
         request.get('/all-emails').then((res) => setExistedEmails(res.data));
@@ -96,114 +98,125 @@ const SignUp = () => {
     });
 
     return (
-        <AnimatePresence>
-            <motion.div
-                className="relative flex size-full min-h-screen flex-col items-center justify-between py-4 transition-all"
-                initial={{ y: 100, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: 100, opacity: 0 }}
-                transition={{ duration: 0.3, delay: 0.3 }}
-            >
-                <Link
-                    to="/"
-                    className="font-BebasNeue text-[40px] font-bold 2xl:text-[60px]"
-                >
-                    HYPER
-                </Link>
+        <>
+            {isAuthenticated ? (
+                <Navigate to="/"></Navigate>
+            ) : (
+                <AnimatePresence>
+                    <motion.div
+                        className="relative flex size-full min-h-screen flex-col items-center justify-between py-4 transition-all"
+                        initial={{ y: 100, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        exit={{ y: 100, opacity: 0 }}
+                        transition={{ duration: 0.3, delay: 0.3 }}
+                    >
+                        <Link
+                            to="/"
+                            className="font-BebasNeue text-[40px] font-bold 2xl:text-[60px]"
+                        >
+                            HYPER
+                        </Link>
 
-                <AnimatePresence mode="wait">
-                    {!isFillingDetail ? (
-                        <motion.form
-                            key={isFillingDetail}
-                            initial={{ x: '-100%', opacity: 0 }}
-                            animate={{ x: 0, opacity: 1 }}
-                            exit={{ x: '-100%', opacity: 0 }}
-                            className="w-[80%] px-10 lg:w-[50%]"
-                            onSubmit={registrationForm.handleSubmit}
-                        >
-                            <div className="pb-10">
-                                <h5 className="text-center text-4xl font-semibold capitalize 2xl:text-7xl">
-                                    Welcome to our shop
-                                </h5>
-                                <p className="text-center text-gray-500 2xl:text-3xl">
-                                    Use your email to register
-                                </p>
-                            </div>
-                            <RegisterForm form={registrationForm} />
-                            <button
-                                type="submit"
-                                className="mt-4 w-full cursor-pointer select-none rounded-md 
-                        bg-slate-950 py-3 text-center text-lg capitalize text-white"
-                            >
-                                Next
-                            </button>
-                        </motion.form>
-                    ) : (
-                        <motion.form
-                            key={isFillingDetail}
-                            initial={{ x: '100%', opacity: 0 }}
-                            animate={{ x: 0, opacity: 1 }}
-                            exit={{ x: '100%', opacity: 0 }}
-                            className="w-[80%] px-10 lg:w-[50%]"
-                            onSubmit={detailForm.handleSubmit}
-                        >
-                            <div
-                                className="flex cursor-pointer select-none items-center gap-1"
-                                onClick={() => setIsFillingDetail(false)}
-                            >
-                                <span>
-                                    <HiOutlineArrowLongLeft className="size-5" />
-                                </span>
-                                <span>Back</span>
-                            </div>
-                            <div className="pb-10">
-                                <h5 className="text-center text-4xl font-semibold capitalize 2xl:text-7xl">
-                                    Next step
-                                </h5>
-                                <p className="text-center text-gray-500 2xl:text-3xl">
-                                    Fill in your information
-                                </p>
-                            </div>
-                            <DetailForm form={detailForm} />
-                            <div className="mt-4 flex items-center justify-between gap-10">
-                                <button
-                                    type="submit"
-                                    className="cursor-divointer w-full select-none rounded-md 
-                                bg-slate-950 py-3 text-center text-lg capitalize text-white"
+                        <AnimatePresence mode="wait">
+                            {!isFillingDetail ? (
+                                <motion.form
+                                    key={isFillingDetail}
+                                    initial={{ x: '-100%', opacity: 0 }}
+                                    animate={{ x: 0, opacity: 1 }}
+                                    exit={{ x: '-100%', opacity: 0 }}
+                                    className="w-[80%] px-10 lg:w-[50%]"
+                                    onSubmit={registrationForm.handleSubmit}
                                 >
-                                    Submit
-                                </button>
-                                <div
-                                    className="w-full cursor-pointer select-none rounded-md 
-                                bg-slate-950 py-3 text-center text-lg capitalize text-white"
-                                    onClick={() => {
-                                        console.log(loginInfo);
-                                        request
-                                            .post('/signup', loginInfo)
-                                            .then((res) =>
-                                                console.log(res.data),
-                                            );
-                                    }}
+                                    <div className="pb-10">
+                                        <h5 className="text-center text-4xl font-semibold capitalize 2xl:text-7xl">
+                                            Welcome to our shop
+                                        </h5>
+                                        <p className="text-center text-gray-500 2xl:text-3xl">
+                                            Use your email to register
+                                        </p>
+                                    </div>
+                                    <RegisterForm form={registrationForm} />
+                                    <button
+                                        type="submit"
+                                        className="mt-4 w-full cursor-pointer select-none rounded-md 
+                            bg-slate-950 py-3 text-center text-lg capitalize text-white"
+                                    >
+                                        Next
+                                    </button>
+                                </motion.form>
+                            ) : (
+                                <motion.form
+                                    key={isFillingDetail}
+                                    initial={{ x: '100%', opacity: 0 }}
+                                    animate={{ x: 0, opacity: 1 }}
+                                    exit={{ x: '100%', opacity: 0 }}
+                                    className="w-[80%] px-10 lg:w-[50%]"
+                                    onSubmit={detailForm.handleSubmit}
                                 >
-                                    Skip this step
-                                </div>
-                            </div>
-                        </motion.form>
-                    )}
+                                    <div
+                                        className="flex cursor-pointer select-none items-center gap-1"
+                                        onClick={() =>
+                                            setIsFillingDetail(false)
+                                        }
+                                    >
+                                        <span>
+                                            <HiOutlineArrowLongLeft className="size-5" />
+                                        </span>
+                                        <span>Back</span>
+                                    </div>
+                                    <div className="pb-10">
+                                        <h5 className="text-center text-4xl font-semibold capitalize 2xl:text-7xl">
+                                            Next step
+                                        </h5>
+                                        <p className="text-center text-gray-500 2xl:text-3xl">
+                                            Fill in your information
+                                        </p>
+                                    </div>
+                                    <DetailForm form={detailForm} />
+                                    <div className="mt-4 flex items-center justify-between gap-10">
+                                        <button
+                                            type="submit"
+                                            className="cursor-divointer w-full select-none rounded-md 
+                                    bg-slate-950 py-3 text-center text-lg capitalize text-white"
+                                        >
+                                            Submit
+                                        </button>
+                                        <div
+                                            className="w-full cursor-pointer select-none rounded-md 
+                                    bg-slate-950 py-3 text-center text-lg capitalize text-white"
+                                            onClick={() => {
+                                                console.log(loginInfo);
+                                                request
+                                                    .post('/signup', loginInfo)
+                                                    .then((res) =>
+                                                        console.log(res.data),
+                                                    );
+                                            }}
+                                        >
+                                            Skip this step
+                                        </div>
+                                    </div>
+                                </motion.form>
+                            )}
+                        </AnimatePresence>
+
+                        <motion.h5
+                            initial={{ y: 50, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            exit={{ y: 50, opacity: 0 }}
+                        >
+                            Already have an account?{' '}
+                            <Link
+                                to="/login"
+                                className="cursor-pointer font-medium"
+                            >
+                                Login
+                            </Link>
+                        </motion.h5>
+                    </motion.div>
                 </AnimatePresence>
-
-                <motion.h5
-                    initial={{ y: 50, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: 50, opacity: 0 }}
-                >
-                    Already have an account?{' '}
-                    <Link to="/login" className="cursor-pointer font-medium">
-                        Login
-                    </Link>
-                </motion.h5>
-            </motion.div>
-        </AnimatePresence>
+            )}
+        </>
     );
 };
 

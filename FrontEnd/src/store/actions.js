@@ -4,14 +4,11 @@ import { toast } from 'react-toastify';
 
 export const logInUser = (values, navigate) => async (dispatch) => {
     request
-        .post(
-            '/login',
-            {
-                email: values.email,
-                password: values.password,
-            },
-            { withCredentials: true },
-        )
+        .post('/login', {
+            email: values.email,
+            password: values.password,
+            remember: values.remember,
+        })
         .then((res) => {
             dispatch(logIn(res.data));
             navigate('/');
@@ -26,7 +23,7 @@ export const logInUser = (values, navigate) => async (dispatch) => {
 
 export const logOutUser = () => async (dispatch) => {
     request
-        .get('/logout', { withCredentials: true })
+        .get('/logout')
         .then(() => {
             dispatch(logOut());
             toast.success('Log out successfully!');
@@ -38,9 +35,10 @@ export const logOutUser = () => async (dispatch) => {
 
 export const checkingLoginUser = () => async (dispatch) => {
     request
-        .get('/checking-login', { withCredentials: true })
+        .get('/checking-login')
         .then((res) => {
             dispatch(checkLogin(res.data));
+            console.log(res.data.current_user);
         })
         .catch((err) => console.log(err));
 };
