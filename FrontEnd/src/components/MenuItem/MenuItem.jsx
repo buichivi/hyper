@@ -15,7 +15,7 @@ const MenuItem = ({ brand = {}, className = '' }) => {
                 before:transition-all before:duration-300 before:content-[''] 
                 hover:before:w-full ${className}`}
         >
-            <Link to={`/${brand.name}`} className="cursor-pointer capitalize">
+            <Link to={`/${brand.code}`} className="cursor-pointer capitalize">
                 {brand.name}
             </Link>
             <motion.div
@@ -25,21 +25,20 @@ const MenuItem = ({ brand = {}, className = '' }) => {
                 h-auto min-h-[30vh] w-[100vw] cursor-auto items-center bg-white px-14 py-6 shadow-xl group-hover/menu-item:flex`}
             >
                 <Link
-                    to={`/${brand.name}`}
+                    to={`/${brand.code}`}
                     className="flex flex-[2] flex-col items-center justify-center"
                 >
-                    <NikeLogo className={'block size-20'} />
+                    <div className="block size-20">
+                        <img
+                            src={brand.imgUrl}
+                            alt=""
+                            className={'size-full object-contain'}
+                        />
+                    </div>
                     <span className="capitalize">All {brand.name}</span>
                 </Link>
                 <div className="grid flex-[8] grid-cols-3 gap-2 lg:grid-cols-4">
-                    {[
-                        'Jordan',
-                        'Air Max',
-                        'Air Force 1',
-                        'Basketball',
-                        'Running',
-                        'Outside',
-                    ].map((category, index) => {
+                    {brand.shoe_types.map((type, index) => {
                         return (
                             <motion.div
                                 key={index}
@@ -49,12 +48,15 @@ const MenuItem = ({ brand = {}, className = '' }) => {
                                 transition={{ delay: index * 0.1 }}
                             >
                                 <Link
-                                    to={`/${brand.name}/`}
+                                    to={`/${brand.code}/${type.code}/`}
                                     className="group/category-menu-item
                                         relative flex items-center justify-center gap-2"
                                 >
                                     <img
-                                        src="/src/assets/images/luka-2-preview.png"
+                                        src={
+                                            type.imgUrl ||
+                                            'https://placehold.co/400'
+                                        }
                                         alt=""
                                         className="size-24 object-cover transition-all duration-500"
                                     />
@@ -63,7 +65,7 @@ const MenuItem = ({ brand = {}, className = '' }) => {
                                             transition-all 
                                             duration-300 group-hover/category-menu-item:opacity-100"
                                     >
-                                        {category}
+                                        {type.name}
                                     </span>
                                 </Link>
                             </motion.div>

@@ -1,11 +1,13 @@
 from flask import Flask
 from flask_cors import CORS
-from flask_login import LoginManager, login_user, logout_user
+from flask_login import LoginManager
 from flask_restful import Api
 
 import config
 from database import db
-# from flask_session import Session
+from services.brand import *
+from services.product import *
+from services.shoe_type import *
 from services.user import *
 
 app = Flask(__name__)
@@ -17,17 +19,25 @@ db.init_app(app)
 # Flask-restful
 api = Api(app)
 
-
-# Access-Control-Allow-Credentials
-@app.after_request
-def after_request(response):
-    if "Access-Control-Allow-Credentials" not in response.headers:
-        response.headers.add("Access-Control-Allow-Credentials", "true")
-    return response
-
-
 # CORS
 CORS(app=app, supports_credentials=True)
+
+
+@app.after_request
+def after_request(response):
+    if not "Access-Control-Allow-Credentials" in response.headers:
+        response.headers.add("Access-Control-Allow-Credentials", "true")
+    if not "Access-Control-Allow-Origin" in response.headers:
+        response.headers.add("Access-Control-Allow-Origin", "http://localhost:5173")
+    if not "Access-Control-Allow-Headers" in response.headers:
+        response.headers.add(
+            "Access-Control-Allow-Headers", "Access-Control-Allow-Headers, content-type"
+        )
+    if not "Access-Control-Allow-Methods" in response.headers:
+        response.headers.add("Access-Control-Allow-Methods", "*")
+
+    return response
+
 
 # Session
 # Session(app)
@@ -47,6 +57,9 @@ api.add_resource(LogOutResource, "/logout")
 api.add_resource(SignUpResource, "/signup")
 api.add_resource(GetAllEmailResource, "/all-emails")
 api.add_resource(CheckingLoginResource, "/checking-login")
+api.add_resource(BrandResource, "/brand")
+api.add_resource(ShoeTypeResource, "/shoe_types")
+api.add_resource(ProductResource, "/product")
 
 if __name__ == "__main__":
     with app.app_context():

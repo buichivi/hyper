@@ -7,10 +7,19 @@ import { CiSearch, CiHeart } from 'react-icons/ci';
 import MenuItem from '../MenuItem/MenuItem';
 import { useDispatch, useSelector } from 'react-redux';
 import { logOutUser } from '../../store/actions';
+import { useEffect, useState } from 'react';
+import request from '../../utils/request';
+import brandLogos from '../../utils/brandLogos';
 
 const Header = () => {
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
     const dispatch = useDispatch();
+    const [brands, setBrands] = useState();
+
+    console.log(brands);
+    useEffect(() => {
+        request.get('/brand').then((res) => setBrands(res.data.brands));
+    }, []);
 
     return (
         <div className="fixed left-0 top-0 z-50 h-auto w-full ">
@@ -32,15 +41,22 @@ const Header = () => {
                     <h3 className="font-BebasNeue text-3xl font-bold">HYPER</h3>
                 </Link>
                 <div className="hidden h-full flex-[2] items-center justify-center gap-10 lg:flex">
-                    {['nike', 'adidas', 'vans', 'converse'].map(
-                        (brand, index) => {
-                            return (
-                                <div key={index} className="h-full">
-                                    <MenuItem brand={{ name: brand }} />
-                                </div>
-                            );
-                        },
-                    )}
+                    {brands?.map((brand, index) => {
+                        return (
+                            <div key={index} className="h-full">
+                                <MenuItem
+                                    brand={brand}
+                                    Logo={
+                                        brandLogos.filter(
+                                            (brandLogo) =>
+                                                brandLogo.brandCode ==
+                                                brand.code,
+                                        )[0].brandLogo
+                                    }
+                                />
+                            </div>
+                        );
+                    })}
                     <Link
                         to=""
                         className="relative flex h-full w-fit items-center 
@@ -78,10 +94,11 @@ const Header = () => {
                             spellCheck={false}
                             type="text"
                             placeholder="Search..."
-                            className="peer/search-input absolute 
-                            left-full right-0 p-2 text-sm outline-none
-                            ring-0 ring-black transition-all duration-500 peer-checked/search-input:left-0 peer-checked/search-input:pl-8
-                            peer-checked/search-input:ring-1
+                            className="peer/search-input absolute left-full
+                            right-0 rounded-full border border-transparent p-2
+                            text-sm outline-none transition-all duration-500 
+                            peer-checked/search-input:left-0 peer-checked/search-input:border-black
+                            peer-checked/search-input:pl-8
                             "
                             onBlur={(e) => {
                                 const checkbox =
@@ -94,7 +111,7 @@ const Header = () => {
                             }}
                         />
                         <span
-                            className="absolute right-2 peer-placeholder-shown/search-input:hidden"
+                            className="absolute right-2 cursor-pointer peer-placeholder-shown/search-input:hidden"
                             onClick={(e) => {
                                 const searchInput = e.target.previousSibling;
                                 searchInput.value = '';

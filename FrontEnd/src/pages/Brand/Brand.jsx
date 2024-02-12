@@ -12,7 +12,7 @@ import { IoIosArrowDown } from 'react-icons/io';
 import { useEffect, useState } from 'react';
 
 const Brand = () => {
-    const { brandId } = useParams();
+    const { brandCode, shoeTypeCode } = useParams();
 
     const [isOpenFilters, setIsOpenFilters] = useState(true);
     const [isOpenSort, setIsOpenSort] = useState(false);
@@ -22,7 +22,7 @@ const Brand = () => {
     }, []);
     return (
         <div className="pb-6">
-            <Navigation brandId={brandId} />
+            <Navigation brandId={brandCode} />
             <div>
                 <div className="flex h-[200px] w-full items-center justify-center bg-black">
                     <AdidasLogo className="size-40 text-white" />

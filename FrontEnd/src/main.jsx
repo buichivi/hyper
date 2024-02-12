@@ -18,6 +18,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                 draggable={true}
                 draggableDirection="x"
                 autoClose={3000}
+                className="!top-[4.5rem]"
             />
         </Provider>
     </React.StrictMode>,

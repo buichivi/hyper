@@ -5,4 +5,4 @@ SESSION_COOKIE_SAMESITE = "None"
 REMEMBER_COOKIE_SAMESITE = "None"
 SESSION_COOKIE_SECURE = True
 REMEMBER_COOKIE_SECURE = True
-REMEMBER_COOKIE_NAME = "remember_me" #This is the default name
+REMEMBER_COOKIE_NAME = "remember_me"  # This is the default name

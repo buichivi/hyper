@@ -5,25 +5,31 @@ const publicRoutes = [
         path: '/',
         component: Home,
         title: 'Home',
-        authRequired: false
+        authRequired: false,
     },
     {
-        path: '/:brandId',
+        path: '/:brandCode',
         component: Brand,
         title: 'Brand',
-        authRequired: false
+        authRequired: false,
+    },
+    {
+        path: '/:brandCode/:shoeTypeCode',
+        component: Brand,
+        title: 'Brand',
+        authRequired: false,
     },
     {
         path: '/product/:prodId',
         component: Product,
         title: 'Product',
-        authRequired: false
+        authRequired: false,
     },
     {
         path: '/checkout',
         component: CheckOut,
         title: 'CheckOut',
-        authRequired: true
+        authRequired: true,
     },
 ];
 
