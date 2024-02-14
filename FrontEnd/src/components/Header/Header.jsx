@@ -25,7 +25,7 @@ const Header = () => {
         <div className="fixed left-0 top-0 z-50 h-auto w-full ">
             {!isAuthenticated && (
                 <div
-                    className="flex h-[24px] items-center justify-end bg-slate-200 px-4 md:px-14 2xl:px-[15%]
+                    className="flex h-[28px] items-center justify-end bg-slate-200 px-4 md:px-14 2xl:px-[15%]
                 [&>*]:px-2"
                 >
                     <Link to="/login" className="border-r border-r-slate-400">
@@ -44,16 +44,7 @@ const Header = () => {
                     {brands?.map((brand, index) => {
                         return (
                             <div key={index} className="h-full">
-                                <MenuItem
-                                    brand={brand}
-                                    Logo={
-                                        brandLogos.filter(
-                                            (brandLogo) =>
-                                                brandLogo.brandCode ==
-                                                brand.code,
-                                        )[0].brandLogo
-                                    }
-                                />
+                                <MenuItem brand={brand} />
                             </div>
                         );
                     })}

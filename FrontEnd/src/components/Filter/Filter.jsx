@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { FilterByPrice, FilterBySaleOff, FilterByType } from '..';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const Filter = ({ isOpen = true }) => {
+const Filter = ({ isOpen = true, brand = {} }) => {
     const [filterTypes, setFilterTypes] = useState([]);
     const [saleOffs, setSaleOffs] = useState([]);
     const [maxPrice, setMaxPrice] = useState(50);
@@ -32,7 +32,10 @@ const Filter = ({ isOpen = true }) => {
                     exit="exit"
                     variants={toggleOpen}
                 >
-                    <FilterByType setFilterTypes={setFilterTypes} />
+                    <FilterByType
+                        setFilterTypes={setFilterTypes}
+                        brandTypes={brand.shoe_types}
+                    />
                     <FilterByPrice
                         valuePrice={maxPrice}
                         max={200}

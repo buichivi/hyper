@@ -12,15 +12,13 @@ class Product(db.Model):
     featured = db.Column(
         db.Boolean, nullable=False, default=False
     )  # Đánh dấu sản phẩm nổi bật
-    imgUrl = db.Column(
-        db.String(255), nullable=False, default="https://placehold.co/600x600"
-    )
 
     # ForeignKey
     brand_id = db.Column(db.Integer, db.ForeignKey("tb_brand.id"), nullable=False)
     shoe_type_id = db.Column(
-        db.Integer, db.ForeignKey("tb_shoetype.id"), nullable=False
+        db.Integer, db.ForeignKey("tb_shoe_type.id"), nullable=False
     )
+    product_images = db.relationship("ProductImage", backref="product", lazy=True)
 
     def __init__(
         self,
@@ -31,22 +29,17 @@ class Product(db.Model):
         shoe_type_id,
         discount=0,
         featured=False,
-        imgUrl="https://placehold.co/600x600",
     ) -> None:
         self.name = name
         self.detail = detail
         self.price = price
         self.featured = featured
-        self.imgUrl = imgUrl
         self.discount = discount
         self.brand_id = brand_id
         self.shoe_type_id = shoe_type_id
 
     def set_discount(self, discount) -> None:
         self.discount = discount
-
-    def set_imgUrl(self, imgUrl) -> None:
-        self.imgUrl = imgUrl
 
     def set_featured(self, featured) -> None:
         self.featured = featured
@@ -58,7 +51,6 @@ class Product(db.Model):
             "detail": self.detail,
             "price": self.price,
             "featured": self.featured,
-            "imgUrl": self.imgUrl,
         }
 
     def __repr__(self) -> str:

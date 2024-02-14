@@ -30,8 +30,9 @@
 }
 
 .swiper-button-disabled {
-    cursor: not-allowed;
-    opacity: 0.5;
+    display: none;
+    /* cursor: not-allowed;
+    opacity: 0.5; */
 }
 
 /* Custom scroll bar */

@@ -7,6 +7,7 @@ import config
 from database import db
 from services.brand import *
 from services.product import *
+from services.product_image import *
 from services.shoe_type import *
 from services.user import *
 
@@ -52,14 +53,21 @@ def load_user(user_id):
     return User.query.get(user_id)
 
 
+# User
 api.add_resource(LoginResource, "/login")
 api.add_resource(LogOutResource, "/logout")
 api.add_resource(SignUpResource, "/signup")
 api.add_resource(GetAllEmailResource, "/all-emails")
 api.add_resource(CheckingLoginResource, "/checking-login")
+
+# Brand
 api.add_resource(BrandResource, "/brand")
+api.add_resource(GetBrandResource, "/brand/<string:brand_code>")
 api.add_resource(ShoeTypeResource, "/shoe_types")
+
+# Product
 api.add_resource(ProductResource, "/product")
+api.add_resource(ProductImageResource, "/product-image")
 
 if __name__ == "__main__":
     with app.app_context():

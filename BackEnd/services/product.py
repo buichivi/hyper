@@ -9,9 +9,22 @@ from models.product import Product
 class ProductResource(Resource):
     @cross_origin()
     def get(self):
-        products = Product.query.all()
-        data = [product.to_json() for product in products]
-        return {"products": data}
+        data = request.get_json()
+        brand_id = data.get("brand_id")
+        shoe_type_id = data.get("shoe_type_id")
+        if not brand_id:
+            return {"message": "brand_id is not provided!"}
+        products = None
+        result = None
+        if not shoe_type_id:
+            products = Product.query.filter_by(brand_id=brand_id).all()
+            result = [product.to_json() for product in products]
+            return {"products": result}
+        products = Product.query.filter_by(
+            brand_id=brand_id, shoe_type_id=shoe_type_id
+        ).all()
+        result = [product.to_json() for product in products]
+        return {"products": result}
 
     @cross_origin()
     def post(self):
@@ -21,7 +34,6 @@ class ProductResource(Resource):
         price = data.get("price")
         discount = data.get("discount")
         featured = data.get("featured")
-        imgUrl = data.get("imgUrl")
         brand_id = data.get("brand_id")
         shoe_type_id = data.get("shoe_type_id")
         if not name:
@@ -38,8 +50,6 @@ class ProductResource(Resource):
         product = Product(name, detail, price, brand_id, shoe_type_id)
         if discount:
             product.set_discount(discount)
-        if imgUrl:
-            product.set_imgUrl(imgUrl)
         if featured:
             product.set_featured(featured)
 
@@ -47,3 +57,13 @@ class ProductResource(Resource):
         db.session.commit()
 
         return {"message": "Add a product successfully!", "product": product.to_json()}
+
+
+class GetProductResource(Resource):
+    @cross_origin()
+    def get(self, product_id):
+        if not product_id:
+            return {"message": "No product_id is not provided"}, 400
+        product = Product.query.get(product_id)
+        
+        return {}

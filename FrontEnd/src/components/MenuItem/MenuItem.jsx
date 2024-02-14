@@ -1,6 +1,5 @@
 import { motion, useAnimation } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { NikeLogo } from '../../assets/logos';
 
 const MenuItem = ({ brand = {}, className = '' }) => {
     const controls = useAnimation();
@@ -30,7 +29,7 @@ const MenuItem = ({ brand = {}, className = '' }) => {
                 >
                     <div className="block size-20">
                         <img
-                            src={brand.imgUrl}
+                            src={brand.img_url}
                             alt=""
                             className={'size-full object-contain'}
                         />
@@ -48,13 +47,13 @@ const MenuItem = ({ brand = {}, className = '' }) => {
                                 transition={{ delay: index * 0.1 }}
                             >
                                 <Link
-                                    to={`/${brand.code}/${type.code}/`}
+                                    to={`/${brand.code}/${type.code}`}
                                     className="group/category-menu-item
                                         relative flex items-center justify-center gap-2"
                                 >
                                     <img
                                         src={
-                                            type.imgUrl ||
+                                            type.img_url ||
                                             'https://placehold.co/400'
                                         }
                                         alt=""

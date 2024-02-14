@@ -1,35 +1,47 @@
 import { Link, useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-    AdidasLogo,
-    ConverseLogo,
-    NikeLogo,
-    VansLogo,
-} from '../../assets/logos';
 import { Filter, Navigation, ProductCard } from '../../components';
 import { PiSlidersHorizontal } from 'react-icons/pi';
 import { IoIosArrowDown } from 'react-icons/io';
 import { useEffect, useState } from 'react';
+import request from '../../utils/request';
 
 const Brand = () => {
     const { brandCode, shoeTypeCode } = useParams();
 
     const [isOpenFilters, setIsOpenFilters] = useState(true);
     const [isOpenSort, setIsOpenSort] = useState(false);
+    const [brand, setBrand] = useState({});
+    const [products, setProducts] = useState([{}]);
 
     useEffect(() => {
         window.scrollTo(0, 0);
-    }, []);
+        request
+            .get('/brand/' + brandCode)
+            .then((res) => setBrand(res.data.brand));
+        request
+            .get('/product', {
+                brandCode,
+                shoeTypeCode,
+            })
+            .then((res) => console.log(res.data));
+    }, [brandCode, shoeTypeCode]);
     return (
         <div className="pb-6">
-            <Navigation brandId={brandCode} />
+            <Navigation brandCode={brandCode} />
             <div>
                 <div className="flex h-[200px] w-full items-center justify-center bg-black">
-                    <AdidasLogo className="size-40 text-white" />
+                    <div className="flex size-40 items-center justify-center text-white">
+                        <img
+                            src={brand.img_url}
+                            alt={brand.name}
+                            className="size-full object-contain invert"
+                        />
+                    </div>
                 </div>
                 <div className="sticky top-[72px] z-30 flex h-[80px] items-center justify-between bg-white py-4">
                     <h4 className="text-4xl font-medium capitalize">
-                        All Nike
+                        All {brand.name}
                     </h4>
                     <div className="flex items-center gap-2 text-lg font-medium">
                         <div
@@ -84,21 +96,16 @@ const Brand = () => {
                     </div>
                 </div>
                 <div className="flex pb-4">
-                    <Filter isOpen={isOpenFilters} />
+                    <Filter isOpen={isOpenFilters} brand={brand} />
                     <div className="flex-1">
-                        <div className="grid grid-cols-4 gap-4">
-                            {Array(9)
-                                .fill(0)
-                                .map((product, index) => {
-                                    return (
-                                        <div key={index}>
-                                            <ProductCard
-                                                brandName="nike"
-                                                sizes={[40, 41, 42]}
-                                            />
-                                        </div>
-                                    );
-                                })}
+                        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
+                            {products.map((product, index) => {
+                                return (
+                                    <div key={index}>
+                                        <ProductCard product={product} />
+                                    </div>
+                                );
+                            })}
                         </div>
                     </div>
                 </div>
