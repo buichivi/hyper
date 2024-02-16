@@ -10,7 +10,7 @@ import { BsSuitHeart } from 'react-icons/bs';
 import { FaRegHeart, FaHeart } from 'react-icons/fa';
 
 const Product = () => {
-    const { prodId } = useParams();
+    const { product_id } = useParams();
     const [selectedSize, setSelectedSize] = useState(-1);
     const [quantity, setQuantity] = useState(1);
     const [isFavor, setIsFavor] = useState(false);

@@ -7,28 +7,44 @@ import { useEffect, useState } from 'react';
 import request from '../../utils/request';
 
 const Brand = () => {
-    const { brandCode, shoeTypeCode } = useParams();
+    const { brand_code, shoe_type_code } = useParams();
 
     const [isOpenFilters, setIsOpenFilters] = useState(true);
     const [isOpenSort, setIsOpenSort] = useState(false);
     const [brand, setBrand] = useState({});
-    const [products, setProducts] = useState([{}]);
+    const [products, setProducts] = useState([]);
+    const [productFilters, setProductFilters] = useState([]);
+
+    const shoe_type = brand?.shoe_types?.filter(
+        (shoe_type) => shoe_type.code == shoe_type_code,
+    )[0];
+
+    const loadDate = async () => {
+        await request
+            .get('/brand/' + brand_code)
+            .then((res) => setBrand(res.data.brand));
+        await request
+            .get('/product', {
+                params: {
+                    brand_code: brand_code,
+                    shoe_type_code: shoe_type_code,
+                },
+            })
+            .then((res) => {
+                setProducts(res.data.products);
+                setProductFilters(res.data.products);
+            });
+    };
+    console.log(productFilters);
 
     useEffect(() => {
         window.scrollTo(0, 0);
-        request
-            .get('/brand/' + brandCode)
-            .then((res) => setBrand(res.data.brand));
-        request
-            .get('/product', {
-                brandCode,
-                shoeTypeCode,
-            })
-            .then((res) => console.log(res.data));
-    }, [brandCode, shoeTypeCode]);
+        loadDate();
+    }, [brand_code, shoe_type_code]);
+
     return (
         <div className="pb-6">
-            <Navigation brandCode={brandCode} />
+            <Navigation brandCode={brand_code} />
             <div>
                 <div className="flex h-[200px] w-full items-center justify-center bg-black">
                     <div className="flex size-40 items-center justify-center text-white">
@@ -41,7 +57,9 @@ const Brand = () => {
                 </div>
                 <div className="sticky top-[72px] z-30 flex h-[80px] items-center justify-between bg-white py-4">
                     <h4 className="text-4xl font-medium capitalize">
-                        All {brand.name}
+                        {!shoe_type_code
+                            ? `All ${brand.name}`
+                            : shoe_type?.name}
                     </h4>
                     <div className="flex items-center gap-2 text-lg font-medium">
                         <div
@@ -96,17 +114,41 @@ const Brand = () => {
                     </div>
                 </div>
                 <div className="flex pb-4">
-                    <Filter isOpen={isOpenFilters} brand={brand} />
+                    <Filter
+                        isOpen={isOpenFilters}
+                        brand={brand}
+                        shoeTypeCode={shoe_type_code}
+                        setProductFilters={setProductFilters}
+                        products={products}
+                    />
                     <div className="flex-1">
-                        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
-                            {products.map((product, index) => {
-                                return (
-                                    <div key={index}>
-                                        <ProductCard product={product} />
-                                    </div>
-                                );
-                            })}
-                        </div>
+                        {productFilters?.length > 0 ? (
+                            <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
+                                {productFilters.map((product, index) => {
+                                    return (
+                                        <div key={index}>
+                                            <ProductCard product={product} />
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        ) : (
+                            <div className="relative left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 select-none opacity-60">
+                                <div className="flex items-center justify-center text-center">
+                                    <img
+                                        src="/src/assets/images/open-box.png"
+                                        alt=""
+                                        className="size-60 object-cover"
+                                    />
+                                </div>
+                                <h3
+                                    className="text-center font-BebasNeue text-3xl font-medium capitalize tracking-widest
+                                    text-slate-400"
+                                >
+                                    No product found
+                                </h3>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

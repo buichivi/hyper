@@ -1,2 +1,3 @@
-export { default as BRANDS } from './brands'
-export * from './content'
+export { default as BRANDS } from './brands';
+export { default as SALE_OFFS } from './saleoff';
+export * from './content';

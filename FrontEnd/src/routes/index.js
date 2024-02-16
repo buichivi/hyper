@@ -8,19 +8,19 @@ const publicRoutes = [
         authRequired: false,
     },
     {
-        path: '/:brandCode',
+        path: '/:brand_code',
         component: Brand,
         title: 'Brand',
         authRequired: false,
     },
     {
-        path: '/:brandCode/:shoeTypeCode',
+        path: '/:brand_code/:shoe_type_code',
         component: Brand,
         title: 'Brand',
         authRequired: false,
     },
     {
-        path: '/product/:prodId',
+        path: '/product/:product_id',
         component: Product,
         title: 'Product',
         authRequired: false,

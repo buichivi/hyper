@@ -4,25 +4,34 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 
 import { IoIosHeart, IoIosHeartEmpty } from 'react-icons/io';
-import { LuPlus } from 'react-icons/lu';
 import { AnimatePresence, motion } from 'framer-motion';
-import { IoBag, IoBagHandle } from 'react-icons/io5';
+import { IoBagHandle } from 'react-icons/io5';
+import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 const ProductCard = ({ product = {} }) => {
     const [isFavor, setIsFavor] = useState(false);
     const [isSelected, setIsSelected] = useState(false);
+    const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+
+    const totalQuantityInStock = product?.sizes?.reduce(
+        (acc, { quantity_in_stock }) => {
+            return acc + quantity_in_stock;
+        },
+        0,
+    );
 
     return (
         <div className="select-none overflow-hidden border-[1px] border-transparent">
             <Link
                 to={`/product/${product.id}`}
-                className="relative block w-full overflow-hidden "
+                className="relative block w-full overflow-hidden"
                 style={{ aspectRatio: 1 }}
             >
                 <img
-                    src="https://shorturl.at/nszNY"
+                    src={product.img_preview_url}
                     alt=""
-                    className="h-full w-full rounded-lg object-cover transition-all duration-500"
+                    className="h-full w-full object-cover transition-all duration-500"
                 />
                 {!isSelected && (
                     <div
@@ -31,6 +40,9 @@ const ProductCard = ({ product = {} }) => {
                         onClick={(e) => {
                             e.preventDefault();
                             setIsFavor(!isFavor);
+                            if (!isAuthenticated) {
+                                toast.warn('Login to save favorite product!');
+                            }
                         }}
                     >
                         {!isFavor ? (
@@ -52,15 +64,17 @@ const ProductCard = ({ product = {} }) => {
                             onClick={(e) => e.preventDefault()}
                         >
                             <div className="relative grid grid-cols-4 gap-2 p-2">
-                                {[39, 40, 41, 43, 39].map((size, index) => {
+                                {product.sizes.map((size, index) => {
                                     return (
                                         <div
                                             key={index}
-                                            className="relative h-10 cursor-pointer p-1
-                                            text-center text-white ring-1 ring-white hover:bg-white hover:text-black"
+                                            className={`relative h-10 cursor-pointer p-1
+                                            text-center text-white ring-1 ring-white
+                                            hover:bg-white hover:text-black 
+                                            ${size.quantity_in_stock <= 0 && 'cursor-not-allowed bg-white !text-black opacity-50'}`}
                                         >
                                             <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-                                                {size}
+                                                {size.size}
                                             </span>
                                         </div>
                                     );
@@ -76,22 +90,50 @@ const ProductCard = ({ product = {} }) => {
                         isSelected ? 'bg-[#0000008f]' : 'bg-transparent'
                     } transition-colors duration-300`}
                 ></div>
+
+                {totalQuantityInStock > 0 &&
+                    product.discount &&
+                    !isSelected && (
+                        <div className="absolute left-5 top-0 flex h-[24%] w-[15%] items-center justify-center rounded-b-full bg-black">
+                            <span className="inline-block -rotate-90 text-white">
+                                -{product.discount}%
+                            </span>
+                        </div>
+                    )}
             </Link>
             <div className="flex items-center justify-between p-2">
                 <div className="flex-1 shrink-0">
+                    {totalQuantityInStock <= 0 && (
+                        <span className="text-red-400">Sold out</span>
+                    )}
                     <Link
                         to={`/product/${product.id}`}
                         className="text-limit-1 text-lg font-medium"
                     >
-                        Nike Air Force 1
+                        {product.name}
                     </Link>
-                    <span className="font-medium">$200</span>
+                    <div>
+                        <span className="font-semibold">
+                            $
+                            {Math.ceil(
+                                (product.price * (100 - product.discount)) /
+                                    100,
+                            )}
+                        </span>
+                        {totalQuantityInStock > 0 && (
+                            <span className="ml-1 text-slate-500 line-through">
+                                ${product.price}
+                            </span>
+                        )}
+                    </div>
                 </div>
-                <IoBagHandle
-                    className="box-content size-6 cursor-pointer rounded-full 
+                {totalQuantityInStock > 0 && (
+                    <IoBagHandle
+                        className="box-content size-6 cursor-pointer rounded-full 
                     bg-white p-2 text-black transition-colors duration-300 hover:bg-black hover:text-white"
-                    onClick={() => setIsSelected(!isSelected)}
-                />
+                        onClick={() => setIsSelected(!isSelected)}
+                    />
+                )}
             </div>
         </div>
     );

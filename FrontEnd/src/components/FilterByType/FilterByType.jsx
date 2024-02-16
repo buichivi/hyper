@@ -1,11 +1,28 @@
 import { IoMdCheckmark } from 'react-icons/io';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FiMinus, FiPlus } from 'react-icons/fi';
 import { filterGroupAnimation } from '../../utils/animation';
+import PropTypes from 'prop-types';
 
-const FilterByType = ({ setFilterTypes = () => {}, brandTypes = [] }) => {
+const FilterByType = ({ isReset, shoeTypes = [], onChange }) => {
+    console.log("FilterByType re-render");
+
     const [isOpen, setIsOpen] = useState(true);
+    const [filterTypes, setFilterTypes] = useState([]);
+
+    useEffect(() => {
+        setFilterTypes(shoeTypes.map((shoeType) => shoeType.id));
+    }, [shoeTypes]);
+
+    useEffect(() => {
+        setFilterTypes(shoeTypes.map((shoeType) => shoeType.id));
+    }, [isReset, shoeTypes]);
+
+    useEffect(() => {
+        onChange({ filterTypes });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [filterTypes.length]);
 
     return (
         <motion.div
@@ -17,7 +34,7 @@ const FilterByType = ({ setFilterTypes = () => {}, brandTypes = [] }) => {
                 className="flex items-center justify-between"
                 onClick={() => setIsOpen(!isOpen)}
             >
-                <h3 className="text-lg font-medium">Types</h3>
+                <h3 className="text-lg font-medium">Product Type</h3>
                 {isOpen ? (
                     <FiMinus className={`size-5 transition-all duration-500`} />
                 ) : (
@@ -33,7 +50,7 @@ const FilterByType = ({ setFilterTypes = () => {}, brandTypes = [] }) => {
                 transition={{ type: 'spring', duration: 0.7 }}
                 className="overflow-hidden px-4"
             >
-                {brandTypes.map((type, index) => {
+                {shoeTypes.map((shoeType, index) => {
                     return (
                         <label
                             key={index}
@@ -43,19 +60,20 @@ const FilterByType = ({ setFilterTypes = () => {}, brandTypes = [] }) => {
                                 type="checkbox"
                                 id={`type-filter-${index}`}
                                 className={`peer/type-filter hidden`}
+                                checked={filterTypes.includes(shoeType.id)}
                                 onChange={(e) => {
                                     if (e.target.checked) {
                                         setFilterTypes((prev) => [
                                             ...prev,
-                                            type.id,
+                                            shoeType.id,
                                         ]);
-                                    } else
+                                    } else {
                                         setFilterTypes((prev) =>
                                             prev.filter(
-                                                (filterType) =>
-                                                    filterType != type.id,
+                                                (type) => type != shoeType.id,
                                             ),
                                         );
+                                    }
                                 }}
                             />
                             <label
@@ -73,7 +91,7 @@ const FilterByType = ({ setFilterTypes = () => {}, brandTypes = [] }) => {
                                 className="pl-2 text-lg capitalize"
                                 htmlFor={`type-filter-${index}`}
                             >
-                                {type.name}
+                                {shoeType.name}
                             </label>
                         </label>
                     );
@@ -81,6 +99,12 @@ const FilterByType = ({ setFilterTypes = () => {}, brandTypes = [] }) => {
             </motion.div>
         </motion.div>
     );
+};
+
+FilterByType.propTypes = {
+    isReset: PropTypes.bool,
+    shoeTypes: PropTypes.array,
+    onChange: PropTypes.func.isRequired,
 };
 
 export default FilterByType;

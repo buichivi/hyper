@@ -12,3 +12,7 @@ class ProductImage(db.Model):
 
     # ForeignKey
     product_id = db.Column(db.Integer, db.ForeignKey("tb_product.id"), nullable=False)
+
+    def __repr__(self) -> str:
+        return f"<ProductImage {self.id}> {self.img_url} {self.is_preview}"
+

@@ -1,4 +1,6 @@
 from database import db
+from models.product_image import ProductImage
+from models.product_size import ProductSize
 
 
 class Product(db.Model):
@@ -18,7 +20,10 @@ class Product(db.Model):
     shoe_type_id = db.Column(
         db.Integer, db.ForeignKey("tb_shoe_type.id"), nullable=False
     )
-    product_images = db.relationship("ProductImage", backref="product", lazy=True)
+    product_images = db.relationship(
+        "ProductImage", backref="product_images", lazy=True
+    )
+    product_sizes = db.relationship("ProductSize", backref="product_sizes", lazy=True)
 
     def __init__(
         self,
@@ -45,12 +50,31 @@ class Product(db.Model):
         self.featured = featured
 
     def to_json(self) -> dict:
+        sizes = (
+            ProductSize.query.filter_by(product_id=self.id)
+            .order_by(ProductSize.size.asc())
+            .all()
+        )
+        product_sizes = [size.get_size() for size in sizes]
+        img_url = ""
+
+        product_image_preview = ProductImage.query.filter_by(
+            product_id=self.id, is_preview=True
+        ).first()
+        if product_image_preview:
+            img_url = product_image_preview.img_url
+
         return {
             "id": self.id,
             "name": self.name,
             "detail": self.detail,
             "price": self.price,
+            "discount": self.discount,
             "featured": self.featured,
+            "sizes": product_sizes,
+            "img_preview_url": img_url,
+            "shoe_type_id": self.shoe_type_id,
+            "brand_id": self.brand_id,
         }
 
     def __repr__(self) -> str:
