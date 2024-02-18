@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from database import db
 
 
@@ -13,7 +15,15 @@ class Review(db.Model):
     product_id = db.Column(db.Integer, db.ForeignKey("tb_product.id"), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("tb_users.id"), nullable=False)
 
-    def __init__(self, rating, title, comment, comment_on, product_id, user_id) -> None:
+    def __init__(
+        self,
+        rating,
+        title,
+        comment,
+        product_id,
+        user_id,
+        comment_on=datetime.now().strftime("%d/%m/%Y"),
+    ) -> None:
         self.rating = rating
         self.title = title
         self.comment = comment

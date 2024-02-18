@@ -18,6 +18,8 @@ class ProductResource(Resource):
             return {"message": "brand_code is not provided!"}, 400
         brand = Brand.query.filter_by(code=brand_code).first()
         shoe_type = ShoeType.query.filter_by(code=shoe_type_code).first()
+        if not brand:
+            return {"message": "No brand is match with brand_code!"}, 400
         products = None
         result = None
         if not shoe_type_code:

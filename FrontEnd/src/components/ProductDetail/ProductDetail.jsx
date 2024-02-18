@@ -1,32 +1,47 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useCallback, useEffect, useState } from 'react';
-import { ReviewStars } from '../';
+import { ReviewForm, ReviewStars } from '../';
 import { IoIosArrowDown } from 'react-icons/io';
 import { DEMO_CONTENT, SORT_COMMENT } from '../../constants';
 import { IoStar } from 'react-icons/io5';
 import request from '../../utils/request';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const ProductDetail = ({ productId = null }) => {
     const [selectedTab, setSelectedTab] = useState('description');
     const [limitReviews, setLimitReviews] = useState(3);
     const [sortReviewMethod, setSortReviewMethod] = useState(SORT_COMMENT[0]);
-    const [userReviewStars, setUserReviewStars] = useState(0);
     const [productReviews, setProductReviews] = useState({});
     const [isReviewing, setIsReviewing] = useState(false);
+    const [reviewDetails, setReviewDetails] = useState([]);
 
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 
     const loadData = useCallback(async () => {
-        await request
-            .get('/product-reviews/' + productId)
-            .then((res) => setProductReviews(res.data));
+        await request.get('/product-reviews/' + productId).then((res) => {
+            setProductReviews(res.data);
+            setReviewDetails(res.data.reviews.review_details);
+        });
     }, [productId]);
 
     useEffect(() => {
         loadData();
     }, [productId, loadData]);
+
+    const handleCreateReview = async ({ data }) => {
+        await request
+            .post('/product-reviews', {
+                ...data,
+                product_id: productId,
+            })
+            .then((res) => {
+                toast.success('Add a review successfully!');
+                setReviewDetails((prev) => [res.data.review, ...prev]);
+            })
+            .catch(() => toast.error('Somthing went wrong!'));
+    };
 
     return (
         <div>
@@ -43,12 +58,7 @@ const ProductDetail = ({ productId = null }) => {
                             {item == 'reviews' && (
                                 <div className="flex items-center pl-1">
                                     {' ('}
-                                    <span>
-                                        {
-                                            productReviews[item].review_details
-                                                .length
-                                        }
-                                    </span>
+                                    <span>{reviewDetails.length}</span>
                                     {')'}
                                 </div>
                             )}
@@ -107,12 +117,6 @@ const ProductDetail = ({ productId = null }) => {
                                     >
                                         Write your review
                                     </label>
-
-                                    {/* <input
-                                        type="checkbox"
-                                        id="toggle-review"
-                                        className="peer/toggle-review hidden"
-                                    /> */}
                                     <AnimatePresence>
                                         {isReviewing && (
                                             <motion.div
@@ -135,65 +139,11 @@ const ProductDetail = ({ productId = null }) => {
                                                 }}
                                             >
                                                 {isAuthenticated ? (
-                                                    <>
-                                                        <div className="grid h-auto w-[80%] grid-cols-4 gap-2 py-4">
-                                                            <label htmlFor="title_review">
-                                                                Title:
-                                                            </label>
-                                                            <input
-                                                                id="title_review"
-                                                                type="text"
-                                                                placeholder="Enter a title"
-                                                                className="col-span-3 px-2 text-sm outline-none ring-1 ring-slate-200 transition-all focus:ring-black"
-                                                            />
-                                                            <label htmlFor="content_review">
-                                                                Content:
-                                                            </label>
-                                                            <textarea
-                                                                id="content_review"
-                                                                type="text"
-                                                                placeholder="Enter your review"
-                                                                className="col-span-3 resize-none px-2 text-sm outline-none ring-1 ring-slate-200 transition-all focus:ring-black"
-                                                                rows={4}
-                                                            ></textarea>
-                                                            <label htmlFor="">
-                                                                Stars:{' '}
-                                                            </label>
-                                                            <div className="col-span-3 flex items-center gap-2">
-                                                                {Array(5)
-                                                                    .fill(0)
-                                                                    .map(
-                                                                        (
-                                                                            item,
-                                                                            index,
-                                                                        ) => {
-                                                                            return (
-                                                                                <IoStar
-                                                                                    key={
-                                                                                        index
-                                                                                    }
-                                                                                    className={`cursor-pointer text-slate-300 ${index + 1 <= userReviewStars && '!text-black'}`}
-                                                                                    onClick={() =>
-                                                                                        setUserReviewStars(
-                                                                                            index +
-                                                                                                1,
-                                                                                        )
-                                                                                    }
-                                                                                />
-                                                                            );
-                                                                        },
-                                                                    )}
-                                                                <span>
-                                                                    {
-                                                                        userReviewStars
-                                                                    }
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                        <button className="bg-black px-8 py-1 text-white ring-1 ring-black transition-all hover:bg-white hover:text-black ">
-                                                            Submit
-                                                        </button>
-                                                    </>
+                                                    <ReviewForm
+                                                        onChange={
+                                                            handleCreateReview
+                                                        }
+                                                    />
                                                 ) : (
                                                     <Link
                                                         to="/login"
@@ -206,8 +156,7 @@ const ProductDetail = ({ productId = null }) => {
                                         )}
                                     </AnimatePresence>
                                 </div>
-                                {productReviews?.reviews?.review_details
-                                    ?.length > 0 ? (
+                                {reviewDetails?.length > 0 ? (
                                     <div>
                                         <div className="flex items-center gap-2 pb-2">
                                             <span>Sort by</span>
@@ -261,9 +210,7 @@ const ProductDetail = ({ productId = null }) => {
                                                 </div>
                                             </div>
                                         </div>
-                                        {productReviews[
-                                            selectedTab
-                                        ]?.review_details
+                                        {reviewDetails
                                             .sort(sortReviewMethod.method)
                                             .map((review, index) => {
                                                 return (
@@ -309,8 +256,7 @@ const ProductDetail = ({ productId = null }) => {
                                         </span>
                                     </div>
                                 )}
-                                {productReviews[selectedTab]?.review_details
-                                    ?.length > limitReviews && (
+                                {reviewDetails?.length > limitReviews && (
                                     <button
                                         className="px-4 py-1 ring-1 ring-black transition-all hover:bg-black hover:text-white"
                                         onClick={() =>

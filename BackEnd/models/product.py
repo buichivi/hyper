@@ -2,6 +2,7 @@ from datetime import datetime
 
 from database import db
 from models.brand import Brand
+from models.favorite import Favorite
 from models.product_size import ProductSize
 from models.shoe_type import ShoeType
 

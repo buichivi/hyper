@@ -7,18 +7,21 @@ from flask_restful import Resource
 
 from config import REMEMBER_COOKIE_NAME
 from database import db
+from models.favorite import Favorite
+from models.product import Product
 from models.user import User
 
 
 class LoginResource(Resource):
     @cross_origin()
-    def post(self):
-        data = request.get_json()
+    def get(self):
+        data = request.args
         if not data:
             return {"message": "No data provided"}, 400
         email = data.get("email")
         password = data.get("password")
         remember = data.get("remember") or False
+        print(data)
         if not email:
             return {"message": "Email is missing"}, 400
         if not password:
@@ -97,3 +100,57 @@ class GetAllEmailResource(Resource):
         emails = User.query.with_entities(User.email).all()
         email_list = [email[0] for email in emails]
         return email_list
+
+
+class FavoriteProductsResource(Resource):
+    @cross_origin()
+    @login_required
+    def get(self):
+        favorite_products = current_user.user_favorite_products
+        products = []
+        for fav in favorite_products:
+            product = Product.query.get(fav.product_id)
+            products.append(product.to_json())
+        return {"favorite_products": products}
+
+    @cross_origin()
+    @login_required
+    def post(self):
+        data = request.get_json()
+        product_id = data.get("product_id")
+        if not product_id:
+            return {"message": "No product_id is provided"}, 400
+        product = Product.query.get(product_id)
+        if not product:
+            return {"message": "No product match product_id"}, 400
+        favor = Favorite(product_id, current_user.id)
+        db.session.add(favor)
+        db.session.commit()
+        return {
+            "message": "Add favorite product successfully",
+            "favor": favor.to_json(),
+        }, 200
+
+    @cross_origin()
+    @login_required
+    def delete(self):
+        data = request.args
+        product_id = data.get("product_id")
+        if not product_id:
+            return {"message": "No product_id is provided"}, 400
+        product = Product.query.get(product_id)
+        if not product:
+            return {"message": "No product match product_id"}, 400
+        favor = Favorite.query.filter_by(
+            product_id=product_id, user_id=current_user.id
+        ).first()
+        if not favor:
+            return {
+                "message": "This product has not been added to the user's favorites list"
+            }, 400
+        db.session.delete(favor)
+        db.session.commit()
+        return {
+            "message": "Remove favorite product successfully",
+            "favor": favor.to_json(),
+        }, 200

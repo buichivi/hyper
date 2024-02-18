@@ -17,6 +17,9 @@ class User(db.Model, UserMixin):
     address = db.Column(db.String(255), nullable=True)
 
     user_reviews = db.relationship("Review", backref="user_reviews", lazy=True)
+    user_favorite_products = db.relationship(
+        "Favorite", backref="user_favorite_products", lazy=True
+    )
 
     def __init__(
         self, first, last, email, pwd, dob=None, phoneNb=None, address=None

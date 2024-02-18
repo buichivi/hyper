@@ -83,10 +83,10 @@ const LoginForm = () => {
                         name="email"
                         id="email"
                         className={`w-full rounded-md
-                border border-gray-400 p-2.5 outline-none ring-2 ring-transparent transition-all
-                focus:border-transparent focus:ring-slate-800 2xl:rounded-xl
-                2xl:p-4 
-                2xl:text-3xl`}
+                        border border-gray-400 p-2.5 outline-none ring-2 ring-transparent transition-all
+                        focus:border-transparent focus:ring-slate-800 2xl:rounded-xl
+                        2xl:p-4 
+                        2xl:text-3xl`}
                         placeholder="example@email.com"
                         value={loginForm.values.email}
                         onChange={loginForm.handleChange}

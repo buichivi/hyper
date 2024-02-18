@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
@@ -8,11 +8,51 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { IoBagHandle } from 'react-icons/io5';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import request from '../../utils/request';
 
-const ProductCard = ({ product = {} }) => {
-    const [isFavor, setIsFavor] = useState(false);
+const ProductCard = ({ product = {}, isFavorite = false }) => {
+    console.log(product.id, isFavorite);
+
+    const [isFavor, setIsFavor] = useState(isFavorite);
     const [isSelected, setIsSelected] = useState(false);
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+
+    console.log(product.id + ' isFavor: ', isFavor);
+
+    useEffect(() => {
+        setIsFavor(isFavorite);
+    }, [isFavorite]);
+
+    const handleFavoriteProduct = async (e) => {
+        e.preventDefault();
+        if (!isAuthenticated && !isFavor) {
+            toast.warn('Please login to add favorite product');
+        }
+        if (isAuthenticated && !isFavor) {
+            await request
+                .post('/me/favorites', {
+                    product_id: product?.id,
+                })
+                .then(() => {
+                    toast.success('Add favorite product successfully!');
+                    setIsFavor(true);
+                })
+                .catch(() => toast.error('Something went wrong!'));
+        }
+        if (isAuthenticated && isFavor) {
+            await request
+                .delete('/me/favorites', {
+                    params: {
+                        product_id: product?.id,
+                    },
+                })
+                .then(() => {
+                    toast.success('Remove favorite product successfully!');
+                    setIsFavor(false);
+                })
+                .catch(() => toast.error('Something went wrong!'));
+        }
+    };
 
     return (
         <div className="select-none overflow-hidden border-[1px] border-transparent">
@@ -30,13 +70,7 @@ const ProductCard = ({ product = {} }) => {
                     <div
                         className="absolute right-2 top-2 z-20 size-8 cursor-pointer rounded-full bg-black md:size-9 
                     [&>*]:absolute [&>*]:left-1/2 [&>*]:top-1/2 [&>*]:-translate-x-1/2 [&>*]:-translate-y-1/2"
-                        onClick={(e) => {
-                            e.preventDefault();
-                            setIsFavor(!isFavor);
-                            if (!isAuthenticated) {
-                                toast.warn('Login to save favorite product!');
-                            }
-                        }}
+                        onClick={handleFavoriteProduct}
                     >
                         {!isFavor ? (
                             <IoIosHeartEmpty className="size-4 text-white md:size-6" />

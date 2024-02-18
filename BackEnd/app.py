@@ -36,7 +36,9 @@ def after_request(response):
             "Access-Control-Allow-Headers", "Access-Control-Allow-Headers, content-type"
         )
     if not "Access-Control-Allow-Methods" in response.headers:
-        response.headers.add("Access-Control-Allow-Methods", "*")
+        response.headers.add(
+            "Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE"
+        )
 
     return response
 
@@ -60,6 +62,7 @@ api.add_resource(LogOutResource, "/logout")
 api.add_resource(SignUpResource, "/signup")
 api.add_resource(GetAllEmailResource, "/all-emails")
 api.add_resource(CheckingLoginResource, "/checking-login")
+api.add_resource(FavoriteProductsResource, "/me/favorites")
 
 # Brand
 api.add_resource(BrandResource, "/brand")
@@ -73,7 +76,8 @@ api.add_resource(ProductImageResource, "/product-image")
 
 
 # Review
-api.add_resource(ReviewResource, "/product-reviews/<int:product_id>")
+api.add_resource(CreateReviewResource, "/product-reviews") # Add a review
+api.add_resource(ReviewResource, "/product-reviews/<int:product_id>") # Get all review by product_id
 
 if __name__ == "__main__":
     with app.app_context():

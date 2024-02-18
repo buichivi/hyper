@@ -1,7 +1,11 @@
+from flask import request
 from flask_cors import cross_origin
+from flask_login import current_user, login_required
 from flask_restful import Resource
 
+from database import db
 from models.product import Product
+from models.review import Review
 from models.user import User
 
 
@@ -29,3 +33,37 @@ class ReviewResource(Resource):
                 "review_details": product_reviews,
             },
         }
+
+
+class CreateReviewResource(Resource):
+    @cross_origin()
+    @login_required
+    def post(self):
+        data = request.get_json()
+        print(data)
+        title = data.get("title")
+        content = data.get("content")
+        rating = data.get("rating")
+        product_id = data.get("product_id")
+
+        if not title:
+            return {"message": "No title review is provided"}, 400
+        if not content:
+            return {"message": "No content review is provided"}, 400
+        if not rating:
+            return {"message": "No rating review is provided"}, 400
+        if not product_id:
+            return {"message": "No product_id is provided"}, 400
+        product = Product.query.get(product_id)
+        if not product:
+            return {"message": "No product match product_id"}, 400
+
+        review = Review(rating, title, content, product_id, current_user.id)
+        db.session.add(review)
+        db.session.commit()
+        review_json = review.to_json()
+        review_json["user_name"] = current_user.get_name()
+        return {
+            "message": "Add a review successfully!",
+            "review": review_json,
+        }, 200

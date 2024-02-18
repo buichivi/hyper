@@ -1,4 +1,4 @@
-import { Home, Brand, Product, CheckOut, Login } from '../pages';
+import { Home, Brand, Product, CheckOut, Favorites } from '../pages';
 
 const publicRoutes = [
     {
@@ -30,6 +30,12 @@ const publicRoutes = [
         component: CheckOut,
         title: 'CheckOut',
         authRequired: true,
+    },
+    {
+        path: '/favorites',
+        component: Favorites,
+        title: 'Favorites',
+        authRequired: false,
     },
 ];
 

@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { Header, Footer } from '../../components';
 
 const MainLayout = ({ children }) => {

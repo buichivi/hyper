@@ -7,16 +7,21 @@ import { useCallback, useEffect, useState } from 'react';
 import request from '../../utils/request';
 import { SORT_PRODUCT } from '../../constants';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 
 const Brand = () => {
     const { brand_code, shoe_type_code } = useParams();
+    const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 
     const [isOpenFilters, setIsOpenFilters] = useState(true);
     const [brand, setBrand] = useState({});
     const [products, setProducts] = useState([]);
     const [productFilters, setProductFilters] = useState([]);
+    const [favoriteProducts, setFavoriteProducts] = useState([]);
     const [sort, setSort] = useState({});
     const [path, setPath] = useState([]);
+
+    const favorite_product_ids = favoriteProducts.map((prod) => prod.id);
 
     console.log(
         productFilters.map((prod) => {
@@ -48,7 +53,12 @@ const Brand = () => {
                 setProducts(res.data.products);
                 setProductFilters(res.data.products);
             });
-    }, [brand_code, shoe_type_code]);
+        if (isAuthenticated) {
+            await request
+                .get('/me/favorites')
+                .then((res) => setFavoriteProducts(res.data.favorite_products));
+        }
+    }, [brand_code, shoe_type_code, isAuthenticated]);
 
     useEffect(() => {
         console.log('Set path');
@@ -136,9 +146,13 @@ const Brand = () => {
                             <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
                                 {productFilters.map((product, index) => {
                                     return (
-                                        <div key={index}>
-                                            <ProductCard product={product} />
-                                        </div>
+                                        <ProductCard
+                                            key={index}
+                                            product={product}
+                                            isFavorite={favorite_product_ids.includes(
+                                                product.id,
+                                            )}
+                                        />
                                     );
                                 })}
                             </div>

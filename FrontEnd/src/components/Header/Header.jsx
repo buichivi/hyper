@@ -13,6 +13,7 @@ import brandLogos from '../../utils/brandLogos';
 
 const Header = () => {
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+
     const dispatch = useDispatch();
     const [brands, setBrands] = useState();
 
