@@ -5,7 +5,7 @@ from flask_restful import Resource
 from database import db
 from models.brand import Brand
 from models.product import Product
-from models.product_size import ProductSize
+from models.review import Review
 from models.shoe_type import ShoeType
 
 
@@ -69,5 +69,8 @@ class GetProductResource(Resource):
         if not product_id:
             return {"message": "No product_id is not provided"}, 400
         product = Product.query.get(product_id)
-
-        return {}
+        if not product:
+            return {
+                "message": "No products were found with the provided product_id!"
+            }, 200
+        return {"product": product.to_json()}, 200

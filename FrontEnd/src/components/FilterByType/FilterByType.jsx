@@ -6,18 +6,14 @@ import { filterGroupAnimation } from '../../utils/animation';
 import PropTypes from 'prop-types';
 
 const FilterByType = ({ isReset, shoeTypes = [], onChange }) => {
-    console.log("FilterByType re-render");
+    console.log('FilterByType re-render');
 
     const [isOpen, setIsOpen] = useState(true);
     const [filterTypes, setFilterTypes] = useState([]);
 
     useEffect(() => {
         setFilterTypes(shoeTypes.map((shoeType) => shoeType.id));
-    }, [shoeTypes]);
-
-    useEffect(() => {
-        setFilterTypes(shoeTypes.map((shoeType) => shoeType.id));
-    }, [isReset, shoeTypes]);
+    }, [isReset, shoeTypes.length]);
 
     useEffect(() => {
         onChange({ filterTypes });

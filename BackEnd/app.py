@@ -8,6 +8,7 @@ from database import db
 from services.brand import *
 from services.product import *
 from services.product_image import *
+from services.review import *
 from services.shoe_type import *
 from services.user import *
 
@@ -66,8 +67,13 @@ api.add_resource(GetBrandResource, "/brand/<string:brand_code>")
 api.add_resource(ShoeTypeResource, "/shoe_types")
 
 # Product
-api.add_resource(ProductResource, "/product")
+api.add_resource(ProductResource, "/products")
+api.add_resource(GetProductResource, "/products/<int:product_id>")
 api.add_resource(ProductImageResource, "/product-image")
+
+
+# Review
+api.add_resource(ReviewResource, "/product-reviews/<int:product_id>")
 
 if __name__ == "__main__":
     with app.app_context():

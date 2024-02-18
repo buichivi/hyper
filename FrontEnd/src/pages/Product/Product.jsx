@@ -1,29 +1,83 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
+
 import { Navigation, ProductDetail, ProductPreview } from '../../components';
-import { AiFillHeart, AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
 import { CiDeliveryTruck } from 'react-icons/ci';
-import { IoIosHeart, IoIosHeartEmpty } from 'react-icons/io';
-import { CiHeart } from 'react-icons/ci';
-import { AiOutlineHeart } from 'react-icons/ai';
-import { BsSuitHeart } from 'react-icons/bs';
 import { FaRegHeart, FaHeart } from 'react-icons/fa';
+import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
+import request from '../../utils/request';
+import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 const Product = () => {
     const { product_id } = useParams();
+    const [product, setProduct] = useState({});
+    const [path, setPath] = useState([]);
     const [selectedSize, setSelectedSize] = useState(-1);
-    const [quantity, setQuantity] = useState(1);
-    const [isFavor, setIsFavor] = useState(false);
+    const [quantity, setQuantity] = useState(0);
+
+    const errorSizeRef = useRef();
+    const errorQuantityRef = useRef();
+
+    const loadData = useCallback(async () => {
+        await request
+            .get('/products/' + product_id)
+            .then((res) => setProduct(res.data.product));
+    }, [product_id]);
+
+    useEffect(() => {
+        setPath([
+            {
+                name: product?.brand?.name,
+                path: '/' + product?.brand?.code,
+            },
+            {
+                name: product?.shoe_type?.name,
+                path:
+                    '/' + product?.brand?.code + '/' + product?.shoe_type?.code,
+            },
+            {
+                name: product?.name,
+                path:
+                    '/' +
+                    product?.brand?.code +
+                    '/' +
+                    product?.shoe_type?.code +
+                    '/' +
+                    product?.id,
+            },
+        ]);
+    }, [product]);
 
     useEffect(() => {
         window.scrollTo(0, 0);
-    }, []);
+        loadData();
+    }, [loadData]);
+
+    useEffect(() => {
+        if (quantity > 0) errorQuantityRef.current.style.display = 'none';
+        if (selectedSize != -1) {
+            errorSizeRef.current.style.display = 'none';
+        }
+    }, [quantity, selectedSize]);
+
+    const handleAddToCart = () => {
+        if (selectedSize == -1) {
+            errorSizeRef.current.style.display = 'inline-block';
+        }
+        if (quantity == 0) {
+            errorQuantityRef.current.style.display = 'inline-block';
+        }
+        if (selectedSize != -1 && quantity > 0) {
+            console.log(selectedSize, quantity);
+        }
+    };
 
     return (
         <div className="">
-            <Navigation />
-            <div className="flex min-h-[600px] items-start gap-10 pb-4">
-                <div className="sticky top-[72px] h-[90%] flex-[6]">
+            <Navigation path={path} />
+            <div className="flex min-h-[600px] flex-col items-start gap-10 pb-4 lg:flex-row">
+                <div className="top-[72px] block h-[90%] flex-1 lg:sticky lg:flex-[6]">
                     <ProductPreview
                         images={[
                             'https://shorturl.at/jvDLP',
@@ -34,103 +88,185 @@ const Product = () => {
                         ]}
                     />
                 </div>
-                <div className="flex-[4]">
-                    <h2 className="text-4xl font-medium">Nike Force 1</h2>
-                    <h5 className="pb-4 text-base">Nike</h5>
-                    <span className="block pb-4 text-lg font-bold tracking-wider">
-                        $200
-                    </span>
-                    <div className="pb-4">
-                        <span className="block pb-2 font-medium">
-                            Select size:{' '}
+                <div className="relative w-full flex-1 lg:flex-[4]">
+                    <div className="w-[80%]">
+                        <h2 className="text-4xl font-medium">
+                            {product?.name}
+                        </h2>
+                        <h5 className="pb-4 text-base">
+                            {product?.brand?.name}
+                        </h5>
+                    </div>
+                    <FavoriteProduct />
+                    <div>
+                        <span className="inline-block pb-4 text-xl font-bold tracking-wider">
+                            $
+                            {Math.ceil(
+                                product?.price * (100 - product?.discount),
+                            ) / 100}
                         </span>
-                        <div className="flex flex-wrap items-center gap-2">
-                            {[39, 40, 41, 42, 43, 44, 45, 46, 47, 48].map(
-                                (size, index) => {
-                                    return (
-                                        <span
-                                            key={index}
-                                            className={`inline-block cursor-pointer select-none border-[1px] 
+                        {product?.discount > 0 && (
+                            <>
+                                <span className="ml-2 inline-block pb-4 text-lg font-medium tracking-wider text-slate-500 line-through">
+                                    ${product?.price}
+                                </span>
+                                <span className="ml-2 text-green-400">
+                                    ({product?.discount}% Off)
+                                </span>
+                            </>
+                        )}
+                    </div>
+                    <div className="pb-4">
+                        {product.total_quantity > 0 ? (
+                            <>
+                                <div className="flex flex-col items-start gap-2 pb-2 lg:flex-row lg:items-end">
+                                    <span className="inline-block  font-medium">
+                                        Select size:{' '}
+                                    </span>
+                                    <span
+                                        ref={errorSizeRef}
+                                        className="hidden text-sm text-red-500"
+                                    >
+                                        Please select size
+                                    </span>
+                                </div>
+                                <div className="flex flex-wrap items-center gap-2">
+                                    {product?.sizes?.map((sizeItem, index) => {
+                                        return (
+                                            <span
+                                                key={index}
+                                                className={`inline-block cursor-pointer select-none border-[1px] 
                                             border-black px-4 py-1 text-center transition-all
-                                            hover:bg-black hover:text-white ${size == selectedSize && 'bg-black text-white'}`}
-                                            onClick={() => {
-                                                if (size == selectedSize)
-                                                    setSelectedSize(-1);
-                                                else setSelectedSize(size);
-                                            }}
-                                        >
-                                            {size}
-                                        </span>
-                                    );
-                                },
-                            )}
-                        </div>
-                    </div>
-                    <div className="pb-4">
-                        <h5 className="pb-2 font-medium">Quantity: </h5>
-                        <div className="flex w-fit items-center border-[1px] border-black">
-                            <div
-                                className="cursor-pointer border-r-[1px] border-r-black p-3 transition-colors duration-300 hover:bg-black hover:text-white"
-                                onClick={() =>
-                                    setQuantity((prev) => {
-                                        if (prev == 0) return 0;
-                                        return prev - 1;
-                                    })
-                                }
-                            >
-                                <AiOutlineMinus />
+                                            hover:bg-black hover:text-white 
+                                            ${sizeItem?.size == selectedSize && 'bg-black text-white'}
+                                            ${sizeItem?.quantity_in_stock <= 0 && 'pointer-events-none opacity-50'}`}
+                                                onClick={() => {
+                                                    if (
+                                                        sizeItem?.size ==
+                                                        selectedSize
+                                                    )
+                                                        setSelectedSize(-1);
+                                                    else
+                                                        setSelectedSize(
+                                                            sizeItem?.size,
+                                                        );
+                                                }}
+                                            >
+                                                {sizeItem?.size}
+                                            </span>
+                                        );
+                                    })}
+                                </div>
+                            </>
+                        ) : (
+                            <div className="bg-slate-300 text-center">
+                                <span className="inline-block w-[50%] text-wrap py-4">
+                                    SOLD OUT: This product is currently
+                                    unavailable
+                                </span>
                             </div>
-                            <input
-                                type="number"
-                                className="w-12 appearance-none text-center outline-none"
-                                value={quantity}
-                                onChange={(e) => setQuantity(e.target.value)}
-                            />
-                            <div
-                                className="cursor-pointer border-l-[1px] border-l-black p-3 transition-colors duration-300 hover:bg-black hover:text-white"
-                                onClick={() => setQuantity(quantity + 1)}
-                            >
-                                <AiOutlinePlus />
+                        )}
+                    </div>
+
+                    {product.total_quantity > 0 && (
+                        <>
+                            <div className="pb-4">
+                                <div className="flex flex-col items-start gap-2 pb-2 lg:flex-row lg:items-end">
+                                    <h5 className="pb-2 font-medium">
+                                        Quantity:{' '}
+                                    </h5>
+                                    <span
+                                        ref={errorQuantityRef}
+                                        className="hidden text-sm text-red-500"
+                                    >
+                                        Quantity must be greater than 0
+                                    </span>
+                                </div>
+                                <div className="flex w-fit items-center border-[1px] border-black">
+                                    <div
+                                        className="cursor-pointer border-r-[1px] border-r-black p-3 transition-colors duration-300 hover:bg-black hover:text-white"
+                                        onClick={() =>
+                                            setQuantity((prev) => {
+                                                if (prev == 0) return 0;
+                                                return prev - 1;
+                                            })
+                                        }
+                                    >
+                                        <AiOutlineMinus />
+                                    </div>
+                                    <input
+                                        type="number"
+                                        className="w-12 appearance-none text-center outline-none"
+                                        value={quantity}
+                                        onChange={(e) =>
+                                            setQuantity(e.target.value)
+                                        }
+                                    />
+                                    <div
+                                        className="cursor-pointer border-l-[1px] border-l-black p-3 transition-colors duration-300 hover:bg-black hover:text-white"
+                                        onClick={() => {
+                                            setQuantity(quantity + 1);
+                                        }}
+                                    >
+                                        <AiOutlinePlus />
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
+                            <div className="pb-4">
+                                <div className="flex items-center gap-2 pb-2">
+                                    <CiDeliveryTruck className="size-6" />
+                                    <span className="text-sm">
+                                        Free ship and returns for members.
+                                    </span>
+                                </div>
+                                <hr />
+                            </div>
+                            <div className="flex items-center gap-4 pb-8">
+                                <button
+                                    className="min-w-[50%] bg-black py-3 text-base font-medium uppercase 
+                            tracking-wider text-white ring-1 ring-black hover:text-opacity-80 "
+                                    onClick={handleAddToCart}
+                                >
+                                    Add to cart
+                                </button>
+                                <button className="min-w-[30%] py-3 text-base uppercase ring-1 ring-black transition-all hover:bg-black hover:text-white">
+                                    View cart
+                                </button>
+                            </div>
+                        </>
+                    )}
+
                     <div className="pb-4">
-                        <div className="flex items-center gap-2 pb-2">
-                            <CiDeliveryTruck className="size-6" />
-                            <span className="text-sm">
-                                Free ship and returns for members.
-                            </span>
-                        </div>
-                        <hr />
-                    </div>
-                    <div className="flex items-center gap-4 pb-8">
-                        <button
-                            className="min-w-[50%] bg-black py-3 text-base font-medium uppercase 
-                        tracking-wider text-white ring-1 ring-black hover:text-opacity-80 "
-                        >
-                            Add to bag
-                        </button>
-                        <button className="min-w-[30%] py-3 text-base uppercase ring-1 ring-black transition-all hover:bg-black hover:text-white">
-                            View cart
-                        </button>
-                        <button
-                            onClick={() => setIsFavor(!isFavor)}
-                            className="group/heart flex h-[48px] items-center justify-center text-lg ring-1 ring-black"
-                            style={{ aspectRatio: 1 }}
-                        >
-                            {!isFavor ? (
-                                <FaRegHeart className="size-5 transition-all group-hover/heart:scale-[1.3]" />
-                            ) : (
-                                <FaHeart className="size-5 transition-all group-hover/heart:scale-[1.3]" />
-                            )}
-                        </button>
-                    </div>
-                    <div className="pb-4">
-                        <ProductDetail />
+                        <ProductDetail productId={product_id} />
                     </div>
                 </div>
             </div>
         </div>
+    );
+};
+
+const FavoriteProduct = () => {
+    const [isFavor, setIsFavor] = useState(false);
+
+    const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+
+    return (
+        <button
+            onClick={() => {
+                if (!isAuthenticated && !isFavor) {
+                    toast.warn('Please login to add favorite product');
+                }
+                setIsFavor(!isFavor);
+            }}
+            className="group/heart absolute right-0 top-0 flex h-[48px] items-center justify-center text-lg ring-1 ring-black"
+            style={{ aspectRatio: 1 }}
+        >
+            {!isFavor ? (
+                <FaRegHeart className="size-5 transition-all group-hover/heart:scale-[1.3]" />
+            ) : (
+                <FaHeart className="size-5 transition-all group-hover/heart:scale-[1.3]" />
+            )}
+        </button>
     );
 };
 

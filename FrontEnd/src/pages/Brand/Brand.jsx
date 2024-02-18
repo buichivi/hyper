@@ -1,30 +1,44 @@
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Filter, Navigation, ProductCard } from '../../components';
 import { PiSlidersHorizontal } from 'react-icons/pi';
 import { IoIosArrowDown } from 'react-icons/io';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import request from '../../utils/request';
+import { SORT_PRODUCT } from '../../constants';
+import PropTypes from 'prop-types';
 
 const Brand = () => {
     const { brand_code, shoe_type_code } = useParams();
 
     const [isOpenFilters, setIsOpenFilters] = useState(true);
-    const [isOpenSort, setIsOpenSort] = useState(false);
     const [brand, setBrand] = useState({});
     const [products, setProducts] = useState([]);
     const [productFilters, setProductFilters] = useState([]);
+    const [sort, setSort] = useState({});
+    const [path, setPath] = useState([]);
+
+    console.log(
+        productFilters.map((prod) => {
+            return {
+                date: prod.manufacture_date,
+                price: Math.ceil((prod.price * (100 - prod.discount)) / 100),
+            };
+        }),
+    );
 
     const shoe_type = brand?.shoe_types?.filter(
         (shoe_type) => shoe_type.code == shoe_type_code,
     )[0];
 
-    const loadDate = async () => {
+    console.log('Brand re-render');
+
+    const loadData = useCallback(async () => {
         await request
             .get('/brand/' + brand_code)
             .then((res) => setBrand(res.data.brand));
         await request
-            .get('/product', {
+            .get('/products', {
                 params: {
                     brand_code: brand_code,
                     shoe_type_code: shoe_type_code,
@@ -34,17 +48,39 @@ const Brand = () => {
                 setProducts(res.data.products);
                 setProductFilters(res.data.products);
             });
-    };
-    console.log(productFilters);
+    }, [brand_code, shoe_type_code]);
 
     useEffect(() => {
+        console.log('Set path');
+        if (shoe_type_code)
+            setPath([
+                {
+                    name: brand?.name,
+                    path: '/' + brand?.code,
+                },
+                {
+                    name: shoe_type?.name,
+                    path: '/' + brand?.code + '/' + shoe_type?.code,
+                },
+            ]);
+        else
+            setPath([
+                {
+                    name: brand?.name,
+                    path: '/' + brand?.code,
+                },
+            ]);
+    }, [brand_code, shoe_type_code, brand, shoe_type]);
+
+    useEffect(() => {
+        console.log('loaddata');
         window.scrollTo(0, 0);
-        loadDate();
-    }, [brand_code, shoe_type_code]);
+        loadData();
+    }, [brand_code, shoe_type_code, loadData]);
 
     return (
         <div className="pb-6">
-            <Navigation brandCode={brand_code} />
+            <Navigation path={path} />
             <div>
                 <div className="flex h-[200px] w-full items-center justify-center bg-black">
                     <div className="flex size-40 items-center justify-center text-white">
@@ -72,45 +108,18 @@ const Brand = () => {
                             </span>
                             <PiSlidersHorizontal className="size-6" />
                         </div>
-                        <div
-                            className="relative flex cursor-pointer select-none items-center 
-                                gap-2 px-2 py-1 transition-colors hover:bg-gray-100"
-                        >
-                            <div
-                                className="flex items-center gap-2"
-                                onClick={() => setIsOpenSort(!isOpenSort)}
-                            >
-                                <span>Sort by</span>
-                                <IoIosArrowDown className="size-4" />
-                            </div>
-                            <AnimatePresence>
-                                {isOpenSort && (
-                                    <motion.div
-                                        animate={{
-                                            y: 0,
-                                            opacity: 1,
-                                        }}
-                                        initial={{
-                                            y: -20,
-                                            opacity: 0,
-                                        }}
-                                        exit={{ y: -20, opacity: 0 }}
-                                        className="absolute right-0 top-full flex w-52 flex-col gap-2 
-                                    bg-white py-2 shadow-lg *:text-right *:text-base *:opacity-80 *:transition-colors"
-                                    >
-                                        <span className="p-1 hover:bg-gray-100 hover:opacity-100">
-                                            Newest
-                                        </span>
-                                        <span className="p-1 hover:bg-gray-100 hover:opacity-100">
-                                            Price: High to low
-                                        </span>
-                                        <span className="p-1 hover:bg-gray-100 hover:opacity-100">
-                                            Price: Low to high
-                                        </span>
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-                        </div>
+                        <SortProduct
+                            sort={sort}
+                            onChange={({ sortOption }) => {
+                                setSort(sortOption);
+                                setProductFilters((prev) => {
+                                    const productSorted = prev.sort(
+                                        sortOption?.method,
+                                    );
+                                    return [...productSorted];
+                                });
+                            }}
+                        />
                     </div>
                 </div>
                 <div className="flex pb-4">
@@ -120,6 +129,7 @@ const Brand = () => {
                         shoeTypeCode={shoe_type_code}
                         setProductFilters={setProductFilters}
                         products={products}
+                        sort={sort}
                     />
                     <div className="flex-1">
                         {productFilters?.length > 0 ? (
@@ -154,6 +164,70 @@ const Brand = () => {
             </div>
         </div>
     );
+};
+
+const SortProduct = ({ onChange = () => {} }) => {
+    const [isOpenSort, setIsOpenSort] = useState(false);
+    const [sortOption, setSortOption] = useState();
+
+    console.log('Sort Product re-render');
+
+    useEffect(() => {
+        onChange({ sortOption });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [sortOption]);
+
+    return (
+        <div
+            className="relative flex cursor-pointer select-none items-center 
+            gap-2 px-2 py-1 transition-colors hover:bg-gray-100"
+        >
+            <div
+                className="flex items-center gap-2"
+                onClick={() => setIsOpenSort(!isOpenSort)}
+            >
+                <span>Sort by</span>
+                {sortOption?.name && <span>- {sortOption?.name}</span>}
+                <IoIosArrowDown className="size-4" />
+            </div>
+            <AnimatePresence>
+                {isOpenSort && (
+                    <motion.div
+                        animate={{
+                            height: 'auto',
+                            opacity: 1,
+                        }}
+                        initial={{
+                            height: 0,
+                            opacity: 0,
+                        }}
+                        exit={{ height: 0, opacity: 0 }}
+                        className="absolute right-0 top-full flex w-52 flex-col gap-2 overflow-hidden
+                                    bg-white shadow-lg *:text-right *:text-base *:opacity-80 *:transition-colors [&>span]:p-2"
+                    >
+                        {SORT_PRODUCT.map((sortItem, index) => {
+                            return (
+                                <span
+                                    key={index}
+                                    className="p-1 hover:bg-gray-100 hover:opacity-100"
+                                    onClick={() => {
+                                        setSortOption(sortItem);
+                                        setIsOpenSort(false);
+                                    }}
+                                >
+                                    {sortItem.name}
+                                </span>
+                            );
+                        })}
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </div>
+    );
+};
+
+SortProduct.propTypes = {
+    onChange: PropTypes.func,
 };
 
 export default Brand;

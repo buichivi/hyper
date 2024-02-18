@@ -20,7 +20,7 @@ const publicRoutes = [
         authRequired: false,
     },
     {
-        path: '/product/:product_id',
+        path: '/:brand_code/:shoe_type_code/:product_id',
         component: Product,
         title: 'Product',
         authRequired: false,

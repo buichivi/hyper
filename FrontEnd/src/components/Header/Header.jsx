@@ -16,7 +16,6 @@ const Header = () => {
     const dispatch = useDispatch();
     const [brands, setBrands] = useState();
 
-    console.log(brands);
     useEffect(() => {
         request.get('/brand').then((res) => setBrands(res.data.brands));
     }, []);

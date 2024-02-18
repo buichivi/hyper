@@ -73,27 +73,64 @@ const DEMO_CONTENT = {
     },
 };
 
-
-const SORT_METHODS = [
+const SORT_COMMENT = [
     {
         name: 'Newest',
         method: (a, b) => {
-            return new Date(b.date).getTime() - new Date(a.date).getTime();
+            return (
+                new Date(b?.comment_on).getTime() -
+                new Date(a?.comment_on).getTime()
+            );
         },
     },
     {
         name: 'Highest rated',
         method: (a, b) => {
-            return b.voted - a.voted;
+            return b?.rating - a?.rating;
         },
     },
     {
         name: 'Lowest rated',
         method: (a, b) => {
-            return a.voted - b.voted;
+            return a?.rating - b?.rating;
         },
     },
 ];
 
+const SORT_PRODUCT = [
+    {
+        name: 'Newest',
+        method: (a, b) => {
+            return (
+                new Date(b?.manufacture_date).getTime() -
+                new Date(a?.manufacture_date).getTime()
+            );
+        },
+    },
+    {
+        name: 'Price: High to low',
+        method: (a, b) => {
+            const aPriceAfterSale = Math.ceil(
+                (a?.price * (100 - a?.discount)) / 100,
+            );
+            const bPriceAfterSale = Math.ceil(
+                (b?.price * (100 - b?.discount)) / 100,
+            );
+            return bPriceAfterSale - aPriceAfterSale;
+        },
+    },
+    {
+        name: 'Price: Low to high',
+        method: (a, b) => {
+            const aPriceAfterSale = Math.ceil(
+                (a?.price * (100 - a?.discount)) / 100,
+            );
+            const bPriceAfterSale = Math.ceil(
+                (b?.price * (100 - b?.discount)) / 100,
+            );
+            return aPriceAfterSale - bPriceAfterSale;
+        },
+    },
+];
 
-export { DEMO_CONTENT, SORT_METHODS }
+export { DEMO_CONTENT, SORT_COMMENT, SORT_PRODUCT };

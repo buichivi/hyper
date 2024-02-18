@@ -1,6 +1,9 @@
+from datetime import datetime
+
 from database import db
-from models.product_image import ProductImage
+from models.brand import Brand
 from models.product_size import ProductSize
+from models.shoe_type import ShoeType
 
 
 class Product(db.Model):
@@ -8,40 +11,48 @@ class Product(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False, unique=True)
-    detail = db.Column(db.String(255), nullable=False)
+    description = db.Column(db.Text, nullable=False)
     price = db.Column(db.Integer, nullable=False)
     discount = db.Column(db.Integer, nullable=False, default=0)
     featured = db.Column(
         db.Boolean, nullable=False, default=False
     )  # Đánh dấu sản phẩm nổi bật
+    manufacture_date = db.Column(
+        db.String(255), nullable=False, default=datetime.now().strftime("%d/%m/%Y")
+    )
 
     # ForeignKey
     brand_id = db.Column(db.Integer, db.ForeignKey("tb_brand.id"), nullable=False)
     shoe_type_id = db.Column(
         db.Integer, db.ForeignKey("tb_shoe_type.id"), nullable=False
     )
+
+    # Relationship
     product_images = db.relationship(
         "ProductImage", backref="product_images", lazy=True
     )
     product_sizes = db.relationship("ProductSize", backref="product_sizes", lazy=True)
+    product_reviews = db.relationship("Review", backref="product_reviews", lazy=True)
 
     def __init__(
         self,
         name,
-        detail,
+        description,
         price,
         brand_id,
         shoe_type_id,
         discount=0,
         featured=False,
+        manufacture_date=datetime.now().strftime("%d/%m/%Y"),
     ) -> None:
         self.name = name
-        self.detail = detail
+        self.description = description
         self.price = price
         self.featured = featured
         self.discount = discount
         self.brand_id = brand_id
         self.shoe_type_id = shoe_type_id
+        self.manufacture_date = manufacture_date
 
     def set_discount(self, discount) -> None:
         self.discount = discount
@@ -50,32 +61,37 @@ class Product(db.Model):
         self.featured = featured
 
     def to_json(self) -> dict:
-        sizes = (
-            ProductSize.query.filter_by(product_id=self.id)
-            .order_by(ProductSize.size.asc())
-            .all()
-        )
-        product_sizes = [size.get_size() for size in sizes]
-        img_url = ""
+        sizes = self.product_sizes
+        total_quantity = 0
+        for size in sizes:
+            total_quantity += size.quantity_in_stock
 
-        product_image_preview = ProductImage.query.filter_by(
-            product_id=self.id, is_preview=True
-        ).first()
+        product_sizes = [size.get_size() for size in sizes]
+        product_sizes.sort(key=lambda x: x["size"])
+        img_url = ""
+        product_image_preview = [
+            img for img in self.product_images if img.is_preview == True
+        ][0]
         if product_image_preview:
             img_url = product_image_preview.img_url
+
+        brand = Brand.query.get(self.brand_id)
+        shoe_type = ShoeType.query.get(self.shoe_type_id)
 
         return {
             "id": self.id,
             "name": self.name,
-            "detail": self.detail,
+            "description": self.description,
             "price": self.price,
             "discount": self.discount,
             "featured": self.featured,
             "sizes": product_sizes,
+            "manufacture_date": self.manufacture_date,
             "img_preview_url": img_url,
-            "shoe_type_id": self.shoe_type_id,
-            "brand_id": self.brand_id,
+            "shoe_type": shoe_type.to_json(),
+            "brand": brand.to_json(),
+            "total_quantity": total_quantity,
         }
 
     def __repr__(self) -> str:
-        return f"<Product {self.id}> {self.name} {self.detail} {self.price} {self.discount} {self.brand_id} {self.shoe_type_id}"
+        return f"<Product {self.id}> {self.name} {self.description} {self.price} {self.discount} {self.brand_id} {self.shoe_type_id}"

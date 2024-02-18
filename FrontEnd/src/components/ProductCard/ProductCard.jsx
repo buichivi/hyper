@@ -14,22 +14,15 @@ const ProductCard = ({ product = {} }) => {
     const [isSelected, setIsSelected] = useState(false);
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 
-    const totalQuantityInStock = product?.sizes?.reduce(
-        (acc, { quantity_in_stock }) => {
-            return acc + quantity_in_stock;
-        },
-        0,
-    );
-
     return (
         <div className="select-none overflow-hidden border-[1px] border-transparent">
             <Link
-                to={`/product/${product.id}`}
+                to={`/${product?.brand?.code}/${product?.shoe_type?.code}/${product?.id}`}
                 className="relative block w-full overflow-hidden"
                 style={{ aspectRatio: 1 }}
             >
                 <img
-                    src={product.img_preview_url}
+                    src={product?.img_preview_url}
                     alt=""
                     className="h-full w-full object-cover transition-all duration-500"
                 />
@@ -64,7 +57,7 @@ const ProductCard = ({ product = {} }) => {
                             onClick={(e) => e.preventDefault()}
                         >
                             <div className="relative grid grid-cols-4 gap-2 p-2">
-                                {product.sizes.map((size, index) => {
+                                {product?.sizes.map((size, index) => {
                                     return (
                                         <div
                                             key={index}
@@ -91,43 +84,45 @@ const ProductCard = ({ product = {} }) => {
                     } transition-colors duration-300`}
                 ></div>
 
-                {totalQuantityInStock > 0 &&
-                    product.discount &&
+                {product?.total_quantity > 0 &&
+                    product?.discount &&
                     !isSelected && (
                         <div className="absolute left-5 top-0 flex h-[24%] w-[15%] items-center justify-center rounded-b-full bg-black">
                             <span className="inline-block -rotate-90 text-white">
-                                -{product.discount}%
+                                -{product?.discount}%
                             </span>
                         </div>
                     )}
             </Link>
             <div className="flex items-center justify-between p-2">
                 <div className="flex-1 shrink-0">
-                    {totalQuantityInStock <= 0 && (
+                    {product?.total_quantity <= 0 && (
                         <span className="text-red-400">Sold out</span>
                     )}
                     <Link
-                        to={`/product/${product.id}`}
+                        to={`/${product?.brand?.code}/${product?.shoe_type?.code}/${product?.id}`}
                         className="text-limit-1 text-lg font-medium"
                     >
-                        {product.name}
+                        {product?.name}
                     </Link>
                     <div>
                         <span className="font-semibold">
                             $
                             {Math.ceil(
-                                (product.price * (100 - product.discount)) /
+                                (product?.price * (100 - product?.discount)) /
                                     100,
                             )}
                         </span>
-                        {totalQuantityInStock > 0 && (
+                        {product?.total_quantity > 0 && product?.discount ? (
                             <span className="ml-1 text-slate-500 line-through">
-                                ${product.price}
+                                ${product?.price}
                             </span>
+                        ) : (
+                            <></>
                         )}
                     </div>
                 </div>
-                {totalQuantityInStock > 0 && (
+                {product?.total_quantity > 0 && (
                     <IoBagHandle
                         className="box-content size-6 cursor-pointer rounded-full 
                     bg-white p-2 text-black transition-colors duration-300 hover:bg-black hover:text-white"
