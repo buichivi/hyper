@@ -9,13 +9,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logOutUser } from '../../store/actions';
 import { useEffect, useState } from 'react';
 import request from '../../utils/request';
-import brandLogos from '../../utils/brandLogos';
 
 const Header = () => {
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+    const cart = useSelector((state) => state.cart.items);
+    const [isOpenCart, setIsOpenCart] = useState(false);
 
     const dispatch = useDispatch();
     const [brands, setBrands] = useState();
+
+    const totalProducts = cart.reduce(
+        (acc, cartItem) => acc + cartItem?.quantity,
+        0,
+    );
 
     useEffect(() => {
         request.get('/brand').then((res) => setBrands(res.data.brands));
@@ -112,14 +118,24 @@ const Header = () => {
                             &#10005;
                         </span>
                     </div>
-                    <div className="h-6 w-[1px]   bg-[#838383]"></div>
+                    <div className="h-6 w-[1px] bg-[#838383]"></div>
                     <Link to="/favorites">
                         <CiHeart className="h-6 w-6" />
                     </Link>
-                    <Link to="/cart">
-                        <PiShoppingBagLight className="h-6 w-6 " />
+                    <Link to="/cart" className="relative cursor-pointer">
+                        <PiShoppingBagLight
+                            className="h-6 w-6"
+                            onClick={() => setIsOpenCart(!isOpenCart)}
+                        />
+                        {totalProducts > 0 && (
+                            <div
+                                className="absolute -right-2 -top-2 z-10 flex size-4 
+                            items-center justify-center rounded-full bg-black text-white ring-1 ring-black"
+                            >
+                                <span className="">{totalProducts}</span>
+                            </div>
+                        )}
                     </Link>
-
                     {isAuthenticated && (
                         <div
                             onClick={() => dispatch(logOutUser())}

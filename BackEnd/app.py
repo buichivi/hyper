@@ -6,6 +6,7 @@ from flask_restful import Api
 import config
 from database import db
 from services.brand import *
+from services.cart import *
 from services.product import *
 from services.product_image import *
 from services.review import *
@@ -25,6 +26,7 @@ api = Api(app)
 CORS(app=app, supports_credentials=True)
 
 
+# Fix cors problem
 @app.after_request
 def after_request(response):
     if not "Access-Control-Allow-Credentials" in response.headers:
@@ -37,14 +39,11 @@ def after_request(response):
         )
     if not "Access-Control-Allow-Methods" in response.headers:
         response.headers.add(
-            "Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE"
+            "Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE, PATCH"
         )
 
     return response
 
-
-# Session
-# Session(app)
 
 # flask-login set up
 login_manager = LoginManager(app)
@@ -76,8 +75,16 @@ api.add_resource(ProductImageResource, "/product-image")
 
 
 # Review
-api.add_resource(CreateReviewResource, "/product-reviews") # Add a review
-api.add_resource(ReviewResource, "/product-reviews/<int:product_id>") # Get all review by product_id
+api.add_resource(CreateReviewResource, "/product-reviews")  # Add a review
+api.add_resource(
+    ReviewResource, "/product-reviews/<int:product_id>"
+)  # Get all review by product_id
+
+# Cart
+api.add_resource(CartResource, "/me/cart")
+api.add_resource(UpdateCartItemQuantityResource, "/me/cart/update")
+api.add_resource(ClearCartResource, "/me/cart/clear")
+
 
 if __name__ == "__main__":
     with app.app_context():

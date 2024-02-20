@@ -1,4 +1,5 @@
 import request from '../utils/request';
+import { addItem, clearCart, removeItem, updateItem } from './cartSlice';
 import { checkLogin, logIn, logOut } from './userSlice';
 import { toast } from 'react-toastify';
 
@@ -47,4 +48,67 @@ export const checkingLoginUser = () => async (dispatch) => {
             console.log(err);
             localStorage.setItem('isAuthenticated', false);
         });
+};
+
+export const addItemToCart = (cartItem) => async (dispatch) => {
+    request
+        .post('/me/cart', { ...cartItem })
+        .then((res) => {
+            toast.success(res.data.message);
+            dispatch(addItem(res.data.cart_item));
+        })
+        .catch((err) =>
+            toast.error(err.response.data.message || 'Somthing went wrong'),
+        );
+};
+
+export const removeItemFromCart = (cartItemId) => async (dispatch) => {
+    request
+        .delete('/me/cart', { params: { cart_item_id: cartItemId } })
+        .then((res) => {
+            toast.success(res.data.message);
+            dispatch(removeItem(res.data.cart_item));
+        })
+        .catch((err) =>
+            toast.error(err.response.data.message || 'Somthing went wrong'),
+        );
+};
+
+export const updateItemFromCart = (cartItem) => async (dispatch) => {
+    if (cartItem.quantity == 0) {
+        request
+            .delete('/me/cart', { params: { cart_item_id: cartItem.id } })
+            .then((res) => {
+                toast.success(res.data.message);
+                dispatch(removeItem(res.data.cart_item));
+            })
+            .catch((err) =>
+                toast.error(err.response.data.message || 'Somthing went wrong'),
+            );
+    } else {
+        request
+            .patch('/me/cart/update', {
+                cart_item_id: cartItem.id,
+                quantity: cartItem.quantity,
+            })
+            .then((res) => {
+                toast.success(res.data.message);
+                dispatch(updateItem(res.data.cart_item));
+            })
+            .catch((err) => {
+                toast.error(err.response.data.message || 'Somthing went wrong');
+            });
+    }
+};
+
+export const clearAllItemFromCart = () => async (dispatch) => {
+    await request
+        .delete('/me/cart/clear')
+        .then((res) => {
+            dispatch(clearCart());
+            toast.success(res.data.message);
+        })
+        .catch((err) =>
+            toast.error(err.response.data.message || 'Somthing went wrong'),
+        );
 };

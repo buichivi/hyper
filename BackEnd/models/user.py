@@ -20,6 +20,7 @@ class User(db.Model, UserMixin):
     user_favorite_products = db.relationship(
         "Favorite", backref="user_favorite_products", lazy=True
     )
+    cart = db.relationship("Cart", backref="cart", lazy=True)
 
     def __init__(
         self, first, last, email, pwd, dob=None, phoneNb=None, address=None

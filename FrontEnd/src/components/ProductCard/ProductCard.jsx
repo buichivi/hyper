@@ -9,15 +9,15 @@ import { IoBagHandle } from 'react-icons/io5';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import request from '../../utils/request';
+import { useDispatch } from 'react-redux';
+import { addItemToCart } from '../../store/actions';
 
 const ProductCard = ({ product = {}, isFavorite = false }) => {
-    console.log(product.id, isFavorite);
-
     const [isFavor, setIsFavor] = useState(isFavorite);
     const [isSelected, setIsSelected] = useState(false);
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
-
-    console.log(product.id + ' isFavor: ', isFavor);
+    const dispatch = useDispatch();
+    
 
     useEffect(() => {
         setIsFavor(isFavorite);
@@ -52,6 +52,21 @@ const ProductCard = ({ product = {}, isFavorite = false }) => {
                 })
                 .catch(() => toast.error('Something went wrong!'));
         }
+    };
+
+    const handleAddToCart = async (size) => {
+        if (!isAuthenticated) {
+            toast.error('You need to log in to add products to your cart');
+            return;
+        }
+        dispatch(
+            addItemToCart({
+                product_id: product?.id,
+                size: size,
+                quantity: 1,
+            }),
+        );
+        setIsSelected(false);
     };
 
     return (
@@ -99,6 +114,9 @@ const ProductCard = ({ product = {}, isFavorite = false }) => {
                                             text-center text-white ring-1 ring-white
                                             hover:bg-white hover:text-black 
                                             ${size.quantity_in_stock <= 0 && 'cursor-not-allowed bg-white !text-black opacity-50'}`}
+                                            onClick={() =>
+                                                handleAddToCart(size.size)
+                                            }
                                         >
                                             <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
                                                 {size.size}
@@ -135,11 +153,11 @@ const ProductCard = ({ product = {}, isFavorite = false }) => {
                     )}
                     <Link
                         to={`/${product?.brand?.code}/${product?.shoe_type?.code}/${product?.id}`}
-                        className="text-limit-1 text-lg font-medium"
+                        className="text-limit-1 text-xl font-medium"
                     >
                         {product?.name}
                     </Link>
-                    <div>
+                    <div className="text-xl">
                         <span className="font-semibold">
                             $
                             {Math.ceil(

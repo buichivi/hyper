@@ -7,8 +7,9 @@ import { CiDeliveryTruck } from 'react-icons/ci';
 import { FaRegHeart, FaHeart } from 'react-icons/fa';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
 import request from '../../utils/request';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import { addItemToCart } from '../../store/actions';
 
 const Product = () => {
     const { brand_code, shoe_type_code, product_id } = useParams();
@@ -16,6 +17,9 @@ const Product = () => {
     const [path, setPath] = useState([]);
     const [selectedSize, setSelectedSize] = useState(-1);
     const [quantity, setQuantity] = useState(0);
+
+    const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+    const dispatch = useDispatch();
 
     const isCorrectPath =
         product?.brand?.code == brand_code &&
@@ -74,7 +78,17 @@ const Product = () => {
             errorQuantityRef.current.style.display = 'inline-block';
         }
         if (selectedSize != -1 && quantity > 0) {
-            console.log(selectedSize, quantity);
+            if (!isAuthenticated) {
+                toast.error('You need to log in to add products to your cart');
+                return;
+            }
+            dispatch(
+                addItemToCart({
+                    product_id: product?.id,
+                    size: selectedSize,
+                    quantity: quantity,
+                }),
+            );
         }
     };
 
@@ -84,7 +98,7 @@ const Product = () => {
                 <>
                     <Navigation path={path} />
                     <div className="flex min-h-[600px] flex-col items-start gap-10 pb-4 lg:flex-row">
-                        <div className="top-[72px] block h-[90%] flex-1 lg:sticky lg:flex-[6]">
+                        <div className="top-[72px] block h-[90%] shrink-0 basis-1/2 lg:sticky lg:basis-3/5">
                             <ProductPreview
                                 images={[
                                     'https://shorturl.at/jvDLP',
@@ -95,7 +109,7 @@ const Product = () => {
                                 ]}
                             />
                         </div>
-                        <div className="relative w-full flex-1 lg:flex-[4]">
+                        <div className="relative w-full shrink-0 basis-1/2 lg:basis-2/5">
                             <div className="w-[80%]">
                                 <h2 className="text-4xl font-medium">
                                     {product?.name}
@@ -184,7 +198,7 @@ const Product = () => {
                                 <>
                                     <div className="pb-4">
                                         <div className="flex flex-col items-start gap-2 pb-2 lg:flex-row lg:items-end">
-                                            <h5 className="pb-2 font-medium">
+                                            <h5 className="font-medium">
                                                 Quantity:{' '}
                                             </h5>
                                             <span
@@ -249,7 +263,7 @@ const Product = () => {
                                 </>
                             )}
 
-                            <div className="pb-4">
+                            <div className="w-full pb-4">
                                 <ProductDetail productId={product_id} />
                             </div>
                         </div>
@@ -275,7 +289,7 @@ const FavoriteProduct = ({ product_id }) => {
                         .map((prod) => prod?.id)
                         .includes(Number(product_id)),
                 );
-            })
+            });
         }
     }, [isAuthenticated, product_id]);
 

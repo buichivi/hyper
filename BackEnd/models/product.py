@@ -94,5 +94,14 @@ class Product(db.Model):
             "total_quantity": total_quantity,
         }
 
+    def is_in_stock(self):
+        sizes = self.product_sizes
+        total_quantity = 0
+        for size in sizes:
+            total_quantity += size.quantity_in_stock
+        if total_quantity == 0:
+            return False
+        return True
+
     def __repr__(self) -> str:
         return f"<Product {self.id}> {self.name} {self.description} {self.price} {self.discount} {self.brand_id} {self.shoe_type_id}"

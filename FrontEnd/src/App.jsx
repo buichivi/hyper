@@ -17,11 +17,13 @@ import { Login, SignUp } from './pages';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { checkingLoginUser } from './store/actions';
+import { fetchCart } from './store/cartSlice';
 
 function App() {
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(checkingLoginUser())
+        dispatch(checkingLoginUser());
+        dispatch(fetchCart());
     }, []);
     return (
         <BrowserRouter>

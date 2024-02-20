@@ -1,3 +1,4 @@
+import json
 from datetime import timedelta
 
 from flask import make_response, request, session
@@ -10,6 +11,7 @@ from database import db
 from models.favorite import Favorite
 from models.product import Product
 from models.user import User
+from models.cart import Cart
 
 
 class LoginResource(Resource):
@@ -18,10 +20,10 @@ class LoginResource(Resource):
         data = request.args
         if not data:
             return {"message": "No data provided"}, 400
+        print(data)
         email = data.get("email")
         password = data.get("password")
         remember = data.get("remember") or False
-        print(data)
         if not email:
             return {"message": "Email is missing"}, 400
         if not password:
@@ -30,7 +32,10 @@ class LoginResource(Resource):
         print(data)
         user = User.query.filter_by(email=email).first()
         if user and user.check_password(password):
-            login_user(user, remember, timedelta(days=1))
+            if remember == "true":
+                login_user(user, True, timedelta(days=1))
+            else:
+                login_user(user, False)
             print(session)
             return {"message": "Logged in successfully!", "user": user.to_json()}, 200
 

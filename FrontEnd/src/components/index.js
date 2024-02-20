@@ -18,3 +18,4 @@ export { default as RegisterForm } from './RegisterForm';
 export { default as DetailForm } from './DetailForm';
 export { default as MultipleRange } from './MultipleRange';
 export { default as ReviewForm } from './ReviewForm';
+export { default as CartItem } from './CartItem';

@@ -6,3 +6,4 @@ export { default as Login } from './Login';
 export { default as SignUp } from './SignUp';
 export { default as ErrorPage } from './ErrorPage';
 export { default as Favorites } from './Favorites';
+export { default as Cart } from './Cart';
