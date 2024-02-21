@@ -1,5 +1,11 @@
 import request from '../utils/request';
-import { addItem, clearCart, removeItem, updateItem } from './cartSlice';
+import {
+    addItem,
+    clearCart,
+    fetchCart,
+    removeItem,
+    updateItem,
+} from './cartSlice';
 import { checkLogin, logIn, logOut } from './userSlice';
 import { toast } from 'react-toastify';
 
@@ -14,6 +20,7 @@ export const logInUser = (values, navigate) => async (dispatch) => {
         })
         .then((res) => {
             dispatch(logIn(res.data));
+            dispatch(fetchCart());
             navigate('/');
             setTimeout(() => {
                 toast.success('Logged in successfully!');
@@ -30,6 +37,7 @@ export const logOutUser = () => async (dispatch) => {
         .then(() => {
             localStorage.setItem('isAuthenticated', false);
             dispatch(logOut());
+            dispatch(clearCart());
             toast.success('Log out successfully!');
         })
         .catch(() => {
@@ -42,6 +50,7 @@ export const checkingLoginUser = () => async (dispatch) => {
         .get('/checking-login')
         .then((res) => {
             dispatch(checkLogin(res.data));
+            dispatch(fetchCart());
             console.log(res.data.current_user);
         })
         .catch((err) => {

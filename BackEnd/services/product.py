@@ -5,6 +5,7 @@ from flask_restful import Resource
 from database import db
 from models.brand import Brand
 from models.product import Product
+from models.product_size import ProductSize
 from models.review import Review
 from models.shoe_type import ShoeType
 
@@ -76,3 +77,22 @@ class GetProductResource(Resource):
                 "message": "No products were found with the provided product_id!"
             }, 200
         return {"product": product.to_json()}, 200
+
+
+class CheckingProductIsInStockResource(Resource):
+    @cross_origin()
+    def post(self):
+        data = request.get_json()
+        product_carts = data.get("product_carts")
+        if not product_carts:
+            return {"message": "No product_carts is provided!"}, 400
+        for product_cart in product_carts:
+            product_size = ProductSize.query.filter_by(
+                product_id=product_cart["product_id"], size=product_cart["size"]
+            ).first()
+            if product_size.quantity_in_stock < product_cart["quantity"]:
+                return {
+                    "message": f"The product named {product_cart['product_name']} with size {product_cart["size"]} is no longer in stock",
+                    "cart_id": product_cart['cart_id']
+                }, 400
+        return {"message": "All product are still in stock"}, 200

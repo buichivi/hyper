@@ -26,8 +26,7 @@ export const userSlice = createSlice({
         checkLogin: (state, action) => {
             localStorage.setItem('isAuthenticated', action.payload.logged_in);
             state.isAuthenticated = action.payload.logged_in;
-            state.user = action.payload?.user || null;
-            console.log(state.user);
+            state.user = action.payload?.current_user || null;
         },
     },
 });

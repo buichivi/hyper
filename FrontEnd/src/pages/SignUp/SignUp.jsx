@@ -2,12 +2,15 @@ import { useFormik } from 'formik';
 import { AnimatePresence } from 'framer-motion';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { DetailForm, RegisterForm } from '../../components';
 import { HiOutlineArrowLongLeft } from 'react-icons/hi2';
 import request from '../../utils/request';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { logInUser } from '../../store/actions';
 
 const regexName =
     /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s\W|_]+$/;
@@ -16,12 +19,15 @@ const regexPhoneNumber = /(84|0[3|5|7|8|9])+([0-9]{8})\b/g;
 const SignUp = () => {
     const [isFillingDetail, setIsFillingDetail] = useState(false);
     const [loginInfo, setLoginInfo] = useState({});
-    const [existedEmails, setExistedEmails] = useState([]);
+    // const [existedEmails, setExistedEmails] = useState([]);
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 
-    useEffect(() => {
-        request.get('/all-emails').then((res) => setExistedEmails(res.data));
-    }, []);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    // useEffect(() => {
+    //     request.get('/all-emails').then((res) => setExistedEmails(res.data));
+    // }, []);
 
     const registrationForm = useFormik({
         initialValues: {
@@ -34,7 +40,7 @@ const SignUp = () => {
         validationSchema: Yup.object({
             email: Yup.string()
                 .email('Invalid email format')
-                .notOneOf(existedEmails, 'This email already being used')
+                // .notOneOf(existedEmails, 'This email already being used')
                 .required('This field is required!'),
             password: Yup.string()
                 .min(6, 'Password must be contain at least 6 characters')
@@ -59,9 +65,17 @@ const SignUp = () => {
                 values.password &&
                 values.confirm_password
             ) {
-                setLoginInfo(values);
-                setIsFillingDetail(true);
-                return;
+                request
+                    .post('/check-email', { email: values.email })
+                    .then(() => {
+                        setLoginInfo(values);
+                        setIsFillingDetail(true);
+                    })
+                    .catch((err) =>
+                        toast.error(
+                            err.response.data.message || 'Somthing went wrong!',
+                        ),
+                    );
             }
         },
     });
@@ -70,6 +84,9 @@ const SignUp = () => {
         initialValues: {
             phone_number: '',
             date_of_birth: '',
+            province: { province_id: -1, province_name: '' },
+            district: { district_id: -1, district_name: '' },
+            ward: { ward_id: -1, ward_name: '' },
             address: '',
         },
         validationSchema: Yup.object({
@@ -83,6 +100,21 @@ const SignUp = () => {
                     const dobYear = new Date(value).getFullYear();
                     return thisYear - dobYear >= 18;
                 }),
+            province: Yup.object().shape({
+                province_id: Yup.number()
+                    .notOneOf([-1], 'Please select a province')
+                    .required('Province is required'),
+            }),
+            district: Yup.object().shape({
+                district_id: Yup.number()
+                    .notOneOf([-1], 'Please select a province')
+                    .required('District is required'),
+            }),
+            ward: Yup.object().shape({
+                ward_id: Yup.number()
+                    .notOneOf([-1], 'Please select a province')
+                    .required('Ward is required'),
+            }),
             address: Yup.string().required('This field is required!'),
         }),
         onSubmit: (values) => {
@@ -93,7 +125,16 @@ const SignUp = () => {
             console.log(totalInfo);
             request
                 .post('/signup', totalInfo)
-                .then((res) => console.log(res.data));
+                .then((res) => {
+                    toast.success(res.data.message);
+                    dispatch(logInUser(totalInfo, navigate));
+                    console.log(res.data);
+                })
+                .catch((err) =>
+                    toast.error(
+                        err?.response?.data?.message || 'Somthing went wrong!',
+                    ),
+                );
         },
     });
 
@@ -188,9 +229,17 @@ const SignUp = () => {
                                                 console.log(loginInfo);
                                                 request
                                                     .post('/signup', loginInfo)
-                                                    .then((res) =>
-                                                        console.log(res.data),
-                                                    );
+                                                    .then((res) => {
+                                                        toast.success(
+                                                            res.data.message,
+                                                        );
+                                                        dispatch(
+                                                            logInUser(
+                                                                loginInfo,
+                                                                navigate,
+                                                            ),
+                                                        );
+                                                    });
                                             }}
                                         >
                                             Skip this step

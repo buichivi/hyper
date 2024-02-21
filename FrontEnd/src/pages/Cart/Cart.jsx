@@ -1,21 +1,31 @@
-import { useEffect, useState } from 'react';
-import { CartItem, Navigation } from '../../components';
+import { useEffect, useRef, useState } from 'react';
+import {
+    CartItem,
+    CustomerInfo,
+    Navigation,
+    Payment,
+    SummaryOrder,
+} from '../../components';
 import { AnimatePresence, motion } from 'framer-motion';
 import { HiArrowNarrowLeft } from 'react-icons/hi';
 import { Link } from 'react-router-dom';
 import { IoReturnUpBackSharp } from 'react-icons/io5';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { BsFillTrash3Fill } from 'react-icons/bs';
-import { clearAllItemFromCart } from '../../store/actions';
+import { clearAllItemFromCart, removeItemFromCart } from '../../store/actions';
+import request from '../../utils/request';
+import { toast } from 'react-toastify';
 
 const Cart = () => {
     const [progress, setProgress] = useState(0);
+    const [customerInfo, setCustomerInfo] = useState({});
     const cart = useSelector((state) => state.cart.items);
     const dispatch = useDispatch();
+    const customerForm = useRef();
 
-    console.log('Cart re-render');
+    const user = useSelector((state) => state.user.user);
+
+    console.log(user);
 
     const totalProducts = cart.reduce(
         (acc, cartItem) => acc + cartItem?.quantity,
@@ -48,10 +58,6 @@ const Cart = () => {
         },
     };
 
-    const orderDetailForm = useFormik({
-        initialValues: {},
-    });
-
     return (
         <div>
             <Navigation path={[{ path: '/cart', name: 'Cart' }]} />
@@ -65,7 +71,7 @@ const Cart = () => {
                                     key={index}
                                     className={`relative top-full size-8 rounded-full 
                                 bg-white text-center leading-8 ring-1 ring-black 
-                                ${index <= progress && '!bg-black !text-white'} cursor-pointer select-none`}
+                                ${index <= progress && '!bg-black !text-white'} select-none`}
                                     onClick={() => setProgress(index)}
                                 >
                                     {index + 1}
@@ -156,49 +162,51 @@ const Cart = () => {
                                     )}
                                 </div>
                                 {cart.length > 0 && (
-                                    <div className="sticky top-[72px] flex-1">
-                                        <div className="border-[1px] border-slate-300 p-4">
-                                            <h4 className="border-b border-b-slate-200 pb-2 text-xl font-medium">
-                                                Summary Order
-                                            </h4>
-                                            <div className="grid grid-cols-2 gap-2 border-b border-b-slate-200 pb-2 pt-2">
-                                                <span>
-                                                    Quantity of products
-                                                </span>
-                                                <span className="text-right">
-                                                    {totalProducts}
-                                                </span>
-                                                <span>Subtotal</span>
-                                                <span className="text-right">
-                                                    ${subTotal}
-                                                </span>
-                                                <span>Total discount</span>
-                                                <span className="text-right">
-                                                    ${subTotal - total}
-                                                </span>
-                                                <span>Delivery charges</span>
-                                                <span className="text-right">
-                                                    Free Delivery
-                                                </span>
-                                            </div>
-                                            <div className="grid grid-cols-2 pt-2">
-                                                <span>Total</span>
-                                                <span className="text-right font-bold">
-                                                    ${total}
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <button
-                                            className="mt-3 w-full border 
-                                        border-black bg-black py-3 uppercase text-white
-                                        transition-colors hover:bg-white hover:text-black"
-                                            onClick={() => {
-                                                setProgress(progress + 1);
-                                            }}
-                                        >
-                                            Place order
-                                        </button>
-                                    </div>
+                                    <SummaryOrder
+                                        totalProducts={totalProducts}
+                                        subTotal={subTotal}
+                                        total={total}
+                                        onProgress={() => {
+                                            request
+                                                .post('/checking-product', {
+                                                    product_carts: cart.map(
+                                                        (cartItem) => ({
+                                                            cart_id:
+                                                                cartItem.id,
+                                                            product_name:
+                                                                cartItem.product
+                                                                    .name,
+                                                            product_id:
+                                                                cartItem.product_id,
+                                                            size: cartItem.size,
+                                                            quantity:
+                                                                cartItem.quantity,
+                                                        }),
+                                                    ),
+                                                })
+                                                .then(() =>
+                                                    setProgress(
+                                                        (prev) => prev + 1,
+                                                    ),
+                                                )
+                                                .catch((err) => {
+                                                    const cart_id =
+                                                        err.response.data
+                                                            .cart_id;
+                                                    dispatch(
+                                                        removeItemFromCart(
+                                                            cart_id,
+                                                        ),
+                                                    );
+                                                    toast.error(
+                                                        err.response.data
+                                                            .message ||
+                                                            'Something went wrong!',
+                                                    );
+                                                });
+                                        }}
+                                        textBtn={'Next step'}
+                                    />
                                 )}
                             </div>
                         </motion.div>
@@ -221,10 +229,62 @@ const Cart = () => {
                             <h3 className="text-4xl font-medium capitalize">
                                 Address
                             </h3>
-                            <div></div>
+
+                            <div className="flex items-start gap-10">
+                                <div className="basis-[70%]">
+                                    {user && (
+                                        <CustomerInfo
+                                            user={user}
+                                            ref={customerForm}
+                                            onSubmitForm={({ values }) => {
+                                                setCustomerInfo(values);
+                                                setProgress((prev) => prev + 1);
+                                            }}
+                                        />
+                                    )}
+                                </div>
+                                <div className="flex-1">
+                                    <SummaryOrder
+                                        totalProducts={totalProducts}
+                                        subTotal={subTotal}
+                                        total={total}
+                                        onProgress={() => {
+                                            customerForm.current.click();
+                                        }}
+                                        textBtn="Next Step"
+                                    />
+                                </div>
+                            </div>
+                        </motion.div>
+                    )}
+                    {progress == 2 && (
+                        <motion.div
+                            key={progress}
+                            initial="exit"
+                            animate="open"
+                            exit="exit"
+                            variants={animation}
+                        >
+                            <button
+                                className="flex items-center gap-2 p-2 hover:opacity-60"
+                                onClick={() => setProgress(progress - 1)}
+                            >
+                                <IoReturnUpBackSharp />
+                                <span className="text-lg">Back</span>
+                            </button>
+                            <h3 className="text-4xl font-medium capitalize">
+                                Payment
+                            </h3>
+                            <Payment
+                                info={customerInfo}
+                                subTotal={subTotal}
+                                total={total}
+                            />
+                            <div className="flex items-start gap-10"></div>
                         </motion.div>
                     )}
                 </AnimatePresence>
+                {/* <div className="fixed left-0 top-0 z-50 h-screen w-screen bg-[#00000057]"></div> */}
             </div>
         </div>
     );

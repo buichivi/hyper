@@ -1,5 +1,5 @@
-# 1. Render image product 
-# 2. Complete Cart 
-# 3. Complete Order
-# 4. Add send email....
-# 5. Search page
+# 1. Render image product []
+# 2. Complete Cart [x]
+# 3. Complete Order []
+# 4. Add send email.... []
+# 5. Search page []

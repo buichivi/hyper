@@ -56,9 +56,17 @@ class CartResource(Resource):
         existed_cart = Cart.query.filter_by(
             user_id=current_user.id, product_id=product_id, size=size
         ).first()
-
+        print(product.name)
         if not existed_cart:
-            new_cart = Cart(current_user.id, product_id, size, quantity)
+            new_cart = Cart(
+                current_user.id,
+                product.name,
+                product.price,
+                product.discount,
+                product_id,
+                size,
+                quantity,
+            )
             db.session.add(new_cart)
             db.session.commit()
             new_cart_json = new_cart.to_json()

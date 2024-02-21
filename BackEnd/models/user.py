@@ -1,4 +1,5 @@
 from flask_login import UserMixin
+from sqlalchemy import JSON
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from database import db
@@ -15,15 +16,29 @@ class User(db.Model, UserMixin):
     dateOfBirth = db.Column(db.String(50), nullable=True)
     phoneNumber = db.Column(db.String(10), nullable=True)
     address = db.Column(db.String(255), nullable=True)
+    province = db.Column(JSON, nullable=True)
+    district = db.Column(JSON, nullable=True)
+    ward = db.Column(JSON, nullable=True)
 
     user_reviews = db.relationship("Review", backref="user_reviews", lazy=True)
     user_favorite_products = db.relationship(
         "Favorite", backref="user_favorite_products", lazy=True
     )
     cart = db.relationship("Cart", backref="cart", lazy=True)
+    orders = db.relationship("Order", backref="order", lazy=True)
 
     def __init__(
-        self, first, last, email, pwd, dob=None, phoneNb=None, address=None
+        self,
+        first,
+        last,
+        email,
+        pwd,
+        dob=None,
+        phoneNb=None,
+        address=None,
+        province='{"province_id": -1}',
+        district='{"district_id": -1}',
+        ward='{"ward_id": -1}',
     ) -> None:
         self.firstName = first
         self.lastName = last
@@ -32,6 +47,9 @@ class User(db.Model, UserMixin):
         self.phoneNumber = phoneNb
         self.dateOfBirth = dob
         self.address = address
+        self.province = province
+        self.district = district
+        self.ward = ward
 
     def __repr__(self) -> str:
         return f"<User {self.id}> {self.firstName} {self.lastName} {self.email} {self.password} {self.phoneNumber} {self.dateOfBirth} {self.address}"
@@ -51,15 +69,21 @@ class User(db.Model, UserMixin):
             "dateOfBirth": self.dateOfBirth,
             "phoneNumber": self.phoneNumber,
             "address": self.address,
+            "province": self.province,
+            "district": self.district,
+            "ward": self.ward,
         }
 
-    def set_detail_info(self, phoneNb, dob, address) -> None:
+    def set_detail_info(self, phoneNb, dob, address, province, district, ward) -> None:
         self.phoneNumber = phoneNb
         self.dateOfBirth = dob
         self.address = address
+        self.province = province
+        self.district = district
+        self.ward = ward
 
     def email_exists(self, email) -> bool:
         return User.query.filter_by(email=email).first() is not None
 
     def get_name(self) -> str:
-        return self.lastName + " " + self.firstName
+        return self.firstName + " " + self.lastName

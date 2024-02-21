@@ -1,12 +1,14 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_cors import CORS
 from flask_login import LoginManager
+from flask_mail import Mail, Message
 from flask_restful import Api
 
 import config
 from database import db
 from services.brand import *
 from services.cart import *
+from services.order import *
 from services.product import *
 from services.product_image import *
 from services.review import *
@@ -62,6 +64,7 @@ api.add_resource(SignUpResource, "/signup")
 api.add_resource(GetAllEmailResource, "/all-emails")
 api.add_resource(CheckingLoginResource, "/checking-login")
 api.add_resource(FavoriteProductsResource, "/me/favorites")
+api.add_resource(CheckingEmailSignUpResource, "/check-email")
 
 # Brand
 api.add_resource(BrandResource, "/brand")
@@ -72,6 +75,7 @@ api.add_resource(ShoeTypeResource, "/shoe_types")
 api.add_resource(ProductResource, "/products")
 api.add_resource(GetProductResource, "/products/<int:product_id>")
 api.add_resource(ProductImageResource, "/product-image")
+api.add_resource(CheckingProductIsInStockResource, "/checking-product")
 
 
 # Review
@@ -84,6 +88,52 @@ api.add_resource(
 api.add_resource(CartResource, "/me/cart")
 api.add_resource(UpdateCartItemQuantityResource, "/me/cart/update")
 api.add_resource(ClearCartResource, "/me/cart/clear")
+
+# Order
+api.add_resource(OrderResource, "/me/order")
+api.add_resource(UpdateOrderStatusResource, "/me/order/status")
+
+
+shoe_store_app_pwd = "dafojlmacqtyzzvu"
+app.config["MAIL_SERVER"] = "smtp.gmail.com"
+app.config["MAIL_PORT"] = 465
+app.config["MAIL_USERNAME"] = "buivi04062002@gmail.com"
+app.config["MAIL_PASSWORD"] = shoe_store_app_pwd
+app.config["MAIL_USE_TLS"] = False
+app.config["MAIL_USE_SSL"] = True
+
+
+mail = Mail(app)
+
+
+# @app.route("/email")
+# def email():
+#     order_details = [
+#         {
+#             "name": "Sản phẩm 1",
+#             "quantity": 2,
+#             "unit_price": "$50.00",
+#             "total_price": "$100.00",
+#         },
+#         {
+#             "name": "Sản phẩm 2",
+#             "quantity": 1,
+#             "unit_price": "$25.00",
+#             "total_price": "$25.00",
+#         },
+#     ]
+#     return render_template("order_detail.html", order=order_details)
+
+
+@app.template_global()
+def round_up(number):
+    return math.ceil(number)
+
+
+def send_email(subject, sender, recipients, body):
+    msg = Message(subject, sender=sender, recipients=recipients)
+    msg.html = body
+    mail.send(msg)
 
 
 if __name__ == "__main__":

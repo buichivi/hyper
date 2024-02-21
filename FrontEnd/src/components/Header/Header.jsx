@@ -130,7 +130,7 @@ const Header = () => {
                         {totalProducts > 0 && (
                             <div
                                 className="absolute -right-2 -top-2 z-10 flex size-4 
-                            items-center justify-center rounded-full bg-black text-white ring-1 ring-black"
+                            items-center justify-center rounded-full bg-black text-sm text-white ring-1 ring-black"
                             >
                                 <span className="">{totalProducts}</span>
                             </div>

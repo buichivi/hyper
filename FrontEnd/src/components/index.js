@@ -19,3 +19,7 @@ export { default as DetailForm } from './DetailForm';
 export { default as MultipleRange } from './MultipleRange';
 export { default as ReviewForm } from './ReviewForm';
 export { default as CartItem } from './CartItem';
+export { default as CustomerInfo } from './CustomerInfo';
+export { default as SummaryOrder } from './SummaryOrder';
+export { default as Payment } from './Payment';
+export { default as PaypalPayment } from './PaypalPayment';

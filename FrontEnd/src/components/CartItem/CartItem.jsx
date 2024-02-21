@@ -46,7 +46,7 @@ const CartItem = ({ cartItem = {} }) => {
 
     return (
         <div
-            className="flex h-[120px] min-h-[100px] items-start gap-2 border-[1px] select-none
+            className="flex h-[120px] min-h-[100px] select-none items-start gap-2 border-[1px]
     border-slate-300 p-2"
         >
             <Link
@@ -88,6 +88,12 @@ const CartItem = ({ cartItem = {} }) => {
                         </span>
                     </p>
                     <span>Size: {cartItem?.size}</span>
+                    {cartItem?.product?.discount > 0 && <p>
+                        Discount:{' '}
+                        <span className="text-green-600">
+                            -{cartItem?.product?.discount}%
+                        </span>
+                    </p>}
                 </div>
             </div>
             <div className="relative flex h-full flex-1 items-end justify-end">

@@ -8,10 +8,14 @@ from flask_restful import Resource
 
 from config import REMEMBER_COOKIE_NAME
 from database import db
+from models.cart import Cart
 from models.favorite import Favorite
+from models.order import Order
+from models.order_detail import OrderDetail
+from models.order_status import OrderStatus
+from models.payment import Payment
 from models.product import Product
 from models.user import User
-from models.cart import Cart
 
 
 class LoginResource(Resource):
@@ -29,8 +33,8 @@ class LoginResource(Resource):
         if not password:
             return {"message": "Password is missing"}, 400
 
-        print(data)
         user = User.query.filter_by(email=email).first()
+        print(user)
         if user and user.check_password(password):
             if remember == "true":
                 login_user(user, True, timedelta(days=1))
@@ -73,6 +77,9 @@ class SignUpResource(Resource):
         dob = data.get("date_of_birth")
         phoneNb = data.get("phone_number")
         address = data.get("address")
+        province = data.get("province") or {"province_id": -1}
+        district = data.get("district") or {"district_id": -1}
+        ward = data.get("ward") or {"ward_id": -1}
         if not firstName:
             return {"message": "First name is missing"}, 400
         if not lastName:
@@ -85,11 +92,21 @@ class SignUpResource(Resource):
         user = User(firstName, lastName, email, password)
         if user.email_exists(email):
             return {"message": "This email is already being used"}, 400
-        user.set_detail_info(phoneNb, dob, address)
+        user.set_detail_info(phoneNb, dob, address, province, district, ward)
+        login_user(user, False)
         db.session.add(user)
         db.session.commit()
         return {"message": "Sign up successfully!", "user": user.to_json()}, 200
 
+class CheckingEmailSignUpResource(Resource):
+    @cross_origin()
+    def post(self):
+        data = request.get_json()
+        email = data.get('email')
+        user = User.query.filter_by(email = email).first()
+        if user:
+            return {"message": "This email is already being used!"}, 400
+        return {"message": "This email is valid"}, 200
 
 class CheckingLoginResource(Resource):
     @cross_origin()

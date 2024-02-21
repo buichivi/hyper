@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script src="https://cdn.tailwindcss.com"></script>
+        <title>Order</title>
+        <style>
+            * {
+                color: "#333";
+            }
+        </style>
+    </head>
+    <body>
+        <h4 style="font-size: 18px; font-weight: 500">{{ message }}</h4>
+        <table
+            cellspacing="0"
+            cellpadding="0"
+            style="width: 100%; border-collapse: collapse"
+        >
+            <thead>
+                <tr>
+                    <th style="padding: 10px; text-align: left; border: 1px solid #333">
+                        Product name
+                    </th>
+                    <th style="padding: 10px; text-align: left; border: 1px solid #333">Quantity</th>
+                    <th style="padding: 10px; text-align: left; border: 1px solid #333">Size</th>
+                    <th style="padding: 10px; text-align: left; border: 1px solid #333">Unit Price</th>
+                    <th style="padding: 10px; text-align: left; border: 1px solid #333">Discount</th>
+                    <th style="padding: 10px; text-align: left; border: 1px solid #333">Total Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order_item in order %}
+                <tr style="background-color: #eee">
+                    <td style="padding: 10px; border: 1px solid #333">{{order_item['product_name']}}</td>
+                    <td style="padding: 10px; border: 1px solid #333">{{order_item['quantity']}}</td>
+                    <td style="padding: 10px; border: 1px solid #333">{{order_item['size']}}</td>
+                    <td style="padding: 10px; border: 1px solid #333">
+                        ${{order_item['product_price']}}
+                    </td>
+                    <td style="padding: 10px; border: 1px solid #333">
+                        {{order_item['product_discount']}}%
+                    </td>
+                    <td style="padding: 10px; border: 1px solid #333">
+                        ${{round_up(order_item['product_price'] * (100 -
+                        order_item['product_discount']) / 100) *
+                        order_item['quantity']}}
+                    </td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td style="padding: 10px" colspan="4"></td>
+                    <td
+                        style="
+                            border: none;
+                            padding: 5px 10px;
+                            text-align: right;
+                            font-weight: 500;
+                        "
+                    >
+                        Subtotal:
+                    </td>
+                    <td style="padding: 5px 10px">${{sub_total}}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 5px 10px" colspan="4"></td>
+                    <td
+                        style="
+                            border: none;
+                            padding: 5px 10px;
+                            text-align: right;
+                            font-weight: 500;
+                        "
+                    >
+                        Discount:
+                    </td>
+                    <td style="padding: 5px 10px">${{sub_total - total}}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 5px 10px" colspan="4"></td>
+                    <td
+                        style="
+                            border: none;
+                            padding: 5px 10px;
+                            text-align: right;
+                            font-weight: 500;
+                        "
+                    >
+                        Delivery charges:
+                    </td>
+                    <td style="padding: 5px 10px">Free ship</td>
+                </tr>
+                <tr>
+                    <td style="padding: 5px 10px" colspan="4"></td>
+                    <td
+                        style="
+                            border: none;
+                            padding: 5px 10px;
+                            text-align: right;
+                            font-weight: 500;
+                        "
+                    >
+                        Total:
+                    </td>
+                    <td style="padding: 5px 10px">${{ total }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </body>
+</html>
