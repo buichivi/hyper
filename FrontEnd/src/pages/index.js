@@ -8,3 +8,5 @@ export { default as ErrorPage } from './ErrorPage';
 export { default as Favorites } from './Favorites';
 export { default as Cart } from './Cart';
 export { default as Search } from './Search';
+export { default as Profile } from './Profile';
+export { default as Order } from './Order';

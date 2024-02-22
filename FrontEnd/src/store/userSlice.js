@@ -14,7 +14,6 @@ export const userSlice = createSlice({
     reducers: {
         // user reducers
         logIn: (state, action) => {
-            state.isInitialized = true; // make animation
             state.isAuthenticated = true;
             state.user = action.payload.user;
             localStorage.setItem('isAuthenticated', true);
@@ -28,8 +27,11 @@ export const userSlice = createSlice({
             state.isAuthenticated = action.payload.logged_in;
             state.user = action.payload?.current_user || null;
         },
+        setInitialized: (state, action) => {
+            state.isInitialized = action.payload; // make animation
+        },
     },
 });
 
-export const { logIn, logOut, checkLogin } = userSlice.actions;
+export const { logIn, logOut, checkLogin, setInitialized } = userSlice.actions;
 export default userSlice.reducer;

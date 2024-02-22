@@ -15,6 +15,7 @@ import { BsFillTrash3Fill } from 'react-icons/bs';
 import { clearAllItemFromCart, removeItemFromCart } from '../../store/actions';
 import request from '../../utils/request';
 import { toast } from 'react-toastify';
+import { PuffLoader } from 'react-spinners';
 
 const Cart = () => {
     const [progress, setProgress] = useState(0);
@@ -22,6 +23,7 @@ const Cart = () => {
     const cart = useSelector((state) => state.cart.items);
     const dispatch = useDispatch();
     const customerForm = useRef();
+    const [isPurchase, setIsPurchase] = useState(false);
 
     const user = useSelector((state) => state.user.user);
 
@@ -46,6 +48,10 @@ const Cart = () => {
                 cartItem?.quantity,
         0,
     );
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     const animation = {
         open: {
@@ -279,12 +285,17 @@ const Cart = () => {
                                 info={customerInfo}
                                 subTotal={subTotal}
                                 total={total}
+                                setIsPurchase={setIsPurchase}
                             />
                             <div className="flex items-start gap-10"></div>
                         </motion.div>
                     )}
                 </AnimatePresence>
-                {/* <div className="fixed left-0 top-0 z-50 h-screen w-screen bg-[#00000057]"></div> */}
+                {isPurchase && (
+                    <div className="fixed left-0 top-0 z-50 flex h-screen w-screen items-center justify-center bg-[#000000ce]">
+                        <PuffLoader color="#fff" size={80} />
+                    </div>
+                )}
             </div>
         </div>
     );

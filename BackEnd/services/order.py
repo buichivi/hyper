@@ -67,7 +67,7 @@ class OrderResource(Resource):
                 payment,
                 is_paid=False,
             )
-        if payment == "paypal":
+        elif payment == "paypal":
             order = Order(
                 customer_name,
                 shipping_address,
@@ -81,9 +81,13 @@ class OrderResource(Resource):
                 payment,
                 is_paid=True,
             )
+            print(order)
 
         db.session.add(order)
         db.session.commit()
+
+
+        order_id = order.id
 
         for cart_item in cart:
             product_size = ProductSize.query.filter_by(
@@ -104,9 +108,11 @@ class OrderResource(Resource):
                 cart_item.quantity,
                 cart_item.product_price,
                 price_a_product,
-                order.id,
+                order_id,
                 cart_item.product_id,
             )
+            print(order_detail)
+            print(cart_item)
             db.session.add(order_detail)
             db.session.commit()
 
@@ -135,7 +141,7 @@ class OrderResource(Resource):
         send_email(
             subject="Đơn hàng được tạo thành công",
             sender="buivi04062002@gmail.com",
-            recipients=["buichivi04062002@gmail.com"],
+            recipients=[email],
             body=f"{html_content}"
         )
 

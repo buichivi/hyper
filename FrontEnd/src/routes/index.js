@@ -6,6 +6,8 @@ import {
     Favorites,
     Cart,
     Search,
+    Profile,
+    Order,
 } from '../pages';
 
 const publicRoutes = [
@@ -56,6 +58,18 @@ const publicRoutes = [
         component: Search,
         title: 'Search',
         authRequired: false,
+    },
+    {
+        path: '/profile',
+        component: Profile,
+        title: 'Profile',
+        authRequired: true,
+    },
+    {
+        path: '/order',
+        component: Order,
+        title: 'Order',
+        authRequired: true,
     },
 ];
 

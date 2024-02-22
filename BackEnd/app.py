@@ -73,6 +73,7 @@ api.add_resource(GetAllEmailResource, "/all-emails")
 api.add_resource(CheckingLoginResource, "/checking-login")
 api.add_resource(FavoriteProductsResource, "/me/favorites")
 api.add_resource(CheckingEmailSignUpResource, "/check-email")
+api.add_resource(ChangePasswordResource, "/change-password")
 
 # Brand
 api.add_resource(BrandResource, "/brand")

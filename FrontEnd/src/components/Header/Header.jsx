@@ -9,6 +9,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logOutUser } from '../../store/actions';
 import { useEffect, useState } from 'react';
 import request from '../../utils/request';
+import { motion, AnimatePresence } from 'framer-motion';
+import { AiOutlineProfile } from 'react-icons/ai';
+import { GoChecklist } from 'react-icons/go';
+import { MdLogout } from 'react-icons/md';
 
 const Header = () => {
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
@@ -19,6 +23,7 @@ const Header = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [brands, setBrands] = useState();
+    const [isOpen, setIsOpen] = useState(false);
 
     const totalProducts = cart.reduce(
         (acc, cartItem) => acc + cartItem?.quantity,
@@ -149,11 +154,49 @@ const Header = () => {
                         )}
                     </Link>
                     {isAuthenticated && (
-                        <div
-                            onClick={() => dispatch(logOutUser())}
-                            className="cursor-pointer"
-                        >
-                            <HiOutlineUserCircle className="h-6 w-6" />
+                        <div className="relative cursor-pointer">
+                            <HiOutlineUserCircle
+                                className="h-6 w-6"
+                                onClick={() => setIsOpen(!isOpen)}
+                            />
+                            <AnimatePresence>
+                                {isOpen && (
+                                    <motion.div
+                                        key={isOpen}
+                                        initial={{ y: '30%', opacity: 0 }}
+                                        exit={{ y: '30%', opacity: 0 }}
+                                        animate={{ y: '0%', opacity: 1 }}
+                                        className="absolute right-0 top-[140%] flex min-w-[120px] select-none flex-col 
+                                    border border-slate-300 bg-white p-2 shadow-lg [&>*]:px-4 [&>*]:py-1 [&>*]:text-right"
+                                    >
+                                        <Link
+                                            to="/profile#1"
+                                            className="flex items-center justify-between hover:bg-slate-200"
+                                            onClick={() => setIsOpen(!isOpen)}
+                                        >
+                                            <AiOutlineProfile />
+                                            <span>Profile</span>
+                                        </Link>
+                                        <Link
+                                            to="/profile#2"
+                                            className="flex items-center justify-between hover:bg-slate-200"
+                                            onClick={() => setIsOpen(!isOpen)}
+                                        >
+                                            <GoChecklist />
+                                            <span>Orders</span>
+                                        </Link>
+                                        <div
+                                            className="flex items-center justify-between hover:bg-slate-200"
+                                            onClick={() =>
+                                                dispatch(logOutUser())
+                                            }
+                                        >
+                                            <MdLogout />
+                                            <span>Log out</span>
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
                         </div>
                     )}
                 </div>

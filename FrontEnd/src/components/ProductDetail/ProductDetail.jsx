@@ -40,7 +40,11 @@ const ProductDetail = ({ productId = null }) => {
                 toast.success('Add a review successfully!');
                 setReviewDetails((prev) => [res.data.review, ...prev]);
             })
-            .catch(() => toast.error('Somthing went wrong!'));
+            .catch((err) =>
+                toast.error(
+                    err.response.data.message || 'Something went wrong!',
+                ),
+            );
     };
 
     return (
@@ -264,6 +268,14 @@ const ProductDetail = ({ productId = null }) => {
                                         }
                                     >
                                         See more reviews
+                                    </button>
+                                )}
+                                {reviewDetails?.length <= limitReviews && (
+                                    <button
+                                        className="px-4 py-1 ring-1 ring-black transition-all hover:bg-black hover:text-white"
+                                        onClick={() => setLimitReviews(3)}
+                                    >
+                                        Hide reviews
                                     </button>
                                 )}
                             </div>

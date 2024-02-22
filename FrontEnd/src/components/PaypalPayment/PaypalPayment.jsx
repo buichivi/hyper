@@ -6,7 +6,7 @@ import { clearCart } from '../../store/cartSlice';
 import { useNavigate } from 'react-router-dom';
 // import { PayPalButton } from '@paypal/react-paypal-js';
 
-const PaypalPayment = ({ info = {}, total = 0 }) => {
+const PaypalPayment = ({ info = {}, total = 0, setIsPurchase = () => {} }) => {
     const [paypalReady, setPaypalReady] = useState(false);
 
     const cart = useSelector((state) => state.cart.items);
@@ -92,6 +92,7 @@ const PaypalPayment = ({ info = {}, total = 0 }) => {
                         });
                     },
                     onApprove: async (data, actions) => {
+                        setIsPurchase(true);
                         const order = await actions.order.capture();
                         const data_send = {
                             customer_name: info.customer_name,
@@ -110,6 +111,7 @@ const PaypalPayment = ({ info = {}, total = 0 }) => {
                                 toast.success(res.data.message);
                                 dispatch(clearCart());
                                 setTimeout(() => {
+                                    setIsPurchase(false);
                                     navigate('/');
                                 }, 1000);
                             })

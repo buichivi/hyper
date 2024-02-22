@@ -23,4 +23,4 @@ class OrderDetail(db.Model):
         self.product_id = product_id
 
     def __repr__(self) -> str:
-        return f"<Order {self.id}> {self.total_price} {self.price} {self.quantity}"
+        return f"<OrderDetail {self.id}> {self.total_price} {self.price} {self.quantity} {self.product_id}"

@@ -98,15 +98,17 @@ class SignUpResource(Resource):
         db.session.commit()
         return {"message": "Sign up successfully!", "user": user.to_json()}, 200
 
+
 class CheckingEmailSignUpResource(Resource):
     @cross_origin()
     def post(self):
         data = request.get_json()
-        email = data.get('email')
-        user = User.query.filter_by(email = email).first()
+        email = data.get("email")
+        user = User.query.filter_by(email=email).first()
         if user:
             return {"message": "This email is already being used!"}, 400
         return {"message": "This email is valid"}, 200
+
 
 class CheckingLoginResource(Resource):
     @cross_origin()
@@ -176,3 +178,24 @@ class FavoriteProductsResource(Resource):
             "message": "Remove favorite product successfully",
             "favor": favor.to_json(),
         }, 200
+
+
+class ChangePasswordResource(Resource):
+    @cross_origin()
+    @login_required
+    def patch(self):
+        current_password = str(request.get_json().get("current_password"))
+        new_password = str(request.get_json().get("new_password"))
+        if not current_password:
+            return {"message": "Current password is missing"}, 400
+        if not new_password:
+            return {"message": "New password is missing"}, 400
+
+        user = User.query.filter_by(email=current_user.email).first()
+        if not user.check_password(current_password):
+            return {"message": "Your current password is not correct!"}, 400
+        if len(new_password) < 6:
+            return {"message": "New password need at least 6 characters"}, 400
+        user.set_password(new_password)
+        db.session.commit()
+        return {"message": "Change password successfully"}, 200

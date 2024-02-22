@@ -4,6 +4,8 @@ from flask_login import current_user, login_required
 from flask_restful import Resource
 
 from database import db
+from models.order import Order
+from models.order_detail import OrderDetail
 from models.product import Product
 from models.review import Review
 from models.user import User
@@ -58,6 +60,22 @@ class CreateReviewResource(Resource):
         if not product:
             return {"message": "No product match product_id"}, 400
 
+        is_bought = False
+
+        user_orders = Order.query.filter_by(user_id=current_user.id).all()
+        for user_order in user_orders:
+            order_details = user_order.order_details
+            for order_detail in order_details:
+                if int(order_detail.product_id) == int(product_id):
+                    is_bought = True
+                    break
+            if is_bought == True:
+                break
+
+        if is_bought == False:
+            return {
+                "message": "You cannot review if you have not purchased this product!"
+            }, 400
         review = Review(rating, title, content, product_id, current_user.id)
         db.session.add(review)
         db.session.commit()

@@ -1,12 +1,15 @@
 /* eslint-disable react/no-unescaped-entities */
 import { motion } from 'framer-motion';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { LoginForm } from '../../components';
 import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
+import { PuffLoader } from 'react-spinners';
 
 const Login = () => {
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+    const isInitialized = useSelector((state) => state.user.isInitialized);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -67,6 +70,11 @@ const Login = () => {
                         </motion.h4>
                     </motion.div>
                     <LoginForm />
+                    {isInitialized && (
+                        <div className="fixed left-0 top-0 z-50 flex h-screen w-screen items-center justify-center bg-[#000000ce]">
+                            <PuffLoader color="#fff" size={80} />
+                        </div>
+                    )}
                 </div>
             )}
         </>

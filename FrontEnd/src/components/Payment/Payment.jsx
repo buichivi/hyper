@@ -6,7 +6,12 @@ import { clearCart } from '../../store/cartSlice';
 import { useState } from 'react';
 import { PaypalPayment } from '../';
 
-const Payment = ({ info = {}, subTotal = 0, total = 0 }) => {
+const Payment = ({
+    info = {},
+    subTotal = 0,
+    total = 0,
+    setIsPurchase = () => {},
+}) => {
     const cart = useSelector((state) => state.cart.items);
     const [paymentMethod, setPaymentMethod] = useState(0);
     const dispatch = useDispatch();
@@ -14,7 +19,8 @@ const Payment = ({ info = {}, subTotal = 0, total = 0 }) => {
 
     console.log('info', info);
 
-    const handleCreateOrder = () => {
+    const handleCreateOrder = async () => {
+        setIsPurchase(true);
         const data = {
             customer_name: info.customer_name,
             email: info.email,
@@ -25,7 +31,7 @@ const Payment = ({ info = {}, subTotal = 0, total = 0 }) => {
             ward: info.ward,
             payment: 'COD',
         };
-        request
+        await request
             .post('/me/order', { ...data })
             .then((res) => {
                 console.log(res.data);
@@ -33,11 +39,12 @@ const Payment = ({ info = {}, subTotal = 0, total = 0 }) => {
                 dispatch(clearCart());
                 navigate('/');
             })
-            .catch((err) =>
+            .catch((err) => {
                 toast.error(
                     err.response.data.message || 'Something went wrong!',
-                ),
-            );
+                );
+            });
+        setIsPurchase(false);
     };
 
     return (
@@ -348,7 +355,11 @@ const Payment = ({ info = {}, subTotal = 0, total = 0 }) => {
                         </button>
                     )}
                     {paymentMethod == 1 && (
-                        <PaypalPayment info={info} total={total} />
+                        <PaypalPayment
+                            info={info}
+                            total={total}
+                            setIsPurchase={setIsPurchase}
+                        />
                     )}
                 </div>
             </div>

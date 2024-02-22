@@ -6,11 +6,13 @@ import {
     removeItem,
     updateItem,
 } from './cartSlice';
-import { checkLogin, logIn, logOut } from './userSlice';
+import { checkLogin, logIn, logOut, setInitialized } from './userSlice';
 import { toast } from 'react-toastify';
 
 export const logInUser = (values, navigate) => async (dispatch) => {
-    request
+    dispatch(setInitialized(true));
+
+    await request
         .get('/login', {
             params: {
                 email: values.email,
@@ -29,10 +31,13 @@ export const logInUser = (values, navigate) => async (dispatch) => {
         .catch((err) => {
             toast.error(err?.response?.data?.message || 'Login failed!');
         });
+    dispatch(setInitialized(false));
 };
 
 export const logOutUser = () => async (dispatch) => {
-    request
+    dispatch(setInitialized(true));
+
+    await request
         .get('/logout')
         .then(() => {
             localStorage.setItem('isAuthenticated', false);
@@ -43,6 +48,7 @@ export const logOutUser = () => async (dispatch) => {
         .catch(() => {
             toast.error('Something went wrong!');
         });
+    dispatch(setInitialized(false));
 };
 
 export const checkingLoginUser = () => async (dispatch) => {

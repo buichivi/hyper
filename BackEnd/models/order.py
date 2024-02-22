@@ -63,7 +63,7 @@ class Order(db.Model):
         self.is_paid = is_paid
 
     def __repr__(self) -> str:
-        return f"<Order {self.id}> {self.total_amount} {self.status} {self.order_date}"
+        return f"""<Order {self.id}> {self.total_amount} {self.status_id} {self.order_date}"""
 
     def to_json(self) -> dict:
         return {
