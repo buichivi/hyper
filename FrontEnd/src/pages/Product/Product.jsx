@@ -17,9 +17,12 @@ const Product = () => {
     const [path, setPath] = useState([]);
     const [selectedSize, setSelectedSize] = useState(-1);
     const [quantity, setQuantity] = useState(0);
+    const [productImgs, setProductImgs] = useState([]);
 
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
     const dispatch = useDispatch();
+
+    console.log(productImgs);
 
     const isCorrectPath =
         product?.brand?.code == brand_code &&
@@ -32,6 +35,9 @@ const Product = () => {
         await request
             .get('/products/' + product_id)
             .then((res) => setProduct(res.data.product));
+        await request
+            .get('/product-image', { params: { product_id: product_id } })
+            .then((res) => setProductImgs(res.data.product_imgs));
     }, [product_id]);
 
     useEffect(() => {
@@ -100,13 +106,9 @@ const Product = () => {
                     <div className="flex min-h-[600px] flex-col items-start gap-10 pb-4 lg:flex-row">
                         <div className="top-[72px] block h-[90%] shrink-0 basis-1/2 lg:sticky lg:basis-3/5">
                             <ProductPreview
-                                images={[
-                                    'https://shorturl.at/jvDLP',
-                                    'https://shorturl.at/bLRTV',
-                                    'https://shorturl.at/myHOP',
-                                    'https://shorturl.at/fBN48',
-                                    'https://shorturl.at/eKY09',
-                                ]}
+                                images={productImgs.map(
+                                    (product_img) => product_img.img_url,
+                                )}
                             />
                         </div>
                         <div className="relative w-full shrink-0 basis-1/2 lg:basis-2/5">

@@ -1,7 +1,7 @@
 import { motion, useAnimation } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
-const MenuItem = ({ brand = {}, className = '' }) => {
+const MenuItem = ({ brand = {}, className = '', isLogin = False }) => {
     const controls = useAnimation();
     return (
         <motion.div
@@ -20,7 +20,7 @@ const MenuItem = ({ brand = {}, className = '' }) => {
             <motion.div
                 initial={{ y: -20, opacity: 0 }}
                 animate={controls}
-                className={`fixed left-0 top-[72px] hidden 
+                className={`fixed left-0 ${isLogin ? 'top-[72px]' : 'top-[calc(72px_+_28px)]'} hidden 
                 h-auto min-h-[30vh] w-[100vw] cursor-auto items-center bg-white px-14 py-6 shadow-xl group-hover/menu-item:flex`}
             >
                 <Link

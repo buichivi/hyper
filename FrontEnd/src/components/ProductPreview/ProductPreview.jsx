@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 // Import Swiper React components
 
 import { AiOutlinePlus, AiOutlineMinus } from 'react-icons/ai';
@@ -8,6 +8,11 @@ const ProductPreview = ({ images = [] }) => {
     const [isZoom, setIsZoom] = useState(false);
     const zoomInCursor = useRef();
     const zoomOutCursor = useRef();
+
+    useEffect(() => {
+        if (images.length > 0)
+            setSelectedImage(images[0])
+    }, [images.length])
 
     const handleZoomIn = (e) => {
         const rect = e.target.parentElement.getBoundingClientRect();
@@ -62,7 +67,7 @@ const ProductPreview = ({ images = [] }) => {
         <div className="flex size-full items-start">
             <div className="h-full flex-[1] shrink-0 overflow-hidden pr-1">
                 <div className="box-content h-full overflow-y-scroll">
-                    {images?.map((item, index) => {
+                    {images.map((item, index) => {
                         return (
                             <div
                                 key={index}

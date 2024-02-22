@@ -1,5 +1,10 @@
 import { useState } from 'react';
-import { FilterByPrice, FilterBySaleOff, FilterByType } from '..';
+import {
+    FilterByPrice,
+    FilterBySaleOff,
+    FilterByType,
+    FilterByBrand,
+} from '..';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HiOutlineArrowNarrowRight } from 'react-icons/hi';
 import PropTypes from 'prop-types';
@@ -7,14 +12,16 @@ import PropTypes from 'prop-types';
 const MAX_PRICE = 1000;
 
 const Filter = ({
-    isOpen = true,
+    isOpen = false,
     brand = {},
     shoeTypeCode = '',
     setProductFilters = () => {},
     products = [],
     sort = {},
+    isSearchPage = false,
 }) => {
     const [filterTypes, setFilterTypes] = useState([]);
+    const [filterBrands, setFilterBrands] = useState([]);
     const [saleOff, setSaleOff] = useState(0);
     const [rangePrice, setRangePrice] = useState([0, MAX_PRICE]);
     const [isReset, setIsReset] = useState(false);
@@ -23,24 +30,42 @@ const Filter = ({
 
     const handleAppyFilter = () => {
         const [min, max] = rangePrice;
-        setProductFilters(
-            products
-                .filter((product) => {
-                    const productPriceAfterSaleOff =
-                        (product.price * (100 - product.discount)) / 100;
-                    return (
-                        filterTypes.includes(product.shoe_type.id) &&
-                        productPriceAfterSaleOff >= min &&
-                        productPriceAfterSaleOff <= max &&
-                        product.discount >= saleOff
-                    );
-                })
-                .sort(sort.method),
-        );
+        if (!isSearchPage)
+            setProductFilters(
+                products
+                    .filter((product) => {
+                        const productPriceAfterSaleOff =
+                            (product.price * (100 - product.discount)) / 100;
+                        return (
+                            filterTypes.includes(product.shoe_type.id) &&
+                            productPriceAfterSaleOff >= min &&
+                            productPriceAfterSaleOff <= max &&
+                            product.discount >= saleOff
+                        );
+                    })
+                    .sort(sort.method),
+            );
+        else
+            setProductFilters(
+                products
+                    .filter((product) => {
+                        const productPriceAfterSaleOff =
+                            Math.ceil(
+                                product.price * (100 - product.discount),
+                            ) / 100;
+                        return (
+                            filterBrands.includes(product.brand.id) &&
+                            productPriceAfterSaleOff >= min &&
+                            productPriceAfterSaleOff <= max &&
+                            product.discount >= saleOff
+                        );
+                    })
+                    .sort(sort.method),
+            );
     };
 
     const handleResetFilter = () => {
-        setProductFilters(products);
+        setProductFilters(products.sort(sort.method));
         setIsReset(!isReset);
     };
 
@@ -69,12 +94,20 @@ const Filter = ({
                     exit="exit"
                     variants={toggleOpenFilter}
                 >
-                    {!shoeTypeCode && (
+                    {!shoeTypeCode && !isSearchPage && (
                         <FilterByType
                             isReset={isReset}
                             shoeTypes={brand.shoe_types}
                             onChange={({ filterTypes }) => {
                                 setFilterTypes(filterTypes);
+                            }}
+                        />
+                    )}
+                    {isSearchPage && (
+                        <FilterByBrand
+                            isReset={isReset}
+                            onChange={({ filterBrands }) => {
+                                setFilterBrands(filterBrands);
                             }}
                         />
                     )}
@@ -127,6 +160,7 @@ Filter.propTypes = {
     setProductFilters: PropTypes.func,
     products: PropTypes.array,
     sort: PropTypes.object,
+    isSearchPage: PropTypes.bool,
 };
 
 export default Filter;

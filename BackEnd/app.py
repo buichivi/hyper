@@ -27,6 +27,9 @@ api = Api(app)
 # CORS
 CORS(app=app, supports_credentials=True)
 
+# Mailing
+mail = Mail(app)
+
 
 # Fix cors problem
 @app.after_request
@@ -49,6 +52,11 @@ def after_request(response):
 
 # flask-login set up
 login_manager = LoginManager(app)
+
+
+@app.route("/email")
+def index():
+    return render_template("order_detail.html", sub_total=0, total=0, message="Hello")
 
 
 # flask-login user_loader
@@ -76,6 +84,7 @@ api.add_resource(ProductResource, "/products")
 api.add_resource(GetProductResource, "/products/<int:product_id>")
 api.add_resource(ProductImageResource, "/product-image")
 api.add_resource(CheckingProductIsInStockResource, "/checking-product")
+api.add_resource(SearchProductResource, "/search")
 
 
 # Review
@@ -92,37 +101,6 @@ api.add_resource(ClearCartResource, "/me/cart/clear")
 # Order
 api.add_resource(OrderResource, "/me/order")
 api.add_resource(UpdateOrderStatusResource, "/me/order/status")
-
-
-shoe_store_app_pwd = "dafojlmacqtyzzvu"
-app.config["MAIL_SERVER"] = "smtp.gmail.com"
-app.config["MAIL_PORT"] = 465
-app.config["MAIL_USERNAME"] = "buivi04062002@gmail.com"
-app.config["MAIL_PASSWORD"] = shoe_store_app_pwd
-app.config["MAIL_USE_TLS"] = False
-app.config["MAIL_USE_SSL"] = True
-
-
-mail = Mail(app)
-
-
-# @app.route("/email")
-# def email():
-#     order_details = [
-#         {
-#             "name": "Sản phẩm 1",
-#             "quantity": 2,
-#             "unit_price": "$50.00",
-#             "total_price": "$100.00",
-#         },
-#         {
-#             "name": "Sản phẩm 2",
-#             "quantity": 1,
-#             "unit_price": "$25.00",
-#             "total_price": "$25.00",
-#         },
-#     ]
-#     return render_template("order_detail.html", order=order_details)
 
 
 @app.template_global()

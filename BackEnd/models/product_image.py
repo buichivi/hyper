@@ -16,3 +16,9 @@ class ProductImage(db.Model):
     def __repr__(self) -> str:
         return f"<ProductImage {self.id}> {self.img_url} {self.is_preview}"
 
+    def to_json(self) -> dict:
+        return {
+            "id": self.id,
+            "img_url": self.img_url,
+            "is_preview": self.is_preview,
+        }

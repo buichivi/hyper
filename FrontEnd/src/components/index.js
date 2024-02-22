@@ -8,6 +8,7 @@ export { default as ProductCard } from './ProductCard';
 export { default as FilterByPrice } from './FilterByPrice';
 export { default as FilterBySaleOff } from './FilterBySaleOff';
 export { default as FilterByType } from './FilterByType';
+export { default as FilterByBrand } from './FilterByBrand';
 export { default as Navigation } from './Navigation';
 export { default as ProductPreview } from './ProductPreview';
 export { default as ProductDetail } from './ProductDetail';

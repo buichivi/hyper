@@ -126,13 +126,17 @@ class OrderResource(Resource):
             total=total_amount,
             message="Bạn vừa tạo thành công đơn hàng trên hệ thống sau đây là thông tin chi tiết:",
             sub_total=sub_total,
+            payment=payment,
+            address=f"{ward['ward_name']}, {district['district_name']}, {province['province_name']}",
+            address_detail=shipping_address,
+            phone_number=phone_number,
         )
 
         send_email(
             subject="Đơn hàng được tạo thành công",
             sender="buivi04062002@gmail.com",
             recipients=["buichivi04062002@gmail.com"],
-            body=f"{html_content}",
+            body=f"{html_content}"
         )
 
         return {

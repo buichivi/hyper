@@ -20,22 +20,74 @@
         >
             <thead>
                 <tr>
-                    <th style="padding: 10px; text-align: left; border: 1px solid #333">
+                    <th
+                        style="
+                            padding: 10px;
+                            text-align: left;
+                            border: 1px solid #333;
+                        "
+                    >
                         Product name
                     </th>
-                    <th style="padding: 10px; text-align: left; border: 1px solid #333">Quantity</th>
-                    <th style="padding: 10px; text-align: left; border: 1px solid #333">Size</th>
-                    <th style="padding: 10px; text-align: left; border: 1px solid #333">Unit Price</th>
-                    <th style="padding: 10px; text-align: left; border: 1px solid #333">Discount</th>
-                    <th style="padding: 10px; text-align: left; border: 1px solid #333">Total Price</th>
+                    <th
+                        style="
+                            padding: 10px;
+                            text-align: left;
+                            border: 1px solid #333;
+                        "
+                    >
+                        Quantity
+                    </th>
+                    <th
+                        style="
+                            padding: 10px;
+                            text-align: left;
+                            border: 1px solid #333;
+                        "
+                    >
+                        Size
+                    </th>
+                    <th
+                        style="
+                            padding: 10px;
+                            text-align: left;
+                            border: 1px solid #333;
+                        "
+                    >
+                        Unit Price
+                    </th>
+                    <th
+                        style="
+                            padding: 10px;
+                            text-align: left;
+                            border: 1px solid #333;
+                        "
+                    >
+                        Discount
+                    </th>
+                    <th
+                        style="
+                            padding: 10px;
+                            text-align: left;
+                            border: 1px solid #333;
+                        "
+                    >
+                        Total Price
+                    </th>
                 </tr>
             </thead>
             <tbody>
                 {% for order_item in order %}
                 <tr style="background-color: #eee">
-                    <td style="padding: 10px; border: 1px solid #333">{{order_item['product_name']}}</td>
-                    <td style="padding: 10px; border: 1px solid #333">{{order_item['quantity']}}</td>
-                    <td style="padding: 10px; border: 1px solid #333">{{order_item['size']}}</td>
+                    <td style="padding: 10px; border: 1px solid #333">
+                        {{order_item['product_name']}}
+                    </td>
+                    <td style="padding: 10px; border: 1px solid #333">
+                        {{order_item['quantity']}}
+                    </td>
+                    <td style="padding: 10px; border: 1px solid #333">
+                        {{order_item['size']}}
+                    </td>
                     <td style="padding: 10px; border: 1px solid #333">
                         ${{order_item['product_price']}}
                     </td>
@@ -106,6 +158,32 @@
                     <td style="padding: 5px 10px">${{ total }}</td>
                 </tr>
             </tbody>
+        </table>
+        <table>
+            <tr>
+                <td style="font-weight: 500">Hình thức thanh toán:</td>
+                {% if payment == 'COD' %}
+                <td>Thanh toán khi nhận hàng (COD)</td>
+                {% else %}
+                <td>Paypal payment</td>
+                {% endif %}
+            </tr>
+            <tr>
+                <td style="font-weight: 500">Địa chỉ:</td>
+                <td>{{address}}</td>
+            </tr>
+            <tr>
+                <td style="font-weight: 500">Địa chỉ giao hàng cụ thể:</td>
+                <td>{{address_detail}}</td>
+            </tr>
+            <tr>
+                <td style="font-weight: 500">Số điện thoại nhận hàng:</td>
+                <td>{{phone_number}}</td>
+            </tr>
+            <tr>
+                <td style="font-weight: 500">Trạng thái đơn hàng:</td>
+                <td>Pending</td>
+            </tr>
         </table>
     </body>
 </html>

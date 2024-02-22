@@ -1,5 +1,6 @@
-# 1. Render image product []
-# 2. Complete Cart [x]
-# 3. Complete Order []
-# 4. Add send email.... []
-# 5. Search page []
+# Complete Cart [x]
+# Complete Order [x]
+# Add send email.... [x]
+# Render image product [x]
+# Search page []
+# Fix comment problem only user bought the product have right to comment

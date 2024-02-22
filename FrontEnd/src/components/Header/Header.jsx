@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import TippyHeadless from '@tippyjs/react/headless';
 
 import { HiOutlineUserCircle } from 'react-icons/hi2';
@@ -14,7 +14,9 @@ const Header = () => {
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
     const cart = useSelector((state) => state.cart.items);
     const [isOpenCart, setIsOpenCart] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
 
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const [brands, setBrands] = useState();
 
@@ -50,7 +52,10 @@ const Header = () => {
                     {brands?.map((brand, index) => {
                         return (
                             <div key={index} className="h-full">
-                                <MenuItem brand={brand} />
+                                <MenuItem
+                                    brand={brand}
+                                    isLogin={isAuthenticated}
+                                />
                             </div>
                         );
                     })}
@@ -83,7 +88,7 @@ const Header = () => {
                         />
                         <label
                             htmlFor="search-input-toggle"
-                            className="absolute right-0 z-10 transition-all duration-500 peer-checked/search-input:right-[88%]"
+                            className="absolute right-0 z-10 transition-all duration-500 peer-checked/search-input:right-[86%]"
                         >
                             <CiSearch className="h-6 w-6 cursor-pointer" />
                         </label>
@@ -97,6 +102,8 @@ const Header = () => {
                             peer-checked/search-input:left-0 peer-checked/search-input:border-black
                             peer-checked/search-input:pl-8
                             "
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
                             onBlur={(e) => {
                                 const checkbox =
                                     e.target.previousSibling.previousSibling;
@@ -106,12 +113,17 @@ const Header = () => {
                                     searchBtn.style.pointerEvents = 'auto';
                                 }
                             }}
+                            onKeyDown={(e) => {
+                                if (e.keyCode == 13) {
+                                    navigate('/search?' + searchQuery);
+                                }
+                            }}
                         />
                         <span
-                            className="absolute right-2 cursor-pointer peer-placeholder-shown/search-input:hidden"
+                            className="absolute right-3 cursor-pointer peer-placeholder-shown/search-input:hidden"
                             onClick={(e) => {
                                 const searchInput = e.target.previousSibling;
-                                searchInput.value = '';
+                                setSearchQuery('');
                                 searchInput.focus();
                             }}
                         >

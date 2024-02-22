@@ -1,4 +1,12 @@
-import { Home, Brand, Product, CheckOut, Favorites, Cart } from '../pages';
+import {
+    Home,
+    Brand,
+    Product,
+    CheckOut,
+    Favorites,
+    Cart,
+    Search,
+} from '../pages';
 
 const publicRoutes = [
     {
@@ -42,6 +50,12 @@ const publicRoutes = [
         component: Cart,
         title: 'Cart',
         authRequired: true,
+    },
+    {
+        path: '/search',
+        component: Search,
+        title: 'Search',
+        authRequired: false,
     },
 ];
 

@@ -96,3 +96,14 @@ class CheckingProductIsInStockResource(Resource):
                     "cart_id": product_cart['cart_id']
                 }, 400
         return {"message": "All product are still in stock"}, 200
+
+
+class SearchProductResource(Resource):
+    @cross_origin()
+    def get(self):
+        query = request.args.get('query')
+        products = Product.query.filter(Product.name.ilike(f"%{query}%")).all()
+        products_json = [product.to_json() for product in products]
+        return {
+            "products": products_json
+        }
