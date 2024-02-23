@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import CustomerInfo from '../../components/CustomerInfo/CustomerInfo';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import request from '../../utils/request';
 import { toast } from 'react-toastify';
 import { logOutUser } from '../../store/actions';
@@ -15,11 +15,16 @@ const Profile = () => {
 
     const [curPass, setCurPass] = useState('');
     const [newPass, setNewPass] = useState('');
-
+    const [orders, setOrders] = useState([]);
     const dispatch = useDispatch();
 
     useEffect(() => {
         setSection(sectionIndex);
+        if (sectionIndex == 2) {
+            request
+                .get('/me/order/all')
+                .then((res) => setOrders(res.data.orders));
+        }
     }, [sectionIndex, location]);
 
     const user = useSelector((state) => state.user.user);
@@ -181,7 +186,19 @@ const Profile = () => {
                             user={user}
                             isAccountPage={true}
                             onSubmitForm={({ values }) => {
-                                console.log(values);
+                                request
+                                    .patch('/change-infomation', {
+                                        ...values,
+                                    })
+                                    .then((res) => {
+                                        toast.success(res.data.message);
+                                    })
+                                    .catch((err) => {
+                                        toast.error(
+                                            err.response.data.message ||
+                                                'Something went wrong!',
+                                        );
+                                    });
                             }}
                             ref={saveBtn}
                         />
@@ -192,6 +209,55 @@ const Profile = () => {
                         >
                             Save changes
                         </button>
+                    </div>
+                )}
+                {section == 2 && (
+                    <div className="col-span-8">
+                        <div className="grid grid-cols-7 [&>*]:border-b [&>*]:border-b-slate-400 [&>*]:p-3">
+                            <div className="border-b !border-b-slate-500 font-medium">
+                                Order Id
+                            </div>
+                            <div className="border-b !border-b-slate-500 font-medium">
+                                Customer name
+                            </div>
+                            <div className="border-b !border-b-slate-500 font-medium">
+                                Total Price
+                            </div>
+                            <div className="border-b !border-b-slate-500 font-medium">
+                                Order date
+                            </div>
+                            <div className="border-b !border-b-slate-500 font-medium">
+                                Order state
+                            </div>
+                            <div className="border-b !border-b-slate-500 font-medium">
+                                Payment
+                            </div>
+                            <div className="border-b !border-b-slate-500 font-medium">
+                                Action
+                            </div>
+                            {orders.map((order) => {
+                                return (
+                                    <>
+                                        <div>#{order?.id}</div>
+                                        <div>{order?.customer_name}</div>
+                                        <div>${order?.total_amount}</div>
+                                        <div>{order?.order_date}</div>
+                                        <div>{order?.status}</div>
+                                        <div className="uppercase">
+                                            {order?.payment}
+                                        </div>
+                                        <div>
+                                            <Link
+                                                to={'/order/' + order?.id}
+                                                className="bg-black p-2 text-white ring-1 ring-black transition-colors hover:bg-white hover:text-black"
+                                            >
+                                                View detail
+                                            </Link>
+                                        </div>
+                                    </>
+                                );
+                            })}
+                        </div>
                     </div>
                 )}
             </div>

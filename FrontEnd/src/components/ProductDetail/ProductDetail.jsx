@@ -270,7 +270,7 @@ const ProductDetail = ({ productId = null }) => {
                                         See more reviews
                                     </button>
                                 )}
-                                {reviewDetails?.length <= limitReviews && (
+                                {reviewDetails?.length > 0 && reviewDetails?.length <= limitReviews && (
                                     <button
                                         className="px-4 py-1 ring-1 ring-black transition-all hover:bg-black hover:text-white"
                                         onClick={() => setLimitReviews(3)}

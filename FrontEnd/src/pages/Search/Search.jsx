@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useCallback, useEffect, useState } from 'react';
 import { IoIosArrowDown } from 'react-icons/io';
 import { useSelector } from 'react-redux';
-import { useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import request from '../../utils/request';
 import { Filter, Navigation, ProductCard } from '../../components';
 import { PiSlidersHorizontal } from 'react-icons/pi';
@@ -10,8 +10,7 @@ import { SORT_PRODUCT } from '../../constants';
 import PropTypes from 'prop-types';
 
 const Search = () => {
-    const location = useLocation();
-    const searchQuery = location.search.slice(1);
+    const { search_query } = useParams();
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 
     const [isOpenFilters, setIsOpenFilters] = useState(false);
@@ -41,7 +40,7 @@ const Search = () => {
         await request
             .get('/search', {
                 params: {
-                    query: searchQuery,
+                    query: search_query,
                 },
             })
             .then((res) => {
@@ -53,12 +52,12 @@ const Search = () => {
                 .get('/me/favorites')
                 .then((res) => setFavoriteProducts(res.data.favorite_products));
         }
-    }, [searchQuery, isAuthenticated]);
+    }, [search_query, isAuthenticated]);
 
     useEffect(() => {
         window.scrollTo(0, 0);
         loadData();
-    }, [searchQuery, loadData]);
+    }, [search_query, loadData]);
 
     return (
         <div className="pb-6">
@@ -66,7 +65,7 @@ const Search = () => {
             <div>
                 <div className="sticky top-[72px] z-30 flex h-[80px] items-center justify-between bg-white py-4">
                     <h4 className="text-4xl font-medium capitalize">
-                        Search: `{searchQuery}`
+                        Search: `{search_query}`
                     </h4>
                     <div className="flex items-center gap-2 text-lg font-medium">
                         <div

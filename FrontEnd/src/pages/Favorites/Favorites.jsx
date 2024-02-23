@@ -23,19 +23,39 @@ const Favorites = () => {
         <div className="py-4">
             <h2 className="pb-4 text-2xl font-medium">Favorite Products</h2>
             {isAuthenticated ? (
-                <div className="grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4">
-                    {favoriteProducts.map((product, index) => {
-                        return (
-                            <ProductCard
-                                key={index}
-                                product={product}
-                                isFavorite={favorite_product_ids.includes(
-                                    product.id,
-                                )}
-                            />
-                        );
-                    })}
-                </div>
+                <>
+                    {favoriteProducts.length > 0 ? (
+                        <div className="grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4">
+                            {favoriteProducts.map((product, index) => {
+                                return (
+                                    <ProductCard
+                                        key={index}
+                                        product={product}
+                                        isFavorite={favorite_product_ids.includes(
+                                            product.id,
+                                        )}
+                                    />
+                                );
+                            })}
+                        </div>
+                    ) : (
+                        <div className="relative left-1/2 top-2/3 w-full -translate-x-1/2 select-none py-20 opacity-60">
+                            <div className="flex items-center justify-center text-center">
+                                <img
+                                    src="/src/assets/images/open-box.png"
+                                    alt=""
+                                    className="size-60 object-cover"
+                                />
+                            </div>
+                            <h3
+                                className="text-center font-BebasNeue text-3xl font-medium capitalize tracking-widest
+                                        text-slate-400"
+                            >
+                                No product found
+                            </h3>
+                        </div>
+                    )}
+                </>
             ) : (
                 <div className="select-none opacity-60">
                     <div className="flex items-center justify-center text-center">

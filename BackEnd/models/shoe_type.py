@@ -6,7 +6,7 @@ class ShoeType(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     code = db.Column(db.String(100), nullable=False)
-    img_url = db.Column(db.String(255), nullable=True)
+    img_url = db.Column(db.Text, nullable=True)
 
     # ForeignKey
     brand_id = db.Column(db.Integer, db.ForeignKey("tb_brand.id"), nullable=False)

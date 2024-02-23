@@ -13,6 +13,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { AiOutlineProfile } from 'react-icons/ai';
 import { GoChecklist } from 'react-icons/go';
 import { MdLogout } from 'react-icons/md';
+import { IoIosSettings } from 'react-icons/io';
 
 const Header = () => {
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
@@ -22,14 +23,14 @@ const Header = () => {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const [brands, setBrands] = useState();
     const [isOpen, setIsOpen] = useState(false);
-
+    
     const totalProducts = cart.reduce(
         (acc, cartItem) => acc + cartItem?.quantity,
         0,
-    );
-
+        );
+        
+    const [brands, setBrands] = useState();
     useEffect(() => {
         request.get('/brand').then((res) => setBrands(res.data.brands));
     }, []);
@@ -120,7 +121,7 @@ const Header = () => {
                             }}
                             onKeyDown={(e) => {
                                 if (e.keyCode == 13) {
-                                    navigate('/search?' + searchQuery);
+                                    navigate('/search/' + searchQuery);
                                 }
                             }}
                         />
@@ -169,6 +170,14 @@ const Header = () => {
                                         className="absolute right-0 top-[140%] flex min-w-[120px] select-none flex-col 
                                     border border-slate-300 bg-white p-2 shadow-lg [&>*]:px-4 [&>*]:py-1 [&>*]:text-right"
                                     >
+                                        <Link
+                                            to="/profile#0"
+                                            className="flex items-center justify-between hover:bg-slate-200"
+                                            onClick={() => setIsOpen(!isOpen)}
+                                        >
+                                            <IoIosSettings  />
+                                            <span>Settings</span>
+                                        </Link>
                                         <Link
                                             to="/profile#1"
                                             className="flex items-center justify-between hover:bg-slate-200"

@@ -54,7 +54,7 @@ const publicRoutes = [
         authRequired: true,
     },
     {
-        path: '/search',
+        path: '/search/:search_query',
         component: Search,
         title: 'Search',
         authRequired: false,
@@ -66,7 +66,7 @@ const publicRoutes = [
         authRequired: true,
     },
     {
-        path: '/order',
+        path: '/order/:order_id',
         component: Order,
         title: 'Order',
         authRequired: true,

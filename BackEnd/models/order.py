@@ -4,6 +4,7 @@ from sqlalchemy import JSON
 
 from database import db
 from models.order_detail import OrderDetail
+from models.order_status import OrderStatus
 
 
 class Order(db.Model):
@@ -45,9 +46,9 @@ class Order(db.Model):
         ward,
         payment,
         order_date=datetime.now().strftime("%d/%m/%Y"),
-        status_id=1,
         is_paid=False,
     ) -> None:
+        order_status = OrderStatus.query.filter_by(status="Pending").first()
         self.customer_name = cus_name
         self.shipping_address = shipping_address
         self.phone_number = phone_number
@@ -55,7 +56,7 @@ class Order(db.Model):
         self.user_id = user_id
         self.total_amount = total_amount
         self.order_date = order_date
-        self.status_id = status_id
+        self.status_id = order_status.id
         self.province = province
         self.district = district
         self.ward = ward
@@ -66,6 +67,7 @@ class Order(db.Model):
         return f"""<Order {self.id}> {self.total_amount} {self.status_id} {self.order_date}"""
 
     def to_json(self) -> dict:
+        status = OrderStatus.query.get(self.status_id)
         return {
             "id": self.id,
             "customer_name": self.customer_name,
@@ -79,4 +81,5 @@ class Order(db.Model):
             "total_amount": self.total_amount,
             "is_paid": self.is_paid,
             "payment": self.payment,
+            "status": status.status,
         }

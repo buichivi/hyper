@@ -8,12 +8,7 @@ from flask_restful import Resource
 
 from config import REMEMBER_COOKIE_NAME
 from database import db
-from models.cart import Cart
 from models.favorite import Favorite
-from models.order import Order
-from models.order_detail import OrderDetail
-from models.order_status import OrderStatus
-from models.payment import Payment
 from models.product import Product
 from models.user import User
 
@@ -77,9 +72,9 @@ class SignUpResource(Resource):
         dob = data.get("date_of_birth")
         phoneNb = data.get("phone_number")
         address = data.get("address")
-        province = data.get("province") or {"province_id": -1}
-        district = data.get("district") or {"district_id": -1}
-        ward = data.get("ward") or {"ward_id": -1}
+        province = json.dumps((data.get("province") or {'province_id': -1}))
+        district = json.dumps(data.get("district") or {'district_id': -1})
+        ward = json.dumps(data.get("ward") or {'ward_id': -1})
         if not firstName:
             return {"message": "First name is missing"}, 400
         if not lastName:
@@ -199,3 +194,48 @@ class ChangePasswordResource(Resource):
         user.set_password(new_password)
         db.session.commit()
         return {"message": "Change password successfully"}, 200
+
+
+class ChangeUserInfoResource(Resource):
+    @cross_origin()
+    @login_required
+    def patch(self):
+        data = request.get_json()
+        first_name = data.get("first_name")
+        last_name = data.get("last_name")
+        phone_number = data.get("phone_number")
+        date_of_birth = data.get("date_of_birth")
+        province = json.dumps(data.get("province"))
+        district = json.dumps(data.get("district"))
+        ward = json.dumps(data.get("ward"))
+        shipping_address = data.get("shipping_address")
+        if not first_name:
+            return {"message": "first_name is missing"}, 400
+        if not last_name:
+            return {"message": "last_name is missing"}, 400
+        if not phone_number:
+            return {"message": "phone_number is missing"}, 400
+        if not date_of_birth:
+            return {"message": "date_of_birth is missing"}, 400
+        if not province:
+            return {"message": "province is missing"}, 400
+        if not district:
+            return {"message": "district is missing"}, 400
+        if not ward:
+            return {"message": "ward is missing"}, 400
+        if not shipping_address:
+            return {"message": "shipping_address is missing"}, 400
+
+        user = User.query.get(current_user.id)
+        user.set_infomation(
+            first_name,
+            last_name,
+            phone_number,
+            date_of_birth,
+            shipping_address,
+            province,
+            district,
+            ward,
+        )
+        db.session.commit()
+        return {"message": "Change your infomation successfully"}, 200

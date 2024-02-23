@@ -101,10 +101,15 @@ const SORT_PRODUCT = [
     {
         name: 'Newest',
         method: (a, b) => {
-            return (
-                new Date(b?.manufacture_date).getTime() -
-                new Date(a?.manufacture_date).getTime()
-            );
+            function parseDate(dateString) {
+                var parts = dateString.split('/');
+                return new Date(parts[2], parts[1] - 1, parts[0]).getTime();
+            }
+
+            var date1 = parseDate(a?.manufacture_date);
+            var date2 = parseDate(b?.manufacture_date);
+            console.log(date1, date2);
+            return date1 - date2;
         },
     },
     {

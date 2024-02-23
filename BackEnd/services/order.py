@@ -17,6 +17,21 @@ from models.product_size import ProductSize
 class OrderResource(Resource):
     @cross_origin()
     @login_required
+    def get(self):
+        order_id = request.args.get("order_id")
+        if not order_id:
+            return {"message": "order_id is missing"}, 400
+        order = Order.query.filter_by(id=order_id, user_id=current_user.id).first()
+        if not order:
+            return {"message": "Order is not exist"}, 400
+        order_json = order.to_json()
+        order_json["order_details"] = [
+            order_detail.to_json() for order_detail in order.order_details
+        ]
+        return {"order": order_json}, 200
+
+    @cross_origin()
+    @login_required
     def post(self):
         data = request.get_json()
         customer_name = data.get("customer_name")
@@ -86,7 +101,6 @@ class OrderResource(Resource):
         db.session.add(order)
         db.session.commit()
 
-
         order_id = order.id
 
         for cart_item in cart:
@@ -97,7 +111,7 @@ class OrderResource(Resource):
                 return {
                     "message": f"The product named {cart_item.product_name} with size {cart_item.size}  is no longer in stock`"
                 }, 400
-            price_a_product = (
+            total_price = (
                 math.ceil(
                     (cart_item.product_price * (100 - cart_item.product_discount) / 100)
                 )
@@ -107,7 +121,7 @@ class OrderResource(Resource):
                 cart_item.size,
                 cart_item.quantity,
                 cart_item.product_price,
-                price_a_product,
+                total_price,
                 order_id,
                 cart_item.product_id,
             )
@@ -142,7 +156,7 @@ class OrderResource(Resource):
             subject="Đơn hàng được tạo thành công",
             sender="buivi04062002@gmail.com",
             recipients=[email],
-            body=f"{html_content}"
+            body=f"{html_content}",
         )
 
         return {
@@ -191,3 +205,10 @@ class UpdateOrderStatusResource(Resource):
             "status": order_status.to_json(),
             "order": order.to_json(),
         }, 200
+
+
+class GetAllOrderResource(Resource):
+    @cross_origin()
+    @login_required
+    def get(self):
+        return {"orders": [order.to_json() for order in current_user.orders]}, 200

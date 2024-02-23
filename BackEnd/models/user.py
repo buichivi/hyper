@@ -1,3 +1,4 @@
+from flask import json
 from flask_login import UserMixin
 from sqlalchemy import JSON
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -13,12 +14,13 @@ class User(db.Model, UserMixin):
     lastName = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
+    role = db.Column(db.String(255), nullable=False)
     dateOfBirth = db.Column(db.String(50), nullable=True)
     phoneNumber = db.Column(db.String(10), nullable=True)
     address = db.Column(db.String(255), nullable=True)
-    province = db.Column(JSON, nullable=True)
-    district = db.Column(JSON, nullable=True)
-    ward = db.Column(JSON, nullable=True)
+    province = db.Column(db.String(255), nullable=True)
+    district = db.Column(db.String(255), nullable=True)
+    ward = db.Column(db.String(255), nullable=True)
 
     user_reviews = db.relationship("Review", backref="user_reviews", lazy=True)
     user_favorite_products = db.relationship(
@@ -36,6 +38,7 @@ class User(db.Model, UserMixin):
         dob=None,
         phoneNb=None,
         address=None,
+        role="CUSTOMER",
         province='{"province_id": -1}',
         district='{"district_id": -1}',
         ward='{"ward_id": -1}',
@@ -50,9 +53,30 @@ class User(db.Model, UserMixin):
         self.province = province
         self.district = district
         self.ward = ward
+        self.role = role
+
+    def set_infomation(
+        self,
+        first,
+        last,
+        phoneNb=None,
+        dob=None,
+        address=None,
+        province='{"province_id": -1}',
+        district='{"district_id": -1}',
+        ward='{"ward_id": -1}',
+    ) -> None:
+        self.firstName = first
+        self.lastName = last
+        self.phoneNumber = phoneNb
+        self.dateOfBirth = dob
+        self.address = address
+        self.province = province
+        self.district = district
+        self.ward = ward
 
     def __repr__(self) -> str:
-        return f"<User {self.id}> {self.firstName} {self.lastName} {self.email} {self.password} {self.phoneNumber} {self.dateOfBirth} {self.address}"
+        return f"<User {self.id}> {self.firstName} {self.lastName} {self.email} {self.phoneNumber} {self.dateOfBirth} {self.address}"
 
     def set_password(self, password) -> None:
         self.password = generate_password_hash(password)
@@ -69,9 +93,9 @@ class User(db.Model, UserMixin):
             "dateOfBirth": self.dateOfBirth,
             "phoneNumber": self.phoneNumber,
             "address": self.address,
-            "province": self.province,
-            "district": self.district,
-            "ward": self.ward,
+            "province": json.loads(self.province),
+            "district": json.loads(self.district),
+            "ward": json.loads(self.ward),
         }
 
     def set_detail_info(self, phoneNb, dob, address, province, district, ward) -> None:

@@ -1,4 +1,5 @@
 from database import db
+from models.product import Product
 
 
 class OrderDetail(db.Model):
@@ -12,6 +13,17 @@ class OrderDetail(db.Model):
     order_id = db.Column(db.Integer, db.ForeignKey("tb_order.id"), nullable=False)
     product_id = db.Column(db.Integer, db.ForeignKey("tb_product.id"), nullable=False)
 
+    def to_json(self) -> dict:
+        product = Product.query.get(self.product_id)
+        return {
+            "id": self.id,
+            "product": product.to_json(),
+            "size": self.size,
+            "quantity": self.quantity,
+            "price": self.price,
+            "total_price": self.total_price,
+        }
+
     def __init__(
         self, size, quantity, price, total_price, order_id, product_id
     ) -> None:
@@ -23,4 +35,5 @@ class OrderDetail(db.Model):
         self.product_id = product_id
 
     def __repr__(self) -> str:
-        return f"<OrderDetail {self.id}> {self.total_price} {self.price} {self.quantity} {self.product_id}"
+        product = Product.query.get(self.product_id)
+        return f"<OrderDetail {self.id}> Product name: {product.name}, price: {self.price}, quantity: {self.quantity}"

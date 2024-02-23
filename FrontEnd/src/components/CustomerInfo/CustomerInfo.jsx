@@ -84,6 +84,7 @@ const CustomerInfo = forwardRef(function CustomerForm(
             first_name: user?.firstName ? user?.firstName : '',
             last_name: user?.lastName ? user?.lastName : '',
             phone_number: user?.phoneNumber ? user?.phoneNumber : '',
+            date_of_birth: user?.dateOfBirth ? user?.dateOfBirth : '',
             shipping_address: user?.address ? user?.address : '',
             province: user?.province ? user?.province : { province_id: -1 },
             district: user?.district ? user?.district : { district_id: -1 },
@@ -99,6 +100,13 @@ const CustomerInfo = forwardRef(function CustomerForm(
             phone_number: Yup.string()
                 .required('This field is required!')
                 .matches(regexPhoneNumber, 'Please enter valid phone number'),
+            date_of_birth: Yup.date()
+                .required('This field is required!')
+                .test('is-adult', 'Must be at least 18 years old', (value) => {
+                    const thisYear = new Date().getFullYear();
+                    const dobYear = new Date(value).getFullYear();
+                    return thisYear - dobYear >= 18;
+                }),
             shipping_address: Yup.string().required('This field is required!'),
             province: Yup.object().shape({
                 province_id: Yup.number()
@@ -121,42 +129,42 @@ const CustomerInfo = forwardRef(function CustomerForm(
         },
     });
 
-    const handleSelectProvince = (e) => {
+    const handleSelectProvince = (e, form) => {
         const { name } = e.target;
         // provinceErr.current.style.display = 'none';
         const province = provinces.find(
             (province) => province.province_id == e.target.value,
         );
-        customerInfoForm.setFieldValue(name, province);
+        form.setFieldValue(name, province);
         axios
             .get(
                 `https://vapi.vnappmob.com/api/province/district/${e.target.value}`,
             )
             .then((res) => {
                 setDistricts(res.data.results);
-                customerInfoForm.setFieldValue('district', {
+                form.setFieldValue('district', {
                     district_id: -1,
                     district_name: '--Select district--',
                 });
-                customerInfoForm.setFieldValue('ward', {
+                form.setFieldValue('ward', {
                     ward_id: -1,
                     ward_name: '--Select ward--',
                 });
             });
     };
 
-    const handleSelectDistrict = (e) => {
+    const handleSelectDistrict = (e, form) => {
         const district = districts.find(
             (district) => district.district_id == e.target.value,
         );
-        customerInfoForm.setFieldValue('district', district);
+        form.setFieldValue('district', district);
         axios
             .get(
                 `https://vapi.vnappmob.com/api/province/ward/${e.target.value}`,
             )
             .then((res) => {
                 setWards(res.data.results);
-                customerInfoForm.setFieldValue('ward', {
+                form.setFieldValue('ward', {
                     ward_id: -1,
                     ward_name: '--Select ward--',
                 });
@@ -292,7 +300,9 @@ const CustomerInfo = forwardRef(function CustomerForm(
                             value={
                                 customerInfoForm.values.province?.province_id
                             }
-                            onChange={handleSelectProvince}
+                            onChange={(e) =>
+                                handleSelectProvince(e, customerInfoForm)
+                            }
                         >
                             <option value={-1}>--Select province--</option>
                             {provinces.map((province, index) => (
@@ -336,7 +346,9 @@ const CustomerInfo = forwardRef(function CustomerForm(
                                     customerInfoForm.values.district
                                         ?.district_id
                                 }
-                                onChange={handleSelectDistrict}
+                                onChange={(e) =>
+                                    handleSelectDistrict(e, customerInfoForm)
+                                }
                             >
                                 <option value={-1}>--Select district--</option>
                                 {districts.map((district, index) => (
@@ -488,8 +500,8 @@ const CustomerInfo = forwardRef(function CustomerForm(
                             />
                         </div>
                     </div>
-                    <div className="pb-2 2xl:pb-8">
-                        <div className="pb-2 2xl:pb-8">
+                    <div className="flex items-center justify-between gap-4 pb-2 2xl:pb-8 [&>*]:w-full">
+                        <div className="">
                             <div className="flex items-center justify-between pb-2">
                                 <label
                                     htmlFor="phone_number"
@@ -510,16 +522,42 @@ const CustomerInfo = forwardRef(function CustomerForm(
                                 id="phone_number"
                                 placeholder="Enter your phone number"
                                 className={`w-full rounded-md
-                                border border-gray-400 p-2.5 outline-none ring-2 ring-transparent transition-all
-                                focus:border-transparent focus:ring-slate-800 2xl:rounded-xl
-                                2xl:p-4 2xl:text-3xl`}
+                                    border border-gray-400 p-2.5 outline-none ring-2 ring-transparent transition-all
+                                    focus:border-transparent focus:ring-slate-800 2xl:rounded-xl
+                                    2xl:p-4 2xl:text-3xl`}
                                 value={accountInfo.values.phone_number}
                                 onChange={accountInfo.handleChange}
                                 onBlur={accountInfo.handleBlur}
                             />
                         </div>
+                        <div>
+                            <div className="flex items-center justify-between">
+                                <label
+                                    htmlFor="date_of_birth"
+                                    className="pb-2 font-medium"
+                                >
+                                    Date of birth
+                                </label>
+                                {accountInfo.errors.date_of_birth &&
+                                    accountInfo.touched.date_of_birth && (
+                                        <span className="select-none text-sm text-red-500 2xl:text-2xl">
+                                            {accountInfo.errors.date_of_birth}
+                                        </span>
+                                    )}
+                            </div>
+                            <input
+                                type="date"
+                                name="date_of_birth"
+                                id="date_of_birth"
+                                value={accountInfo.values.date_of_birth}
+                                onChange={accountInfo.handleChange}
+                                onBlur={accountInfo.handleBlur}
+                                className=" w-full rounded-md border border-gray-400 p-2.5 outline-none 
+                            ring-2 ring-transparent transition-all focus:border-transparent focus:ring-slate-800
+                            2xl:rounded-xl 2xl:p-4 2xl:text-3xl"
+                            />
+                        </div>
                     </div>
-
                     <div className="pb-2 2xl:pb-8">
                         <div className="flex items-center justify-between pb-2">
                             <label
@@ -542,7 +580,9 @@ const CustomerInfo = forwardRef(function CustomerForm(
                         focus:border-transparent focus:ring-slate-800 2xl:rounded-xl
                         2xl:p-4 2xl:text-3xl`}
                             value={accountInfo.values.province?.province_id}
-                            onChange={handleSelectProvince}
+                            onChange={(e) =>
+                                handleSelectProvince(e, accountInfo)
+                            }
                         >
                             <option value={-1}>--Select province--</option>
                             {provinces.map((province, index) => (
@@ -582,7 +622,9 @@ const CustomerInfo = forwardRef(function CustomerForm(
                             2xl:p-4 
                             2xl:text-3xl`}
                                 value={accountInfo.values.district?.district_id}
-                                onChange={handleSelectDistrict}
+                                onChange={(e) =>
+                                    handleSelectDistrict(e, accountInfo)
+                                }
                             >
                                 <option value={-1}>--Select district--</option>
                                 {districts.map((district, index) => (

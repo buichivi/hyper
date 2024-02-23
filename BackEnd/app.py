@@ -1,10 +1,15 @@
-from flask import Flask, render_template
+import firebase_admin
+from firebase_admin import credentials
+from flask import Flask, redirect, render_template, url_for
+from flask_admin import Admin
 from flask_cors import CORS
 from flask_login import LoginManager
 from flask_mail import Mail, Message
 from flask_restful import Api
+from sqlalchemy.sql import text
 
 import config
+from admin.models import *
 from database import db
 from services.brand import *
 from services.cart import *
@@ -27,8 +32,33 @@ api = Api(app)
 # CORS
 CORS(app=app, supports_credentials=True)
 
+# firebase
+
+
 # Mailing
 mail = Mail(app)
+
+admin = Admin(app, template_mode="bootstrap3")
+
+admin.add_view(UserView(User, db.session))
+admin.add_view(BrandView(Brand, db.session))
+admin.add_view(ShoeTypeView(ShoeType, db.session))
+admin.add_view(ProductView(Product, db.session))
+admin.add_view(ProductImageView(ProductImage, db.session))
+admin.add_view(ProductSizeView(ProductSize, db.session))
+admin.add_view(OrderView(Order, db.session))
+admin.add_view(LogoutAdmin(name="Log out"))
+
+
+@app.route("/login-admin", methods=["POST", "GET"])
+def login_admin():
+    if request.method == "POST":
+        email = request.form.get("email")
+        password = request.form.get("password")
+        user = User.query.filter_by(email=email).first()
+        if user and user.check_password(password) and user.role == "ADMIN":
+            login_user(user)
+    return redirect("/admin")
 
 
 # Fix cors problem
@@ -54,9 +84,9 @@ def after_request(response):
 login_manager = LoginManager(app)
 
 
-@app.route("/email")
-def index():
-    return render_template("order_detail.html", sub_total=0, total=0, message="Hello")
+# @app.route("/email")
+# def index():
+#     return render_template("order_detail.html", sub_total=0, total=0, message="Hello")
 
 
 # flask-login user_loader
@@ -74,6 +104,7 @@ api.add_resource(CheckingLoginResource, "/checking-login")
 api.add_resource(FavoriteProductsResource, "/me/favorites")
 api.add_resource(CheckingEmailSignUpResource, "/check-email")
 api.add_resource(ChangePasswordResource, "/change-password")
+api.add_resource(ChangeUserInfoResource, "/change-infomation")
 
 # Brand
 api.add_resource(BrandResource, "/brand")
@@ -102,6 +133,7 @@ api.add_resource(ClearCartResource, "/me/cart/clear")
 # Order
 api.add_resource(OrderResource, "/me/order")
 api.add_resource(UpdateOrderStatusResource, "/me/order/status")
+api.add_resource(GetAllOrderResource, "/me/order/all")
 
 
 @app.template_global()
@@ -115,7 +147,37 @@ def send_email(subject, sender, recipients, body):
     mail.send(msg)
 
 
+def insert_order_statuses():
+    # Thêm các trạng thái cho đơn hàng vào cơ sở dữ liệu
+    db.session.execute(text("ALTER TABLE tb_order_status AUTO_INCREMENT = 1"))
+    db.session.commit()
+    order_statuses = [
+        {"name": "Pending"},
+        {"name": "Processing"},
+        {"name": "Shipped"},
+        {"name": "Delivered"},
+    ]
+
+    for status in order_statuses:
+        existing_status = OrderStatus.query.filter_by(status=status["name"]).first()
+        if existing_status is None:
+            new_status = OrderStatus(status=status["name"])
+            db.session.add(new_status)
+
+    # Lưu các thay đổi vào cơ sở dữ liệu
+    db.session.commit()
+
+
+def insert_admin_user():
+    user = User("Bui Chi", "Vi", "admin@gmail.com", "admin", role="ADMIN")
+    if not User.query.filter_by(email=user.email).first():
+        db.session.add(user)
+    db.session.commit()
+
+
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
+        insert_admin_user()
+        insert_order_statuses()
     app.run(debug=True)
