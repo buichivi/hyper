@@ -1,6 +1,8 @@
 from flask import request
 from flask_cors import cross_origin
 from flask_restful import Resource
+from sqlalchemy import and_
+from sqlalchemy.sql.expression import func
 
 from database import db
 from models.brand import Brand
@@ -107,3 +109,28 @@ class SearchProductResource(Resource):
         return {
             "products": products_json
         }
+
+class GetFeaturedProductResource(Resource):
+    @cross_origin()
+    def get(self):
+        products = Product.query.filter_by(featured = True).all()
+        return {"products": [product.to_json() for product in products]}, 200
+
+class GetOtherProductOfBrandResource(Resource):
+    @cross_origin()
+    def get(self):
+        brand_id = request.args.get('brand_id')
+        product_id= request.args.get('product_id')
+        number_of_product = request.args.get('number_of_product')
+        if not brand_id:
+            return {"message": "Brand id is missing"}, 400
+        if not product_id:
+            return {"message": "Product id is missing"}, 400
+        if not number_of_product:
+            return {"message": "Number of product is missing"}, 400
+
+        products = Product.query.filter(and_(
+            Product.brand_id == brand_id,
+            Product.id != product_id
+        )).order_by(func.random()).limit(number_of_product).all()
+        return {"products": [prod.to_json() for prod in products]}, 200

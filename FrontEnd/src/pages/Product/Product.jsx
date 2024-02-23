@@ -1,7 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
-import { Navigation, ProductDetail, ProductPreview } from '../../components';
+import {
+    Navigation,
+    ProductDetail,
+    ProductPreview,
+    SectionProduct,
+} from '../../components';
 import { ErrorPage } from '../';
 import { CiDeliveryTruck } from 'react-icons/ci';
 import { FaRegHeart, FaHeart } from 'react-icons/fa';
@@ -16,13 +21,14 @@ const Product = () => {
     const [product, setProduct] = useState({});
     const [path, setPath] = useState([]);
     const [selectedSize, setSelectedSize] = useState(-1);
-    const [quantity, setQuantity] = useState(0);
+    const [quantity, setQuantity] = useState(1);
     const [productImgs, setProductImgs] = useState([]);
+    const [recommendedProducts, setRecommendedProducts] = useState([]);
 
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
     const dispatch = useDispatch();
 
-    console.log(productImgs);
+    console.log(product?.id);
 
     const isCorrectPath =
         product?.brand?.code == brand_code &&
@@ -39,6 +45,21 @@ const Product = () => {
             .get('/product-image', { params: { product_id: product_id } })
             .then((res) => setProductImgs(res.data.product_imgs));
     }, [product_id]);
+
+    useEffect(() => {
+        request
+            .get('/recommended', {
+                params: {
+                    product_id: product_id,
+                    brand_id: product?.brand?.id,
+                    number_of_product: 5,
+                },
+            })
+            .then((res) => {
+                console.log(res.data);
+                setRecommendedProducts(res.data.products);
+            });
+    }, [product, product_id]);
 
     useEffect(() => {
         setPath([
@@ -70,7 +91,12 @@ const Product = () => {
     }, [loadData]);
 
     useEffect(() => {
-        if (quantity > 0) errorQuantityRef.current.style.display = 'none';
+        if (quantity > 0) {
+            if (errorQuantityRef.current) {
+                errorQuantityRef.current.style.display = 'none';
+            }
+        }
+
         if (selectedSize != -1) {
             errorSizeRef.current.style.display = 'none';
         }
@@ -258,9 +284,12 @@ const Product = () => {
                                         >
                                             Add to cart
                                         </button>
-                                        <button className="min-w-[30%] py-3 text-base uppercase ring-1 ring-black transition-all hover:bg-black hover:text-white">
+                                        <Link
+                                            to="/cart"
+                                            className="min-w-[30%] py-3 text-center text-base uppercase ring-1 ring-black transition-all hover:bg-black hover:text-white"
+                                        >
                                             View cart
-                                        </button>
+                                        </Link>
                                     </div>
                                 </>
                             )}
@@ -269,6 +298,12 @@ const Product = () => {
                                 <ProductDetail productId={product_id} />
                             </div>
                         </div>
+                    </div>
+                    <div className="py-8">
+                        <h2 className="text-3xl font-medium">
+                            You might also like
+                        </h2>
+                        <SectionProduct products={recommendedProducts} />
                     </div>
                 </>
             ) : (

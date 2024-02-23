@@ -11,6 +11,8 @@ from flask_login import current_user, login_required, logout_user
 from markupsafe import Markup
 from werkzeug.security import generate_password_hash
 from wtforms import SelectField
+from wtforms.fields import DateField
+from wtforms.widgets import DateInput
 
 from models.brand import Brand, db
 from models.order_status import OrderStatus
@@ -86,7 +88,7 @@ class BrandView(ModelView):
     def on_model_change(self, form, model, is_created):
         # Lấy dữ liệu file từ trường ImageUploadField
         file = form.img_url.data
-        if file:
+        if not isinstance(file, str):
             # Tải lên file vào Firebase Storage
             blob = bucket.blob(file.filename)
             blob.upload_from_file(file, rewind=True, content_type=file.content_type)
@@ -98,6 +100,8 @@ class BrandView(ModelView):
 
             # Lưu đường dẫn URL vào trường ImageUploadField
             model.img_url = url
+        else:
+            model.img_url = file
 
     form_extra_fields = {"img_url": ImageUploadField("Image", base_path=file_path)}
 
@@ -133,7 +137,7 @@ class ShoeTypeView(ModelView):
         # Lấy dữ liệu file từ trường ImageUploadField
         file = form.img_url.data
         brand = form.brand.data
-        if file:
+        if not isinstance(file, str):
             # Tải lên file vào Firebase Storage
             blob = bucket.blob(file.filename)
             blob.upload_from_file(file, rewind=True, content_type=file.content_type)
@@ -145,6 +149,8 @@ class ShoeTypeView(ModelView):
 
             # Lưu đường dẫn URL vào trường ImageUploadField
             model.img_url = url
+        else:
+            model.img_url = file
         if brand:
             model.brand_id = brand.id
 
@@ -189,6 +195,11 @@ class ProductView(ModelView):
             widget=Select2Widget(),
             get_label=lambda item: f"{Brand.query.get(item.brand_id).name} - {item.name}",
         ),
+        # "manufacture_date": fields.DateField(
+        #     "Manufacture Date",  # Label for the field
+        #     widget=DatePickerWidget(),  # Widget for rendering the field
+        #     format="%Y-%m-%d",  # Date format
+        # ),
     }
 
     def on_model_change(self, form, model, is_created):
@@ -249,7 +260,7 @@ class ProductImageView(ModelView):
         # Lấy dữ liệu file từ trường ImageUploadField
         file = form.img_url.data
         product = form.product.data
-        if file and product:
+        if not isinstance(file, str):
             # Tải lên file vào Firebase Storage
             blob = bucket.blob(file.filename)
             blob.upload_from_file(file, rewind=True, content_type=file.content_type)
@@ -261,7 +272,12 @@ class ProductImageView(ModelView):
 
             # Lưu đường dẫn URL vào trường ImageUploadField
             model.img_url = url
+        else:
+            model.img_url = file
+        if product:
             model.product_id = product.id
+
+        
 
     column_formatters = {"product_name": _get_product_name, "image": _get_product_img}
     form_extra_fields = {
@@ -352,4 +368,36 @@ class OrderView(ModelView):
     column_formatters = {
         "status_name": _get_status_name,
         "total_amount": _get_total_amount,
+    }
+
+
+class SliderView(ModelView):
+    column_list = ("id", "image", "order")
+
+    def _get_slider_img(view, context, model, name):
+        return Markup(f'<img src="{model.img_url}" width="100">')
+
+    def on_model_change(self, form, model, is_created):
+        # Lấy dữ liệu file từ trường ImageUploadField
+        file = form.img_url.data
+        if not isinstance(file, str):
+            # Tải lên file vào Firebase Storage
+            blob = bucket.blob(file.filename)
+            blob.upload_from_file(file, rewind=True, content_type=file.content_type)
+
+            # Lấy đường dẫn URL của file đã tải lên
+            blob.make_public()
+            url = blob.public_url
+            os.remove(op.join(file_path, file.filename))
+
+            # Lưu đường dẫn URL vào trường ImageUploadField
+            model.img_url = url
+        else:
+            model.img_url = file
+    form_extra_fields = {
+        "img_url": ImageUploadField("Image", base_path=file_path),
+    }
+
+    column_formatters = {
+        "image": _get_slider_img,
     }

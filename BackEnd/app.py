@@ -11,6 +11,7 @@ from sqlalchemy.sql import text
 import config
 from admin.models import *
 from database import db
+from models.slider import Slider
 from services.brand import *
 from services.cart import *
 from services.order import *
@@ -18,6 +19,7 @@ from services.product import *
 from services.product_image import *
 from services.review import *
 from services.shoe_type import *
+from services.slider import *
 from services.user import *
 
 app = Flask(__name__)
@@ -47,6 +49,7 @@ admin.add_view(ProductView(Product, db.session))
 admin.add_view(ProductImageView(ProductImage, db.session))
 admin.add_view(ProductSizeView(ProductSize, db.session))
 admin.add_view(OrderView(Order, db.session))
+admin.add_view(SliderView(Slider, db.session))
 admin.add_view(LogoutAdmin(name="Log out"))
 
 
@@ -117,6 +120,8 @@ api.add_resource(GetProductResource, "/products/<int:product_id>")
 api.add_resource(ProductImageResource, "/product-image")
 api.add_resource(CheckingProductIsInStockResource, "/checking-product")
 api.add_resource(SearchProductResource, "/search")
+api.add_resource(GetFeaturedProductResource, "/featured")
+api.add_resource(GetOtherProductOfBrandResource, "/recommended")
 
 
 # Review
@@ -134,6 +139,9 @@ api.add_resource(ClearCartResource, "/me/cart/clear")
 api.add_resource(OrderResource, "/me/order")
 api.add_resource(UpdateOrderStatusResource, "/me/order/status")
 api.add_resource(GetAllOrderResource, "/me/order/all")
+
+# Slider
+api.add_resource(SliderResource, "/slider")
 
 
 @app.template_global()

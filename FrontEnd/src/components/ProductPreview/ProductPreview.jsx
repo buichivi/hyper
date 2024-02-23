@@ -10,9 +10,8 @@ const ProductPreview = ({ images = [] }) => {
     const zoomOutCursor = useRef();
 
     useEffect(() => {
-        if (images.length > 0)
-            setSelectedImage(images[0])
-    }, [images.length])
+        if (images.length > 0) setSelectedImage(images[0]);
+    }, [images.length, images]);
 
     const handleZoomIn = (e) => {
         const rect = e.target.parentElement.getBoundingClientRect();

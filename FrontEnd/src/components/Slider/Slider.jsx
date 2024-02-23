@@ -1,5 +1,7 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
+import { useEffect, useState } from 'react';
+import request from '../../utils/request';
 
 const pagination = {
     clickable: true,
@@ -11,10 +13,17 @@ const pagination = {
 };
 
 const Slider = () => {
+    const [sliders, setSliders] = useState([]);
+    useEffect(() => {
+        request.get('/slider').then((res) => setSliders(res.data.sliders));
+    }, []);
+
     return (
-        <div className='before:content-[""] before:w-full before:h-full before:ring-1 
-        before:ring-black before:bg-white relative before:absolute before:top-1 before:left-1
-        '>
+        <div
+            className='relative before:absolute before:left-1 before:top-1 
+        before:h-full before:w-full before:bg-white before:ring-1 before:ring-black before:content-[""]
+        '
+        >
             <Swiper
                 pagination={pagination}
                 autoplay={{
@@ -23,36 +32,41 @@ const Slider = () => {
                 }}
                 loop={true}
                 modules={[Navigation, Pagination, Autoplay]}
-                className="w-full h-[85vh] relative"
+                className="relative h-[85vh] w-full"
             >
-                <SwiperSlide className="bg-black">
-                    <img
-                        src="src/assets/sliders/slider-1.jpg"
-                        alt=""
-                        className="w-full h-full object-cover"
-                    />
-                </SwiperSlide>
-                <SwiperSlide className="bg-black">
+                {sliders.map((slider, index) => {
+                    return (
+                        <SwiperSlide key={index} className="bg-black">
+                            <img
+                                src={slider.img_url}
+                                alt=""
+                                className="h-full w-full object-cover"
+                            />
+                        </SwiperSlide>
+                    );
+                })}
+
+                {/* <SwiperSlide className="bg-black">
                     <img
                         src="src/assets/sliders/slider-2.jpg"
                         alt=""
-                        className="w-full h-full object-cover"
+                        className="h-full w-full object-cover"
                     />
                 </SwiperSlide>
                 <SwiperSlide className="bg-black">
                     <img
                         src="src/assets/sliders/slider-3.jpg"
                         alt=""
-                        className="w-full h-full object-cover"
+                        className="h-full w-full object-cover"
                     />
                 </SwiperSlide>
                 <SwiperSlide className="bg-black">
                     <img
                         src="src/assets/sliders/slider-4.jpg"
                         alt=""
-                        className="w-full h-full object-cover"
+                        className="h-full w-full object-cover"
                     />
-                </SwiperSlide>
+                </SwiperSlide> */}
             </Swiper>
         </div>
     );

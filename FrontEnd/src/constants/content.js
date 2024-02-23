@@ -109,7 +109,7 @@ const SORT_PRODUCT = [
             var date1 = parseDate(a?.manufacture_date);
             var date2 = parseDate(b?.manufacture_date);
             console.log(date1, date2);
-            return date1 - date2;
+            return date2 - date1;
         },
     },
     {
