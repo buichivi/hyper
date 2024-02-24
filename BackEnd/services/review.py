@@ -64,13 +64,14 @@ class CreateReviewResource(Resource):
 
         user_orders = Order.query.filter_by(user_id=current_user.id).all()
         for user_order in user_orders:
-            order_details = user_order.order_details
-            for order_detail in order_details:
-                if int(order_detail.product_id) == int(product_id):
-                    is_bought = True
+            if user_order.status_id == 4:
+                order_details = user_order.order_details
+                for order_detail in order_details:
+                    if int(order_detail.product_id) == int(product_id):
+                        is_bought = True
+                        break
+                if is_bought == True:
                     break
-            if is_bought == True:
-                break
 
         if is_bought == False:
             return {
