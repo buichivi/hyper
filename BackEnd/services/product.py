@@ -17,10 +17,13 @@ class ProductResource(Resource):
     def get(self):
         brand_code = request.args.get("brand_code")
         shoe_type_code = request.args.get("shoe_type_code")
+        print(brand_code, shoe_type_code)
         if not brand_code:
             return {"message": "brand_code is not provided!"}, 400
         brand = Brand.query.filter_by(code=brand_code).first()
-        shoe_type = ShoeType.query.filter_by(code=shoe_type_code).first()
+        shoe_type = ShoeType.query.filter_by(code=shoe_type_code, brand_id = brand.id).first()
+
+        print(brand, shoe_type)
         if not brand:
             return {"message": "No brand is match with brand_code!"}, 400
         products = None
@@ -32,6 +35,7 @@ class ProductResource(Resource):
         products = Product.query.filter_by(
             brand_id=brand.id, shoe_type_id=shoe_type.id
         ).all()
+        print(brand.id, shoe_type.id)
         result = [product.to_json() for product in products]
         return {"products": result}, 200
 

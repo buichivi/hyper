@@ -13,7 +13,7 @@ const FilterByType = ({ isReset, shoeTypes = [], onChange }) => {
 
     useEffect(() => {
         setFilterTypes(shoeTypes.map((shoeType) => shoeType.id));
-    }, [isReset, shoeTypes.length]);
+    }, [isReset, shoeTypes.length, shoeTypes]);
 
     useEffect(() => {
         onChange({ filterTypes });

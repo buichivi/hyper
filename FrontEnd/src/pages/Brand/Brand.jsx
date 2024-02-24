@@ -88,6 +88,8 @@ const Brand = () => {
         loadData();
     }, [brand_code, shoe_type_code, loadData]);
 
+    console.log(brand);
+
     return (
         <div className="pb-6">
             <Navigation path={path} />

@@ -31,5 +31,6 @@ class GetBrandResource(Resource):
             }, 200
         shoe_types = ShoeType.query.filter_by(brand_id=brand.id).all()
         result = brand.to_json()
+        print(result)
         result["shoe_types"] = [shoe_type.to_json() for shoe_type in shoe_types]
         return {"brand": result}, 200
