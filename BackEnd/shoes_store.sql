@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 24, 2024 at 04:55 AM
+-- Generation Time: Feb 24, 2024 at 07:10 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -197,7 +197,8 @@ INSERT INTO `tb_product` (`id`, `name`, `description`, `price`, `discount`, `fea
 (10, 'PREDATOR LEAGUE FIRM GROUND FOOTBALL BOOTS', 'The game\'s all about goals, and these football boots are crafted to find the net. Every. Time. Target perfection in all-new adidas Predator. Covered in a 3D texture and featuring grippy Strikescale fins on its medial side, the Hybridfeel upper is optimised for accurate shooting. Down below, a full-length Controlplate 2.0 tooling offers stability to cut, swerve and score on firm ground.\r\n\r\nThis product features at least 20% recycled materials. By reusing materials that have already been created, we help to reduce waste and our reliance on finite resources and reduce the footprint of the products we make.', 150, 15, 1, '24/02/2024', 2, 5),
 (11, 'COPA PURE II LEAGUE TURF BOOTS', 'To truly run a game, you need to keep your teammates close and the ball closer. Find the freedom to conduct play in comfortable, classy adidas Copa Pure II. Boasting heritage details and a cow leather forefoot, these football boots look and feel iconic. The lug rubber outsole keeps your play stylish on artificial turf.\r\n\r\nThis product features at least 20% recycled materials. By reusing materials that have already been created, we help to reduce waste and our reliance on finite resources and reduce the footprint of the products we make.', 150, 25, 1, '24/02/2024', 2, 5),
 (12, 'PREDATOR ACCURACY.4 TURF BOOTS', 'Top corner. Bottom corner. All the corners. adidas Predator Accuracy is crafted for goalscoring, so you know the ball will find the net. The fun\'s in choosing how it gets there. The comfortable synthetic upper on these football boots has a slightly textured finish. The lug rubber outsole is designed to keep you in control on artificial turf courts.\r\n\r\nMade with a series of recycled materials, this upper features at least 50% recycled content. This product represents just one of our solutions to help end plastic waste.', 150, 35, 1, '24/02/2024', 2, 5),
-(15, 'D.O.N. ISSUE 5 SHOES', 'From the moment he first stepped onto the hardwood, Donovan Mitchell has been a game changer, and that\'s continued even as his game has grown and evolved. These D.O.N. Issue 5 signature shoes from adidas Basketball continue to build on Spida\'s on-court persona as well as his off-court social activism. Riding an ultra-lightweight Lightstrike midsole and a unique rubber outsole with an elevated traction pattern, these basketball trainers help you dominate the game just like one of the sport\'s very best.\r\n\r\n', 180, 25, 0, '24/02/2024', 2, 6);
+(15, 'D.O.N. ISSUE 5 SHOES', 'From the moment he first stepped onto the hardwood, Donovan Mitchell has been a game changer, and that\'s continued even as his game has grown and evolved. These D.O.N. Issue 5 signature shoes from adidas Basketball continue to build on Spida\'s on-court persona as well as his off-court social activism. Riding an ultra-lightweight Lightstrike midsole and a unique rubber outsole with an elevated traction pattern, these basketball trainers help you dominate the game just like one of the sport\'s very best.\r\n\r\n', 180, 25, 0, '24/02/2024', 2, 6),
+(16, 'TRAE YOUNG 3 LOW TRAINERS', 'SIGNATURE SNEAKERS FROM TRAE YOUNG AND ADIDAS BASKETBALL.\r\nGet ready for what\'s next. This iteration of the signature trainers from Trae Young and adidas Basketball is all about the future of the game. Celebrating Trae\'s unique look, crowd-pleasing bravado and expressive, futuristic style of play, these shoes are built for optimised motion and stability, two elements of Trae\'s game that have elevated him to superstar status. The midsole ensures your most explosive moves can be done at top speed while a rubber outsole adds support on hard plants and cuts.', 210, 30, 0, '24/02/2024', 2, 6);
 
 -- --------------------------------------------------------
 
@@ -239,7 +240,10 @@ INSERT INTO `tb_product_image` (`id`, `img_url`, `is_preview`, `product_id`) VAL
 (21, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/Predator_Accuracy.4_Turf_Boots_Blue_GY9996_22_model.png', 0, 12),
 (24, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/D.O.N._Issue_5_Shoes_White_IE7799_01_standard.png', 1, 15),
 (25, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/D.O.N._Issue_5_Shoes_White_IE7799_02_standard_hover.png', 0, 15),
-(26, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/D.O.N._Issue_5_Shoes_White_IE7799_03_standard.png', 0, 15);
+(26, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/D.O.N._Issue_5_Shoes_White_IE7799_03_standard.png', 0, 15),
+(27, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/Trae_Young_3_Low_Trainers_White_IE2704_01_standard.png', 1, 16),
+(28, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/Trae_Young_3_Low_Trainers_White_IE2704_41_detail.png', 0, 16),
+(29, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/Trae_Young_3_Low_Trainers_White_IE2704_09_standard.png', 0, 16);
 
 -- --------------------------------------------------------
 
@@ -309,7 +313,11 @@ INSERT INTO `tb_product_size` (`id`, `size`, `quantity_in_stock`, `product_id`) 
 (48, 42, 52, 12),
 (49, 39, 26, 15),
 (50, 40, 53, 15),
-(51, 41, 54, 15);
+(51, 41, 54, 15),
+(52, 39, 0, 16),
+(53, 40, 54, 16),
+(54, 41, 63, 16),
+(55, 42, 0, 16);
 
 -- --------------------------------------------------------
 
@@ -563,19 +571,19 @@ ALTER TABLE `tb_order_status`
 -- AUTO_INCREMENT for table `tb_product`
 --
 ALTER TABLE `tb_product`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `tb_product_image`
 --
 ALTER TABLE `tb_product_image`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `tb_product_size`
 --
 ALTER TABLE `tb_product_size`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 
 --
 -- AUTO_INCREMENT for table `tb_review`
