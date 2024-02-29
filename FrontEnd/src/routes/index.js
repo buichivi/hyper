@@ -2,7 +2,6 @@ import {
     Home,
     Brand,
     Product,
-    CheckOut,
     Favorites,
     Cart,
     Search,
@@ -34,12 +33,6 @@ const publicRoutes = [
         component: Product,
         title: 'Product',
         authRequired: false,
-    },
-    {
-        path: '/checkout',
-        component: CheckOut,
-        title: 'CheckOut',
-        authRequired: true,
     },
     {
         path: '/favorites',

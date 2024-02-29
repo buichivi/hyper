@@ -2,12 +2,12 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useCallback, useEffect, useState } from 'react';
 import { ReviewForm, ReviewStars } from '../';
 import { IoIosArrowDown } from 'react-icons/io';
-import { DEMO_CONTENT, SORT_COMMENT } from '../../constants';
-import { IoStar } from 'react-icons/io5';
+import { SORT_COMMENT } from '../../constants';
 import request from '../../utils/request';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import PropTypes from 'prop-types';
 
 const ProductDetail = ({ productId = null }) => {
     const [selectedTab, setSelectedTab] = useState('description');
@@ -288,5 +288,7 @@ const ProductDetail = ({ productId = null }) => {
         </div>
     );
 };
-
+ProductDetail.propTypes = {
+    productId: PropTypes.number,
+};
 export default ProductDetail;

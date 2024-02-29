@@ -5,7 +5,7 @@ export default {
         extend: {
             spacing: {
                 'menu-item-after': 'calc((72px - 100%))',
-                'menu-item-after-w': 'calc(100% * 2)'
+                'menu-item-after-w': 'calc(100% * 2)',
             },
         },
         fontFamily: {

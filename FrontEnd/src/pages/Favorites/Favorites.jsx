@@ -19,6 +19,10 @@ const Favorites = () => {
         }
     }, [isAuthenticated]);
 
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
     return (
         <div className="py-4">
             <h2 className="pb-4 text-2xl font-medium">Favorite Products</h2>

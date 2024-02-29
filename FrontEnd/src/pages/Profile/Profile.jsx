@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import CustomerInfo from '../../components/CustomerInfo/CustomerInfo';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -7,11 +7,11 @@ import { toast } from 'react-toastify';
 import { logOutUser } from '../../store/actions';
 
 const Profile = () => {
-    const [section, setSection] = useState(0);
     const saveBtn = useRef();
     const location = useLocation();
     const navigate = useNavigate();
     const sectionIndex = location.hash.slice(1);
+    const [section, setSection] = useState(sectionIndex);
 
     const [curPass, setCurPass] = useState('');
     const [newPass, setNewPass] = useState('');
@@ -44,7 +44,11 @@ const Profile = () => {
                         htmlFor="select-1"
                         className="flex w-full cursor-pointer select-none rounded-lg border p-2 px-3 text-sm text-gray-700 ring-slate-900 peer-checked:ring"
                     >
-                        Accounts{' '}
+                        {
+                            ['Account', 'Profile', 'Order'].filter(
+                                (item, index) => index == section,
+                            )[0]
+                        }
                     </label>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -61,15 +65,20 @@ const Profile = () => {
                         />
                     </svg>
                     <ul className="max-h-0 select-none flex-col overflow-hidden rounded-b-lg shadow-md transition-all duration-300 peer-checked:max-h-56 peer-checked:py-3">
-                        <li className="cursor-pointer px-3 py-2 text-sm text-slate-600 hover:bg-slate-900 hover:text-white">
-                            Accounts
-                        </li>
-                        <li className="cursor-pointer px-3 py-2 text-sm text-slate-600 hover:bg-slate-900 hover:text-white">
-                            Team
-                        </li>
-                        <li className="cursor-pointer px-3 py-2 text-sm text-slate-600 hover:bg-slate-900 hover:text-white">
-                            Others
-                        </li>
+                        {['Account', 'Profile', 'Order'].map((item, index) => {
+                            return (
+                                <li
+                                    key={index}
+                                    className="cursor-pointer px-3 py-2 text-sm text-slate-600 hover:bg-slate-900 hover:text-white"
+                                    onClick={() => {
+                                        setSection(index);
+                                        navigate('/profile#' + index);
+                                    }}
+                                >
+                                    {item}
+                                </li>
+                            );
+                        })}
                     </ul>
                 </div>
 
@@ -79,7 +88,10 @@ const Profile = () => {
                             return (
                                 <li
                                     key={index}
-                                    onClick={() => setSection(index)}
+                                    onClick={() => {
+                                        setSection(index);
+                                        navigate('/profile#' + index);
+                                    }}
                                     className={`mt-5 cursor-pointer 
                                     px-2 py-2 transition hover:border-l-slate-900 hover:text-slate-900
                                     ${section == index && 'border-l-2  border-l-slate-900 font-semibold text-slate-900'}`}
@@ -181,39 +193,43 @@ const Profile = () => {
                     </div>
                 )}
                 {section == 1 && (
-                    <div className="col-span-8">
-                        <CustomerInfo
-                            user={user}
-                            isAccountPage={true}
-                            onSubmitForm={({ values }) => {
-                                request
-                                    .patch('/change-infomation', {
-                                        ...values,
-                                    })
-                                    .then((res) => {
-                                        toast.success(res.data.message);
-                                    })
-                                    .catch((err) => {
-                                        toast.error(
-                                            err.response.data.message ||
-                                                'Something went wrong!',
-                                        );
-                                    });
-                            }}
-                            ref={saveBtn}
-                        />
-                        <button
-                            type="submit"
-                            onClick={() => saveBtn.current.click()}
-                            className="rounded-md bg-black px-4 py-3 text-white ring-1 ring-black transition-colors hover:bg-white hover:text-black"
-                        >
-                            Save changes
-                        </button>
+                    <div className="col-span-8 pb-4">
+                        {user != null && (
+                            <>
+                                <CustomerInfo
+                                    user={user}
+                                    isAccountPage={true}
+                                    onSubmitForm={({ values }) => {
+                                        request
+                                            .patch('/change-infomation', {
+                                                ...values,
+                                            })
+                                            .then((res) => {
+                                                toast.success(res.data.message);
+                                            })
+                                            .catch((err) => {
+                                                toast.error(
+                                                    err.response.data.message ||
+                                                        'Something went wrong!',
+                                                );
+                                            });
+                                    }}
+                                    ref={saveBtn}
+                                />
+                                <button
+                                    type="submit"
+                                    onClick={() => saveBtn.current.click()}
+                                    className="bg-black px-4 py-3 text-white ring-1 ring-black transition-colors hover:bg-white hover:text-black"
+                                >
+                                    Save changes
+                                </button>
+                            </>
+                        )}
                     </div>
                 )}
                 {section == 2 && (
                     <div className="col-span-8">
-                        <div className="grid grid-cols-7 [&>*]:border-b [&>*]:border-b-slate-400 [&>*]:p-3">
+                        <div className="grid grid-cols-5 text-sm md:text-base xl:grid-cols-7 [&>*]:border-b [&>*]:border-b-slate-400 [&>*]:p-3">
                             <div className="border-b !border-b-slate-500 font-medium">
                                 Order Id
                             </div>
@@ -223,13 +239,13 @@ const Profile = () => {
                             <div className="border-b !border-b-slate-500 font-medium">
                                 Total Price
                             </div>
-                            <div className="border-b !border-b-slate-500 font-medium">
+                            <div className="hidden border-b !border-b-slate-500 font-medium xl:inline-block">
                                 Order date
                             </div>
                             <div className="border-b !border-b-slate-500 font-medium">
                                 Order state
                             </div>
-                            <div className="border-b !border-b-slate-500 font-medium">
+                            <div className="hidden border-b !border-b-slate-500 font-medium xl:inline-block">
                                 Payment
                             </div>
                             <div className="border-b !border-b-slate-500 font-medium">
@@ -241,17 +257,22 @@ const Profile = () => {
                                         <div>#{order?.id}</div>
                                         <div>{order?.customer_name}</div>
                                         <div>${order?.total_amount}</div>
-                                        <div>{order?.order_date}</div>
+                                        <div className="hidden xl:inline-block">
+                                            {order?.order_date}
+                                        </div>
                                         <div>{order?.status}</div>
-                                        <div className="uppercase">
+                                        <div className="hidden uppercase xl:inline-block">
                                             {order?.payment}
                                         </div>
                                         <div>
                                             <Link
                                                 to={'/order/' + order?.id}
-                                                className="bg-black p-2 text-white ring-1 ring-black transition-colors hover:bg-white hover:text-black"
+                                                className="bg-black p-1 text-white ring-1 ring-black transition-colors hover:bg-white hover:text-black xl:p-2"
                                             >
-                                                View detail
+                                                View{' '}
+                                                <span className="hidden lg:inline-block">
+                                                    detail
+                                                </span>
                                             </Link>
                                         </div>
                                     </>

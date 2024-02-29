@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { IoStar } from 'react-icons/io5';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import PropTypes from 'prop-types';
 
 const ReviewForm = ({ onChange = () => {} }) => {
     const [userReviewStars, setUserReviewStars] = useState(0);
@@ -109,6 +110,9 @@ const ReviewForm = ({ onChange = () => {} }) => {
             </button>
         </form>
     );
+};
+ReviewForm.propTypes = {
+    onChange: PropTypes.func,
 };
 
 export default ReviewForm;

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 // Import Swiper React components
 
 import { AiOutlinePlus, AiOutlineMinus } from 'react-icons/ai';
+import PropTypes from 'prop-types';
 
 const ProductPreview = ({ images = [] }) => {
     const [selectedImage, setSelectedImage] = useState(images[0]);
@@ -118,6 +119,10 @@ const ProductPreview = ({ images = [] }) => {
             </div>
         </div>
     );
+};
+
+ProductPreview.propTypes = {
+    images: PropTypes.array,
 };
 
 export default ProductPreview;

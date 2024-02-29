@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { LoginForm } from '../../components';
 import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
@@ -9,7 +9,6 @@ import { PuffLoader } from 'react-spinners';
 const Login = () => {
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
     const isInitialized = useSelector((state) => state.user.isInitialized);
-    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -28,8 +27,7 @@ const Login = () => {
                 <div className="flex h-screen w-[100vw] items-center">
                     <motion.div
                         key="leftSideLoginPage"
-                        className="relative h-full flex-1 overflow-hidden
-                    bg-gradient-to-b from-zinc-700 via-zinc-400 to-stone-900"
+                        className="relative hidden h-full flex-1 overflow-hidden bg-gradient-to-b from-zinc-700 via-zinc-400 to-stone-900 md:inline-block"
                         initial="exit"
                         animate="open"
                         exit="exit"

@@ -1,5 +1,5 @@
 import { IoStar } from 'react-icons/io5';
-
+import PropTypes from 'prop-types';
 const ReviewStars = ({ voted = 5, sizeStar = 4 }) => {
     const filledStars = Math.floor(voted);
     const decimalPart = voted - filledStars;
@@ -42,6 +42,11 @@ const ReviewStars = ({ voted = 5, sizeStar = 4 }) => {
                 })}
         </div>
     );
+};
+
+ReviewStars.propTypes = {
+    voted: PropTypes.number,
+    sizeStar: PropTypes.number,
 };
 
 export default ReviewStars;

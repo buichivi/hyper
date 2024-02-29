@@ -14,12 +14,18 @@
 
 # Order page of user [x]
 
-# Word + PPT []
+# Word + PPT [x]
 
-# Home page problem (slider, featured product render) []
+# Home page problem (slider, featured product render) [x]
 
-# Recommend Product []
+# Recommend Product [x]
 
-# Fix admin problem []
+# Fix admin problem [x]
 
-# Select in admin page []
+# Select in admin page [x]
+
+# Fix hover item in header [x]
+
+# Fix Product table add img_preview and Product Image is contain other image of product []
+
+# Fix delete image from firebase storage when delete something from database []

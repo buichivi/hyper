@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import request from '../../utils/request';
 import { IoReturnUpBackSharp } from 'react-icons/io5';
@@ -19,11 +19,12 @@ const Order = () => {
             });
     }, [order_id]);
 
-    const info = {};
-    const cart = [];
     return (
         <div className="py-8 pt-4">
-            <Link to="/profile#2" className="flex items-center gap-2 p-2 hover:opacity-60">
+            <Link
+                to="/profile#2"
+                className="flex items-center gap-2 p-2 hover:opacity-60"
+            >
                 <IoReturnUpBackSharp />
                 <span className="text-lg">Back</span>
             </Link>
@@ -45,13 +46,13 @@ const Order = () => {
                             return (
                                 <div
                                     key={index}
-                                    className="flex flex-col rounded-lg bg-white sm:flex-row"
+                                    className="flex flex-row rounded-lg bg-white sm:flex-row"
                                 >
                                     <Link
                                         to={`/${orderItem?.product?.brand?.code}/${orderItem?.product?.shoe_type?.code}/${orderItem?.product?.id}`}
                                     >
                                         <img
-                                            className="m-2 h-24 w-28 rounded-md border object-cover object-center"
+                                            className="m-2 size-24 rounded-md border object-cover object-center"
                                             src={
                                                 orderItem?.product
                                                     ?.img_preview_url

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 const Navigation = ({ path }) => {
     return (
-        <div className="flex items-center gap-3 pb-5 *:text-lg *:font-medium *:transition-colors">
+        <div className="hidden items-center gap-3 pb-5 *:text-lg *:font-medium *:transition-colors md:flex">
             <Link to="/" className="opacity-100 hover:opacity-70">
                 Home
             </Link>

@@ -19,11 +19,7 @@ const Slider = () => {
     }, []);
 
     return (
-        <div
-            className='relative before:absolute before:left-1 before:top-1 
-        before:h-full before:w-full before:bg-white before:ring-1 before:ring-black before:content-[""]
-        '
-        >
+        <div className='relative before:absolute before:left-1 before:top-1 before:h-full before:w-full before:bg-white before:ring-1 before:ring-black before:content-[""]'>
             <Swiper
                 pagination={pagination}
                 autoplay={{
@@ -32,7 +28,7 @@ const Slider = () => {
                 }}
                 loop={true}
                 modules={[Navigation, Pagination, Autoplay]}
-                className="relative h-[85vh] w-full"
+                className="relative h-[30vh] w-full xl:h-[85vh]"
             >
                 {sliders.map((slider, index) => {
                     return (

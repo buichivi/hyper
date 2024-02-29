@@ -45,12 +45,8 @@ const Home = () => {
                                     />
                                 </div>
                                 <div className="absolute left-0 top-0 h-full w-full bg-transparent transition-all group-hover:bg-[#46464680]"></div>
-                                <div className="absolute left-1/2 top-1/2 h-[150px] w-[150px] -translate-x-1/2 -translate-y-1/2 overflow-hidden">
-                                    <Logo
-                                        width={120}
-                                        height={120}
-                                        className="absolute left-1/2 top-full -translate-x-1/2 text-white transition-all duration-500 group-hover:top-0"
-                                    />
+                                <div className="absolute left-1/2 top-1/2 size-12 -translate-x-1/2 -translate-y-1/2 overflow-hidden xl:size-[150px]">
+                                    <Logo className="absolute left-1/2 top-full size-full -translate-x-1/2 text-white transition-all duration-500 group-hover:top-0" />
                                 </div>
                             </div>
                         );

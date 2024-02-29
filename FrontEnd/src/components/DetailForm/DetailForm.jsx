@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 
 const DetailForm = ({ form = {} }) => {
     const [provinces, setProvinces] = useState([]);
@@ -75,12 +76,11 @@ const DetailForm = ({ form = {} }) => {
                         <label htmlFor="address" className="font-medium">
                             Phone Number
                         </label>
-                        {form.errors.address &&
-                            form.touched.phone_number && (
-                                <span className="select-none text-sm text-red-500 2xl:text-2xl">
-                                    {form.errors.phone_number}
-                                </span>
-                            )}
+                        {form.errors.address && form.touched.phone_number && (
+                            <span className="select-none text-sm text-red-500 2xl:text-2xl">
+                                {form.errors.phone_number}
+                            </span>
+                        )}
                     </div>
                     <input
                         type="tel"
@@ -225,8 +225,11 @@ const DetailForm = ({ form = {} }) => {
                 </div>
             </div>
             <div>
-                <div className="flex items-center justify-between">
-                    <label htmlFor="address" className="font-medium">
+                <div className="flex items-center justify-between pb-2">
+                    <label
+                        htmlFor="address"
+                        className="font-medium 2xl:text-3xl"
+                    >
                         Address
                     </label>
                     {form.errors.address && form.touched.address && (
@@ -247,6 +250,9 @@ const DetailForm = ({ form = {} }) => {
             </div>
         </div>
     );
+};
+DetailForm.propTypes = {
+    form: PropTypes.object,
 };
 
 export default DetailForm;

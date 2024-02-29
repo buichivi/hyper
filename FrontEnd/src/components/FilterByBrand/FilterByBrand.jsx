@@ -19,6 +19,7 @@ const FilterByType = ({ isReset, onChange }) => {
 
     useEffect(() => {
         setFilterBrands(brands.map((brand) => brand.id));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isReset, brands.length]);
 
     useEffect(() => {

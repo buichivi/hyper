@@ -1,17 +1,17 @@
 import { useFormik } from 'formik';
 import { AnimatePresence } from 'framer-motion';
 import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
-import { DetailForm, RegisterForm } from '../../components';
 import { HiOutlineArrowLongLeft } from 'react-icons/hi2';
-import request from '../../utils/request';
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
 import { toast } from 'react-toastify';
-import { logInUser } from '../../store/actions';
 import { PuffLoader } from 'react-spinners';
+
+import { DetailForm, RegisterForm } from '../../components';
+import request from '../../utils/request';
+import { logInUser } from '../../store/actions';
 
 const regexName =
     /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s\W|_]+$/;
@@ -20,16 +20,11 @@ const regexPhoneNumber = /(84|0[3|5|7|8|9])+([0-9]{8})\b/g;
 const SignUp = () => {
     const [isFillingDetail, setIsFillingDetail] = useState(false);
     const [loginInfo, setLoginInfo] = useState({});
-    // const [existedEmails, setExistedEmails] = useState([]);
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
     const isInitialized = useSelector((state) => state.user.isInitialized);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
-    // useEffect(() => {
-    //     request.get('/all-emails').then((res) => setExistedEmails(res.data));
-    // }, []);
 
     const registrationForm = useFormik({
         initialValues: {
@@ -42,7 +37,6 @@ const SignUp = () => {
         validationSchema: Yup.object({
             email: Yup.string()
                 .email('Invalid email format')
-                // .notOneOf(existedEmails, 'This email already being used')
                 .required('This field is required!'),
             password: Yup.string()
                 .min(6, 'Password must be contain at least 6 characters')
@@ -124,7 +118,6 @@ const SignUp = () => {
                 ...loginInfo,
                 ...values,
             };
-            console.log(totalInfo);
             request
                 .post('/signup', totalInfo)
                 .then((res) => {

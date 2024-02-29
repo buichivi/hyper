@@ -100,12 +100,42 @@ const Cart = () => {
                             exit="exit"
                             variants={animation}
                         >
-                            <h3 className="text-4xl font-medium capitalize">
-                                My cart
-                            </h3>
-                            <div className="flex items-start justify-between gap-6 pt-6">
+                            <Link
+                                to="/"
+                                className="flex w-fit items-center gap-2 pb-4 pt-4 hover:opacity-70 md:hidden"
+                            >
+                                <HiArrowNarrowLeft size={22} />
+                                <span className="font-medium capitalize">
+                                    Continue shopping
+                                </span>
+                            </Link>
+                            <div className="flex items-end justify-between">
+                                <h3 className="text-4xl font-medium capitalize">
+                                    My cart
+                                </h3>
+                                {cart.length > 0 && (
+                                    <button
+                                        className="flex items-center gap-2 border border-black bg-white px-4 py-2 text-black shadow-lg transition-colors hover:border-white hover:bg-red-500 hover:text-white md:hidden"
+                                        onClick={() => {
+                                            if (
+                                                confirm(
+                                                    'Do you want to remove all items from your cart?',
+                                                )
+                                            ) {
+                                                dispatch(
+                                                    clearAllItemFromCart(),
+                                                );
+                                            }
+                                        }}
+                                    >
+                                        <span>Clear Cart</span>
+                                        <BsFillTrash3Fill />
+                                    </button>
+                                )}
+                            </div>
+                            <div className="flex flex-col items-start justify-between gap-6 pt-6 md:flex-row">
                                 <div
-                                    className={`h-full basis-[70%] ${cart.length == 0 && 'h-[50vh] !flex-1'}`}
+                                    className={`h-full w-full md:basis-[70%] ${cart.length == 0 && 'h-[50vh] !flex-1'}`}
                                 >
                                     {cart.length > 0 ? (
                                         <>
@@ -125,7 +155,7 @@ const Cart = () => {
                                                     </div>
                                                 );
                                             })}
-                                            <div className="flex items-center justify-between pt-4">
+                                            <div className="hidden items-center justify-between pt-4 md:flex">
                                                 <Link
                                                     to="/"
                                                     className="flex w-fit items-center gap-2 pt-4 hover:opacity-70"
@@ -236,8 +266,8 @@ const Cart = () => {
                                 Address
                             </h3>
 
-                            <div className="flex items-start gap-10">
-                                <div className="basis-[70%]">
+                            <div className="flex flex-col items-start gap-10 md:flex-row">
+                                <div className="w-full basis-full md:basis-[70%]">
                                     {user && (
                                         <CustomerInfo
                                             user={user}
@@ -249,7 +279,7 @@ const Cart = () => {
                                         />
                                     )}
                                 </div>
-                                <div className="flex-1">
+                                <div className="w-full flex-1">
                                     <SummaryOrder
                                         totalProducts={totalProducts}
                                         subTotal={subTotal}

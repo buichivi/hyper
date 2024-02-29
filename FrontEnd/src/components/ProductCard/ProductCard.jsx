@@ -1,7 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation } from 'swiper/modules';
 
 import { IoIosHeart, IoIosHeartEmpty } from 'react-icons/io';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -11,13 +9,13 @@ import { toast } from 'react-toastify';
 import request from '../../utils/request';
 import { useDispatch } from 'react-redux';
 import { addItemToCart } from '../../store/actions';
+import PropTypes from 'prop-types';
 
 const ProductCard = ({ product = {}, isFavorite = false }) => {
     const [isFavor, setIsFavor] = useState(isFavorite);
     const [isSelected, setIsSelected] = useState(false);
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
     const dispatch = useDispatch();
-    
 
     useEffect(() => {
         setIsFavor(isFavorite);
@@ -77,20 +75,19 @@ const ProductCard = ({ product = {}, isFavorite = false }) => {
                 style={{ aspectRatio: 1 }}
             >
                 <img
-                    src={product?.img_preview_url}
+                    src={product?.img_preview}
                     alt=""
                     className="h-full w-full object-cover transition-all duration-500"
                 />
                 {!isSelected && (
                     <div
-                        className="absolute right-2 top-2 z-20 size-8 cursor-pointer rounded-full bg-black md:size-9 
-                    [&>*]:absolute [&>*]:left-1/2 [&>*]:top-1/2 [&>*]:-translate-x-1/2 [&>*]:-translate-y-1/2"
+                        className="absolute right-2 top-2 z-[1] size-8 cursor-pointer rounded-full bg-black md:size-9 [&>*]:absolute [&>*]:left-1/2 [&>*]:top-1/2 [&>*]:-translate-x-1/2 [&>*]:-translate-y-1/2"
                         onClick={handleFavoriteProduct}
                     >
                         {!isFavor ? (
-                            <IoIosHeartEmpty className="size-4 text-white md:size-6" />
+                            <IoIosHeartEmpty className="size-5 text-white md:size-6" />
                         ) : (
-                            <IoIosHeart className="size-4 text-white md:size-6" />
+                            <IoIosHeart className="size-5 text-white  md:size-6" />
                         )}
                     </div>
                 )}
@@ -105,6 +102,9 @@ const ProductCard = ({ product = {}, isFavorite = false }) => {
                             cursor-default overflow-y-auto bg-[#000000b9] [&::-webkit-scrollbar]:hidden "
                             onClick={(e) => e.preventDefault()}
                         >
+                            <h4 className="px-2 text-lg text-white">
+                                Select size:
+                            </h4>
                             <div className="relative grid grid-cols-4 gap-2 p-2">
                                 {product?.sizes.map((size, index) => {
                                     return (
@@ -140,7 +140,7 @@ const ProductCard = ({ product = {}, isFavorite = false }) => {
                     product?.discount &&
                     !isSelected && (
                         <div className="absolute left-5 top-0 flex h-[24%] w-[15%] items-center justify-center rounded-b-full bg-black">
-                            <span className="inline-block -rotate-90 text-white">
+                            <span className="inline-block -rotate-90 text-sm text-white md:text-base">
                                 -{product?.discount}%
                             </span>
                         </div>
@@ -153,7 +153,7 @@ const ProductCard = ({ product = {}, isFavorite = false }) => {
                     )}
                     <Link
                         to={`/${product?.brand?.code}/${product?.shoe_type?.code}/${product?.id}`}
-                        className="text-limit-1 text-xl font-medium"
+                        className="text-limit-1 text-base font-medium md:text-xl"
                     >
                         {product?.name}
                     </Link>
@@ -184,6 +184,11 @@ const ProductCard = ({ product = {}, isFavorite = false }) => {
             </div>
         </div>
     );
+};
+
+ProductCard.propTypes = {
+    product: PropTypes.object,
+    isFavorite: PropTypes.bool,
 };
 
 export default ProductCard;

@@ -30,10 +30,6 @@ const Search = () => {
         }),
     );
 
-    // const shoe_type = brand?.shoe_types?.filter(
-    //     (shoe_type) => shoe_type.code == shoe_type_code,
-    // )[0];
-
     console.log('Brand re-render');
 
     const loadData = useCallback(async () => {
@@ -63,11 +59,13 @@ const Search = () => {
         <div className="pb-6">
             <Navigation path={[{ path: '/search', name: 'Search' }]} />
             <div>
-                <div className="sticky top-[72px] z-30 flex h-[80px] items-center justify-between bg-white py-4">
+                <div
+                    className={`sticky  ${isAuthenticated ? 'top-[72px]' : 'top-[72px] lg:top-[100px]'} z-[2] flex h-[80px] items-center justify-between bg-white py-4`}
+                >
                     <h4 className="text-4xl font-medium capitalize">
                         Search: `{search_query}`
                     </h4>
-                    <div className="flex items-center gap-2 text-lg font-medium">
+                    <div className="hidden items-center gap-2 text-lg font-medium md:flex">
                         <div
                             className="flex cursor-pointer select-none items-center gap-1
                             px-2 py-1 transition-colors hover:bg-gray-100"

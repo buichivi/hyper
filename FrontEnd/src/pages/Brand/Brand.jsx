@@ -1,19 +1,17 @@
 import { useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Filter, Navigation, ProductCard } from '../../components';
 import { PiSlidersHorizontal } from 'react-icons/pi';
 import { IoIosArrowDown } from 'react-icons/io';
 import { useCallback, useEffect, useState } from 'react';
-import request from '../../utils/request';
-import { SORT_PRODUCT } from '../../constants';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 
+import { Filter, Navigation, ProductCard } from '../../components';
+import request from '../../utils/request';
+import { SORT_PRODUCT } from '../../constants';
+
 const Brand = () => {
     const { brand_code, shoe_type_code } = useParams();
-    const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
-
-    const [isOpenFilters, setIsOpenFilters] = useState(true);
     const [brand, setBrand] = useState({});
     const [products, setProducts] = useState([]);
     const [productFilters, setProductFilters] = useState([]);
@@ -21,22 +19,13 @@ const Brand = () => {
     const [sort, setSort] = useState({});
     const [path, setPath] = useState([]);
 
-    const favorite_product_ids = favoriteProducts.map((prod) => prod.id);
 
-    console.log(
-        productFilters.map((prod) => {
-            return {
-                date: prod.manufacture_date,
-                price: Math.ceil((prod.price * (100 - prod.discount)) / 100),
-            };
-        }),
-    );
+    const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+    const favorite_product_ids = favoriteProducts.map((prod) => prod.id);
 
     const shoe_type = brand?.shoe_types?.filter(
         (shoe_type) => shoe_type.code == shoe_type_code,
     )[0];
-
-    console.log('Brand re-render');
 
     const loadData = useCallback(async () => {
         await request
@@ -61,7 +50,6 @@ const Brand = () => {
     }, [brand_code, shoe_type_code, isAuthenticated]);
 
     useEffect(() => {
-        console.log('Set path');
         if (shoe_type_code)
             setPath([
                 {
@@ -83,7 +71,6 @@ const Brand = () => {
     }, [brand_code, shoe_type_code, brand, shoe_type]);
 
     useEffect(() => {
-        console.log('loaddata');
         window.scrollTo(0, 0);
         loadData();
     }, [brand_code, shoe_type_code, loadData]);
@@ -103,23 +90,32 @@ const Brand = () => {
                         />
                     </div>
                 </div>
-                <div className="sticky top-[72px] z-30 flex h-[80px] items-center justify-between bg-white py-4">
+                <div
+                    className={`sticky ${isAuthenticated ? 'top-[72px]' : 'top-[72px] lg:top-[100px]'} z-[2] flex h-[80px] items-center justify-between bg-white py-4`}
+                >
                     <h4 className="text-4xl font-medium capitalize">
                         {!shoe_type_code
                             ? `All ${brand.name}`
                             : shoe_type?.name}
                     </h4>
-                    <div className="flex items-center gap-2 text-lg font-medium">
-                        <div
+                    <label
+                        htmlFor="toggle-filter"
+                        className="flex cursor-pointer select-none items-center gap-1 px-2 py-1 text-lg
+                            font-medium transition-colors hover:bg-gray-100 md:hidden"
+                    >
+                        <span>Filters</span>
+                        <PiSlidersHorizontal className="size-6" />
+                    </label>
+
+                    <div className="hidden items-center gap-2 text-lg font-medium md:flex">
+                        <label
+                            htmlFor="toggle-filter"
                             className="flex cursor-pointer select-none items-center gap-1
                             px-2 py-1 transition-colors hover:bg-gray-100"
-                            onClick={() => setIsOpenFilters(!isOpenFilters)}
                         >
-                            <span>
-                                {isOpenFilters ? 'Hide' : 'Open'} Filters
-                            </span>
+                            <span>Filter</span>
                             <PiSlidersHorizontal className="size-6" />
-                        </div>
+                        </label>
                         <SortProduct
                             sort={sort}
                             onChange={({ sortOption }) => {
@@ -136,12 +132,13 @@ const Brand = () => {
                 </div>
                 <div className="flex pb-4">
                     <Filter
-                        isOpen={isOpenFilters}
                         brand={brand}
                         shoeTypeCode={shoe_type_code}
                         setProductFilters={setProductFilters}
                         products={products}
                         sort={sort}
+                        className=""
+                        setSort={setSort}
                     />
                     <div className="flex-1">
                         {productFilters?.length > 0 ? (
@@ -185,8 +182,6 @@ const Brand = () => {
 const SortProduct = ({ onChange = () => {} }) => {
     const [isOpenSort, setIsOpenSort] = useState(false);
     const [sortOption, setSortOption] = useState();
-
-    console.log('Sort Product re-render');
 
     useEffect(() => {
         onChange({ sortOption });

@@ -14,6 +14,7 @@ class Product(db.Model):
     name = db.Column(db.String(255), nullable=False, unique=True)
     description = db.Column(db.Text, nullable=False)
     price = db.Column(db.Integer, nullable=False)
+    img_preview = db.Column(db.Text, nullable=False)
     discount = db.Column(db.Integer, nullable=False, default=0)
     featured = db.Column(
         db.Boolean, nullable=False, default=False
@@ -42,6 +43,7 @@ class Product(db.Model):
         price,
         brand_id,
         shoe_type_id,
+        img_preview="https://placehold.co/600x400",
         discount=0,
         featured=False,
         manufacture_date=datetime.now().strftime("%d/%m/%Y"),
@@ -49,6 +51,7 @@ class Product(db.Model):
         self.name = name
         self.description = description
         self.price = price
+        self.img_preview = img_preview
         self.featured = featured
         self.discount = discount
         self.brand_id = brand_id
@@ -61,6 +64,9 @@ class Product(db.Model):
     def set_featured(self, featured) -> None:
         self.featured = featured
 
+    def set_img_preview(self, img_preview) -> None:
+        self.img_preview = img_preview
+
     def to_json(self) -> dict:
         sizes = self.product_sizes
         total_quantity = 0
@@ -69,13 +75,6 @@ class Product(db.Model):
 
         product_sizes = [size.get_size() for size in sizes]
         product_sizes.sort(key=lambda x: x["size"])
-        img_url = ""
-        product_image_preview = [
-            img for img in self.product_images if img.is_preview == True
-        ][0]
-        if product_image_preview:
-            img_url = product_image_preview.img_url
-
         brand = Brand.query.get(self.brand_id)
         shoe_type = ShoeType.query.get(self.shoe_type_id)
 
@@ -88,7 +87,7 @@ class Product(db.Model):
             "featured": self.featured,
             "sizes": product_sizes,
             "manufacture_date": self.manufacture_date,
-            "img_preview_url": img_url,
+            "img_preview": self.img_preview,
             "shoe_type": shoe_type.to_json(),
             "brand": brand.to_json(),
             "total_quantity": total_quantity,

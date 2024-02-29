@@ -2,34 +2,32 @@ import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { FiMinus, FiPlus } from 'react-icons/fi';
 import { filterGroupAnimation } from '../../utils/animation';
-import { SALE_OFFS } from '../../constants';
+import { SORT_PRODUCT } from '../../constants';
 import PropTypes from 'prop-types';
 
-const FilterBySaleOff = ({ isReset, onChange }) => {
-    console.log('FilterBySaleOff re-render');
+const SortInFilterMobile = ({ isReset, onChange }) => {
     const [isOpen, setIsOpen] = useState(true);
-    const [saleOff, setSaleOff] = useState(0);
+    const [sort, setSort] = useState();
 
     useEffect(() => {
-        onChange({ saleOff });
+        onChange({ sort });
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [saleOff]);
+    }, [sort]);
 
     useEffect(() => {
-        setSaleOff(0);
+        setSort();
     }, [isReset]);
 
     return (
         <motion.div
-            className={`cursor-pointer select-none overflow-hidden border-b-[1px]
-            border-b-[#B9B4C7] px-[10%] py-2 transition-all duration-500 md:px-0
+            className={`block cursor-pointer select-none overflow-hidden border-b-[1px] border-b-[#B9B4C7] px-[10%] py-2 transition-all duration-500 md:hidden md:px-0
     `}
         >
             <div
                 className="flex items-center justify-between"
                 onClick={() => setIsOpen(!isOpen)}
             >
-                <h3 className="text-lg font-medium">Sale off</h3>
+                <h3 className="text-lg font-medium">Sort</h3>
                 {isOpen ? (
                     <FiMinus className={`size-5 transition-all duration-500`} />
                 ) : (
@@ -46,7 +44,8 @@ const FilterBySaleOff = ({ isReset, onChange }) => {
                 className="px-4"
             >
                 <div className="py-2">
-                    {SALE_OFFS.map(({ name, value }, index) => {
+                    {SORT_PRODUCT.map((sortItem, index) => {
+                        console.log(sort?.name, sortItem.name);
                         return (
                             <label
                                 key={index}
@@ -54,17 +53,17 @@ const FilterBySaleOff = ({ isReset, onChange }) => {
                             >
                                 <input
                                     type="radio"
-                                    id={`sale-off-option-${index}`}
-                                    className={`peer/sale-off accent-black`}
-                                    name="sale-off"
-                                    checked={saleOff == value}
-                                    onChange={() => setSaleOff(value)}
+                                    id={`sort-option-${index}`}
+                                    className={`peer/sort accent-black`}
+                                    name="sort"
+                                    checked={sort?.name == sortItem.name}
+                                    onChange={() => setSort(sortItem)}
                                 />
                                 <label
                                     className="pl-2 text-base capitalize"
-                                    htmlFor={`sale-off-option-${index}`}
+                                    htmlFor={`sort-option-${index}`}
                                 >
-                                    {name}
+                                    {sortItem.name}
                                 </label>
                             </label>
                         );
@@ -75,9 +74,9 @@ const FilterBySaleOff = ({ isReset, onChange }) => {
     );
 };
 
-FilterBySaleOff.propTypes = {
+SortInFilterMobile.propTypes = {
     isReset: PropTypes.bool,
     onChange: PropTypes.func.isRequired,
 };
 
-export default FilterBySaleOff;
+export default SortInFilterMobile;

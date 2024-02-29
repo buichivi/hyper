@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 const SummaryOrder = ({
     totalProducts = 0,
     subTotal = 0,
@@ -6,7 +8,7 @@ const SummaryOrder = ({
     textBtn = '',
 }) => {
     return (
-        <div className="sticky top-[72px] flex-1">
+        <div className="sticky top-[72px] w-full flex-1">
             <div className="border-[1px] border-slate-300 p-4">
                 <h4 className="border-b border-b-slate-200 pb-2 text-xl font-medium">
                     Summary Order
@@ -39,6 +41,14 @@ const SummaryOrder = ({
             </button>
         </div>
     );
+};
+
+SummaryOrder.propTypes = {
+    totalProducts: PropTypes.number,
+    subTotal: PropTypes.number,
+    total: PropTypes.number,
+    onProgress: PropTypes.func,
+    textBtn: PropTypes.string,
 };
 
 export default SummaryOrder;

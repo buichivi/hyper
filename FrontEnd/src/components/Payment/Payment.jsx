@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { clearCart } from '../../store/cartSlice';
 import { useState } from 'react';
 import { PaypalPayment } from '../';
+import PropTypes from 'prop-types';
 
 const Payment = ({
     info = {},
@@ -60,13 +61,14 @@ const Payment = ({
                             return (
                                 <div
                                     key={index}
-                                    className="flex flex-col rounded-lg bg-white sm:flex-row"
+                                    className="flex flex-row rounded-lg bg-white sm:flex-row"
                                 >
                                     <Link
                                         to={`/${cartItem?.product?.brand?.code}/${cartItem?.product?.shoe_type?.code}/${cartItem?.product?.id}`}
+                                        className='shrink-0'
                                     >
                                         <img
-                                            className="m-2 h-24 w-28 rounded-md border object-cover object-center"
+                                            className="m-2 size-24  rounded-md border object-cover object-center"
                                             src={
                                                 cartItem?.product
                                                     ?.img_preview_url
@@ -348,7 +350,7 @@ const Payment = ({
                     </div>
                     {paymentMethod == 0 && (
                         <button
-                            className="mb-8 mt-4 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white"
+                            className="mb-8 mt-4 w-full bg-black px-6 py-3 font-medium text-white"
                             onClick={handleCreateOrder}
                         >
                             Place Order
@@ -365,6 +367,13 @@ const Payment = ({
             </div>
         </div>
     );
+};
+
+Payment.propTypes = {
+    info: PropTypes.object,
+    subTotal: PropTypes.number,
+    total: PropTypes.number,
+    setIsPurchase: PropTypes.func,
 };
 
 export default Payment;

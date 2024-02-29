@@ -1,15 +1,14 @@
+from database import db
 from flask import request
 from flask_cors import cross_origin
 from flask_restful import Resource
-from sqlalchemy import and_
-from sqlalchemy.sql.expression import func
-
-from database import db
 from models.brand import Brand
 from models.product import Product
 from models.product_size import ProductSize
 from models.review import Review
 from models.shoe_type import ShoeType
+from sqlalchemy import and_
+from sqlalchemy.sql.expression import func
 
 
 class ProductResource(Resource):
@@ -17,13 +16,11 @@ class ProductResource(Resource):
     def get(self):
         brand_code = request.args.get("brand_code")
         shoe_type_code = request.args.get("shoe_type_code")
-        print(brand_code, shoe_type_code)
         if not brand_code:
             return {"message": "brand_code is not provided!"}, 400
         brand = Brand.query.filter_by(code=brand_code).first()
         shoe_type = ShoeType.query.filter_by(code=shoe_type_code, brand_id = brand.id).first()
 
-        print(brand, shoe_type)
         if not brand:
             return {"message": "No brand is match with brand_code!"}, 400
         products = None
@@ -46,6 +43,7 @@ class ProductResource(Resource):
         detail = data.get("detail")
         price = data.get("price")
         discount = data.get("discount")
+        img_preview = data.get('img_preview')
         featured = data.get("featured")
         brand_id = data.get("brand_id")
         shoe_type_id = data.get("shoe_type_id")
@@ -65,6 +63,8 @@ class ProductResource(Resource):
             product.set_discount(discount)
         if featured:
             product.set_featured(featured)
+        if img_preview: 
+            product.set_img_preview(img_preview)
 
         db.session.add(product)
         db.session.commit()
@@ -117,7 +117,7 @@ class SearchProductResource(Resource):
 class GetFeaturedProductResource(Resource):
     @cross_origin()
     def get(self):
-        products = Product.query.filter_by(featured = True).all()
+        products = Product.query.filter_by(featured = True).limit(8).all()
         return {"products": [product.to_json() for product in products]}, 200
 
 class GetOtherProductOfBrandResource(Resource):

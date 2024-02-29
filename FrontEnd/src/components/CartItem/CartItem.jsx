@@ -37,6 +37,7 @@ const CartItem = ({ cartItem = {} }) => {
         return () => {
             clearTimeout(timerId);
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [quantity]);
 
     const handleRemoveCartItem = () => {
@@ -63,7 +64,7 @@ const CartItem = ({ cartItem = {} }) => {
             <div className="flex h-full flex-col justify-between">
                 <div className="">
                     <Link
-                        className="text-2xl font-medium"
+                        className="text-base md:text-2xl font-medium text-limit-1 "
                         to={`/${cartItem?.product?.brand?.code}/${cartItem?.product?.shoe_type?.code}/${cartItem?.product?.id}`}
                     >
                         {cartItem?.product?.name}
@@ -80,23 +81,33 @@ const CartItem = ({ cartItem = {} }) => {
                         </Link>
                     </div>
                 </div>
-                <div className="flex items-center gap-4">
-                    <p>
+                <div className="flex flex-col gap-4 md:flex-row md:items-center ">
+                    <p className="hidden md:inline-block">
                         Price (x1):{' '}
                         <span className="font-medium text-[#333]">
                             ${cartItem?.product?.price}
                         </span>
                     </p>
+                    <span className="inline-block font-medium md:hidden">
+                        $
+                        {Math.ceil(
+                            (cartItem?.product?.price *
+                                (100 - cartItem?.product?.discount)) /
+                                100,
+                        ) * cartItem?.quantity}
+                    </span>
                     <span>Size: {cartItem?.size}</span>
-                    {cartItem?.product?.discount > 0 && <p>
-                        Discount:{' '}
-                        <span className="text-green-600">
-                            -{cartItem?.product?.discount}%
-                        </span>
-                    </p>}
+                    {cartItem?.product?.discount > 0 && (
+                        <p className="hidden md:inline-block">
+                            Discount:{' '}
+                            <span className="text-green-600">
+                                -{cartItem?.product?.discount}%
+                            </span>
+                        </p>
+                    )}
                 </div>
             </div>
-            <div className="relative flex h-full flex-1 items-end justify-end">
+            <div className="relative hidden h-full flex-1 items-end justify-end md:flex">
                 <div>
                     <div className="text-right">
                         {cartItem?.product?.discount > 0 && (

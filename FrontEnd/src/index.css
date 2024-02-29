@@ -9,7 +9,7 @@
 @layer base {
     html {
         font-family: 'Barlow', sans-serif;
-        scroll-behavior: smooth;
+        /* scroll-behavior: smooth; */
         overflow-x: hidden;
     }
 }
@@ -72,3 +72,20 @@ input[type='number']::-webkit-outer-spin-button {
 /* :root {
     --toastify-color-success: #333;
 } */
+
+/* Submenu icon */
+#submenu-toggle:checked ~ label span:nth-child(2) {
+    opacity: 0;
+}
+
+#submenu-toggle:checked ~ label span:nth-child(1) {
+    transform: rotate(45deg);
+    transform-origin: left;
+    translate: 0 -2px;
+}
+#submenu-toggle:checked ~ label span:nth-child(3) {
+    width: 100%;
+    transform: rotate(-45deg);
+    transform-origin: left;
+    /* translate: 0 -1px; */
+}

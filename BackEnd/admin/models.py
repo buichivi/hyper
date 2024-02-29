@@ -1,5 +1,6 @@
 import os
 import os.path as op
+from urllib.parse import urlparse
 
 import firebase_admin
 from firebase_admin import credentials, storage
@@ -9,21 +10,30 @@ from flask_admin.contrib.sqla import ModelView, fields
 from flask_admin.form import ImageUploadField, Select2Field, Select2Widget
 from flask_login import current_user, login_required, logout_user
 from markupsafe import Markup
-from werkzeug.security import generate_password_hash
-from wtforms import SelectField
-from wtforms.fields import DateField
-from wtforms.widgets import DateInput
-
 from models.brand import Brand, db
 from models.order_status import OrderStatus
 from models.product import Product
 from models.product_image import ProductImage
 from models.shoe_type import ShoeType
 from models.user import User
+from werkzeug.security import generate_password_hash
+from wtforms import SelectField
+from wtforms.fields import DateField
+from wtforms.widgets import DateInput
 
 cred = credentials.Certificate("firebase-key.json")
 firebase_admin.initialize_app(cred, {"storageBucket": "shoes-store-4cb03.appspot.com"})
 bucket = storage.bucket()
+
+
+def delete_image(image_url):
+    try:
+        blob = bucket.blob(image_url)
+        blob.delete()
+        print("Image deleted successfully.")
+    except Exception as e:
+        print("Error deleting image:", e)
+
 
 file_path = op.join(op.dirname(__file__), "uploads")
 try:
@@ -40,12 +50,12 @@ class LogoutAdmin(BaseView):
         return redirect("/admin")
 
     def is_accessible(self):
-        return current_user.is_authenticated
+        return current_user.is_authenticated and current_user.role == "ADMIN"
 
 
 class UserView(ModelView):
     def is_accessible(self):
-        return current_user.is_authenticated
+        return current_user.is_authenticated and current_user.role == "ADMIN"
 
     def on_model_change(self, form, model, is_created):
         # Kiểm tra xem có thực hiện tạo người dùng mới hay không
@@ -77,7 +87,7 @@ class UserView(ModelView):
 
 class BrandView(ModelView):
     def is_accessible(self):
-        return current_user.is_authenticated
+        return current_user.is_authenticated and current_user.role == "ADMIN"
 
     column_list = ("name", "code", "image logo")
     column_searchable_list = ("name", "code")
@@ -110,7 +120,7 @@ class BrandView(ModelView):
 
 class ShoeTypeView(ModelView):
     def is_accessible(self):
-        return current_user.is_authenticated
+        return current_user.is_authenticated and current_user.role == "ADMIN"
 
     column_hide_backrefs = False
     form_extra_fields = {
@@ -164,7 +174,7 @@ class ShoeTypeView(ModelView):
 
 class ProductView(ModelView):
     def is_accessible(self):
-        return current_user.is_authenticated
+        return current_user.is_authenticated and current_user.role == "ADMIN"
 
     def _get_brand_by_shoe(view, context, model, name):
         brand = Brand.query.get(model.brand_id)
@@ -195,11 +205,7 @@ class ProductView(ModelView):
             widget=Select2Widget(),
             get_label=lambda item: f"{Brand.query.get(item.brand_id).name} - {item.name}",
         ),
-        # "manufacture_date": fields.DateField(
-        #     "Manufacture Date",  # Label for the field
-        #     widget=DatePickerWidget(),  # Widget for rendering the field
-        #     format="%Y-%m-%d",  # Date format
-        # ),
+        "img_preview": ImageUploadField("Image", base_path=file_path),
     }
 
     def on_model_change(self, form, model, is_created):
@@ -209,6 +215,21 @@ class ProductView(ModelView):
         if brand and shoe_type:
             model.brand_id = brand.id
             model.shoe_type_id = shoe_type.id
+        file = form.img_url.data
+        if not isinstance(file, str):
+            # Tải lên file vào Firebase Storage
+            blob = bucket.blob(file.filename)
+            blob.upload_from_file(file, rewind=True, content_type=file.content_type)
+
+            # Lấy đường dẫn URL của file đã tải lên
+            blob.make_public()
+            url = blob.public_url
+            os.remove(op.join(file_path, file.filename))
+
+            # Lưu đường dẫn URL vào trường ImageUploadField
+            model.img_url = url
+        else:
+            model.img_url = file
 
     def _get_brand_name(view, context, model, name):
         brand = Brand.query.get(model.brand_id)
@@ -219,14 +240,9 @@ class ProductView(ModelView):
         return shoe_type.name if shoe_type else None
 
     def _get_product_img(view, context, model, name):
-        productImg = ProductImage.query.filter_by(
-            product_id=model.id, is_preview=True
-        ).first()
-        if not productImg:
-            return None
-        return Markup(f'<img src="{productImg.img_url}" width="100">')
+        return Markup(f'<img src="{model.img_preview}" width="100">')
 
-    # # Override column_formatters để hiển thị brand name
+    # Override column_formatters để hiển thị brand name
     def _get_price(view, context, model, name):
         return f"${model.price}"
 
@@ -237,14 +253,12 @@ class ProductView(ModelView):
         "price": _get_price,
     }
 
-    # inline_models = (ProductImage)
-
 
 class ProductImageView(ModelView):
     def is_accessible(self):
-        return current_user.is_authenticated
+        return current_user.is_authenticated and current_user.role == "ADMIN"
 
-    column_list = ("id", "product_name", "product_id", "is_preview", "image")
+    column_list = ("id", "product_name", "product_id", "image")
     column_sortable_list = ["id"]
     column_sortable_list = ("product_id", "id")
     column_default_sort = "product_id"
@@ -268,6 +282,8 @@ class ProductImageView(ModelView):
             # Lấy đường dẫn URL của file đã tải lên
             blob.make_public()
             url = blob.public_url
+
+            # Delete image from server
             os.remove(op.join(file_path, file.filename))
 
             # Lưu đường dẫn URL vào trường ImageUploadField
@@ -277,7 +293,15 @@ class ProductImageView(ModelView):
         if product:
             model.product_id = product.id
 
-        
+    def on_model_delete(self, model):
+        super().on_model_delete(model)
+
+        # Get the file name want to delete
+        parsed_url = urlparse(model.img_url)
+        file_name = os.path.basename(parsed_url.path)
+
+        # Xoá ảnh từ Firebase Storage
+        delete_image(file_name)
 
     column_formatters = {"product_name": _get_product_name, "image": _get_product_img}
     form_extra_fields = {
@@ -292,6 +316,9 @@ class ProductImageView(ModelView):
 
 
 class ProductSizeView(ModelView):
+    def is_accessible(self):
+        return current_user.is_authenticated and current_user.role == "ADMIN"
+
     def _get_product_name(view, context, model, name):
         product = Product.query.get(model.product_id)
         return product.name if product else None
@@ -321,7 +348,7 @@ class OrderView(ModelView):
     can_create = False
 
     def is_accessible(self):
-        return current_user.is_authenticated
+        return current_user.is_authenticated and current_user.role == "ADMIN"
 
     column_list = (
         "id",
@@ -372,6 +399,9 @@ class OrderView(ModelView):
 
 
 class SliderView(ModelView):
+    def is_accessible(self):
+        return current_user.is_authenticated and current_user.role == "ADMIN"
+
     column_list = ("id", "image", "order")
 
     def _get_slider_img(view, context, model, name):
@@ -394,6 +424,7 @@ class SliderView(ModelView):
             model.img_url = url
         else:
             model.img_url = file
+
     form_extra_fields = {
         "img_url": ImageUploadField("Image", base_path=file_path),
     }

@@ -44,19 +44,19 @@ const SOCIAL_LIST = [
 const Footer = () => {
     return (
         <div>
-            <div className="bg-black w-full h-[250px] relative overflow-hidden">
-                <h5 className="select-none absolute top-2 left-0 w-full font-BebasNeue text-[250px] leading-none text-white tracking-widest text-center">
+            <div className="relative h-[150px] w-full overflow-hidden bg-black xl:h-[250px]">
+                <h5 className="absolute left-0 top-1/2 w-full -translate-y-1/2 select-none text-center font-BebasNeue text-[100px] leading-none tracking-widest text-white xl:text-[250px]">
                     HYPER
                 </h5>
             </div>
-            <div className="pt-4 pb-6 min-h-[80px] md:min-h-[150px] lg:min-h-56 flex flex-col lg:flex-row gap-2 items-start md:items-center justify-between border-b-[1px] border-b-black">
-                <div className="w-full md:w-3/5 lg:w-2/3 h-full flex items-start shrink-0 grow-0">
-                    <div className="w-full lg:w-[80%] grid grid-cols-3 gap-x-5">
+            <div className="flex min-h-[80px] flex-col items-start justify-between gap-2 border-b-[1px] border-b-black pb-6 pt-4 md:min-h-[150px] md:items-center lg:min-h-56 lg:flex-row">
+                <div className="flex h-full w-full shrink-0 grow-0 items-start md:w-3/5 lg:w-2/3">
+                    <div className="grid w-full grid-cols-3 gap-x-5 lg:w-[80%]">
                         {FOOTER_ITEMS.map((item, index) => {
                             return (
                                 <Link
                                     key={index}
-                                    className="w-fit h-fit basis-1/3 uppercase text-sm font-base py-1 hover:underline transition-all"
+                                    className="font-base h-fit w-fit basis-1/3 py-1 text-sm uppercase transition-all hover:underline"
                                 >
                                     {item}
                                 </Link>
@@ -64,43 +64,45 @@ const Footer = () => {
                         })}
                     </div>
                 </div>
-                <div className="flex-1 grow-0 shrink-0">
-                    <h4 className="font-bold text-2xl font-Oswald text-left md:text-right mb-2">
+                <div className="flex-1 shrink-0 grow-0">
+                    <h4 className="mb-2 text-left font-Oswald text-2xl font-bold md:text-right">
                         JOIN OUR COMMUNITY
                     </h4>
                     <div
-                        className="w-fit flex items-center justify-end before:content-[''] before:w-full before:h-full before:ring-1 
-                    before:ring-black before:bg-white relative before:absolute before:top-1 before:left-1 before:-z-10
+                        className="relative flex w-fit items-center justify-end before:absolute before:left-1 before:top-1 
+                    before:-z-10 before:h-full before:w-full before:bg-white before:ring-1 before:ring-black before:content-['']
                     "
                     >
                         <input
                             type="email"
                             placeholder="Enter your email"
-                            className="w-56 h-10 ring-1 ring-black outline-none p-2"
+                            className="h-10 w-56 p-2 outline-none ring-1 ring-black"
                         />
-                        <button className="group w-12 h-10 grow-0 shrink-0 flex items-center justify-center ring-1 ring-black bg-black">
-                            <GoArrowRight className="invert group-hover:translate-x-1 transition-all" />
+                        <button className="group flex h-10 w-12 shrink-0 grow-0 items-center justify-center bg-black ring-1 ring-black">
+                            <GoArrowRight className="invert transition-all group-hover:translate-x-1" />
                         </button>
                     </div>
                     <div className="clear-both"></div>
                 </div>
             </div>
-            <div className="h-auto flex flex-col md:flex-row items-center justify-between">
-                <p className="text-sm">&#169;2024 HYPER. All right reserved.</p>
-                <div className="flex items-center shrink-0">
+            <div className="flex h-auto flex-col items-center justify-between md:flex-row">
+                <p className="py-2 text-sm">
+                    &#169;2024 HYPER. All right reserved.
+                </p>
+                <div className="flex shrink-0 items-center">
                     {SOCIAL_LIST.map((item, index) => {
                         const Element = item.icon;
                         return (
                             <Link
                                 to="/"
                                 key={index}
-                                className="h-[40px] w-24 group relative overflow-hidden cursor-pointer"
+                                className="group relative h-[40px] w-24 cursor-pointer overflow-hidden"
                             >
-                                <div className="w-full text-center uppercase absolute top-0 left-0 group-hover:-top-[40px] transition-all duration-300">
-                                    <div className="h-[40px] flex items-center justify-center">
+                                <div className="absolute left-0 top-0 w-full text-center uppercase transition-all duration-300 group-hover:-top-[40px]">
+                                    <div className="flex h-[40px] items-center justify-center">
                                         <span className="">{item.name}</span>
                                     </div>
-                                    <div className="h-[40px] flex justify-center items-center">
+                                    <div className="flex h-[40px] items-center justify-center">
                                         <Element width={24} height={24} />
                                     </div>
                                 </div>

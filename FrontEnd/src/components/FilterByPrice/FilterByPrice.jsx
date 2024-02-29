@@ -6,7 +6,7 @@ import { MultipleRange } from '../';
 import PropTypes from 'prop-types';
 
 function FilterByPrice({ isReset, maxPrice = 0, setRangePrice = () => {} }) {
-    console.log("FilterByPrice re-render");
+    console.log('FilterByPrice re-render');
     const [isOpen, setIsOpen] = useState(true);
 
     useEffect(() => {
@@ -15,8 +15,8 @@ function FilterByPrice({ isReset, maxPrice = 0, setRangePrice = () => {} }) {
 
     return (
         <div
-            className={`cursor-pointer select-none
-            overflow-hidden border-b-[1px] border-b-[#B9B4C7] pt-2 transition-all duration-500`}
+            className={`cursor-pointer select-none overflow-hidden border-b-[1px]
+            border-b-[#B9B4C7] px-[10%] pt-2 transition-all duration-500 md:px-0`}
         >
             <div
                 className="flex items-center justify-between"

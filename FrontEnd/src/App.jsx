@@ -24,6 +24,7 @@ function App() {
     useEffect(() => {
         dispatch(checkingLoginUser());
         dispatch(fetchCart());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     return (
         <BrowserRouter>

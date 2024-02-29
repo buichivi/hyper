@@ -1,6 +1,4 @@
 import { Link, useNavigate } from 'react-router-dom';
-import TippyHeadless from '@tippyjs/react/headless';
-
 import { HiOutlineUserCircle } from 'react-icons/hi2';
 import { PiShoppingBagLight } from 'react-icons/pi';
 import { CiSearch, CiHeart } from 'react-icons/ci';
@@ -14,34 +12,77 @@ import { AiOutlineProfile } from 'react-icons/ai';
 import { GoChecklist } from 'react-icons/go';
 import { MdLogout } from 'react-icons/md';
 import { IoIosSettings } from 'react-icons/io';
+import { PuffLoader } from 'react-spinners';
+import MenuMobile from '../MenuMobile/MenuMobile';
 
 const Header = () => {
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
     const cart = useSelector((state) => state.cart.items);
     const [isOpenCart, setIsOpenCart] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [isOpen, setIsOpen] = useState(false);
-    
+
     const totalProducts = cart.reduce(
         (acc, cartItem) => acc + cartItem?.quantity,
         0,
-        );
-        
+    );
+
     const [brands, setBrands] = useState();
     useEffect(() => {
         request.get('/brand').then((res) => setBrands(res.data.brands));
     }, []);
 
     return (
-        <div className="fixed left-0 top-0 z-50 h-auto w-full ">
+        <div className="fixed left-0 top-0 z-[3] h-auto w-full">
+            <input
+                type="checkbox"
+                id="toggle-search-mobile"
+                className="peer/toggle-search-mobile hidden"
+                onChange={(e) => {
+                    if (e.currentTarget.checked) {
+                        e.currentTarget.nextSibling.children[0].focus();
+                    }
+                }}
+            />
+            <div className="border-1 absolute left-0 top-0 -z-[1] h-auto w-screen  bg-red-300 shadow-md transition-all duration-500 peer-checked/toggle-search-mobile:top-full">
+                <input
+                    type="text"
+                    placeholder="Search..."
+                    className="w-full border-b border-b-black px-4 py-2 outline-none"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyDown={(e) => {
+                        if (e.keyCode == 13) {
+                            setIsLoading(true);
+                            setTimeout(() => {
+                                setIsLoading(false);
+                                navigate('/search/' + searchQuery);
+                                e.target.parentElement.previousSibling.checked = false;
+                            }, 1000);
+                        }
+                    }}
+                    onBlur={(e) => {
+                        if (!searchQuery)
+                            e.target.parentElement.previousSibling.checked = false;
+                    }}
+                />
+                {searchQuery && (
+                    <span
+                        className="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer peer-placeholder-shown/search-input:hidden"
+                        onClick={() => {
+                            setSearchQuery('');
+                        }}
+                    >
+                        &#10005;
+                    </span>
+                )}
+            </div>
             {!isAuthenticated && (
-                <div
-                    className="flex h-[28px] items-center justify-end bg-slate-200 px-4 md:px-14 2xl:px-[15%]
-                [&>*]:px-2"
-                >
+                <div className="hidden h-[28px] items-center justify-end bg-black px-4 text-white md:px-14 lg:flex 2xl:px-[15%] [&>*]:px-2">
                     <Link to="/login" className="border-r border-r-slate-400">
                         <span>Sign in</span>
                     </Link>
@@ -50,37 +91,56 @@ const Header = () => {
                     </Link>
                 </div>
             )}
-            <div className="flex h-[72px] items-center justify-between bg-white px-4 md:px-14 2xl:px-[15%]">
-                <Link className="flex h-full flex-1 items-center" to="/">
-                    <h3 className="font-BebasNeue text-3xl font-bold">HYPER</h3>
-                </Link>
+            <div className="relative flex h-[72px] items-center justify-between bg-white px-4 shadow-sm md:px-14 2xl:px-[15%]">
+                <MenuMobile />
+                <div className="flex flex-1 items-center justify-center lg:block">
+                    <Link
+                        className="flex h-full w-fit items-center justify-center lg:justify-normal"
+                        to="/"
+                    >
+                        <h3 className="font-BebasNeue text-3xl font-bold">
+                            HYPER
+                        </h3>
+                    </Link>
+                </div>
                 <div className="hidden h-full flex-[2] items-center justify-center gap-10 lg:flex">
                     {brands?.map((brand, index) => {
                         return (
-                            <div key={index} className="h-full">
+                            <div
+                                key={index}
+                                className="flex h-full items-center justify-center"
+                            >
                                 <MenuItem
                                     brand={brand}
                                     isLogin={isAuthenticated}
+                                    className='peer/menu-item'
                                 />
+                                <div className="fixed left-0 top-0 -z-10 hidden h-screen w-screen bg-[#eeeeee00] backdrop-blur-sm peer-hover/menu-item:block"></div>
                             </div>
                         );
                     })}
                     <Link
                         to=""
-                        className="relative flex h-full w-fit items-center 
-                        justify-center text-lg font-medium 
-                        before:absolute before:bottom-0 before:left-0 before:h-[2px]
-                        before:w-0 before:bg-black before:transition-all before:duration-300 
-                        before:content-[''] hover:before:w-full"
+                        className="relative flex h-fit w-fit items-center justify-center text-lg font-medium before:absolute before:bottom-0 before:left-0 before:h-[2px] before:w-0 before:bg-black before:transition-all before:duration-300 before:content-[''] hover:before:w-full"
                     >
                         About us
                     </Link>
                 </div>
                 <div className="flex flex-1 items-center justify-end gap-5">
-                    <div className="relative flex h-8 w-56 flex-shrink-0 flex-grow-0 items-center">
+                    <label
+                        htmlFor="toggle-search-mobile"
+                        className="block lg:hidden"
+                    >
+                        <CiSearch className="h-6 w-6 cursor-pointer" />
+                    </label>
+
+                    <div
+                        className="relative hidden h-12 w-56 shrink-0 flex-grow-0 items-center 
+                        overflow-hidden p-1 lg:flex"
+                    >
                         <input
-                            type="checkbox"
                             id="search-input-toggle"
+                            type="checkbox"
                             className="peer/search-input hidden"
                             onChange={(e) => {
                                 const inputSearch =
@@ -94,22 +154,27 @@ const Header = () => {
                         />
                         <label
                             htmlFor="search-input-toggle"
-                            className="absolute right-0 z-10 transition-all duration-500 peer-checked/search-input:right-[86%]"
+                            className="absolute right-2 top-1/2 z-[1] -translate-y-1/2 transition-all duration-500"
                         >
                             <CiSearch className="h-6 w-6 cursor-pointer" />
                         </label>
+
                         <input
                             spellCheck={false}
                             type="text"
                             placeholder="Search..."
-                            className="peer/search-input absolute left-full
-                            right-0 rounded-full border border-transparent p-2
-                            text-sm outline-none transition-all duration-500 
-                            peer-checked/search-input:left-0 peer-checked/search-input:border-black
-                            peer-checked/search-input:pl-8
-                            "
+                            className="absolute right-0 top-1/2 h-10 w-0 -translate-y-1/2 border border-transparent  text-sm outline-none transition-all duration-500 peer-checked/search-input:w-full peer-checked/search-input:border-slate-900 peer-checked/search-input:p-2 peer-checked/search-input:pr-[25%]"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.keyCode == 13) {
+                                    setIsLoading(true);
+                                    setTimeout(() => {
+                                        setIsLoading(false);
+                                        navigate('/search/' + searchQuery);
+                                    }, 1000);
+                                }
+                            }}
                             onBlur={(e) => {
                                 const checkbox =
                                     e.target.previousSibling.previousSibling;
@@ -119,25 +184,21 @@ const Header = () => {
                                     searchBtn.style.pointerEvents = 'auto';
                                 }
                             }}
-                            onKeyDown={(e) => {
-                                if (e.keyCode == 13) {
-                                    navigate('/search/' + searchQuery);
-                                }
-                            }}
                         />
-                        <span
-                            className="absolute right-3 cursor-pointer peer-placeholder-shown/search-input:hidden"
-                            onClick={(e) => {
-                                const searchInput = e.target.previousSibling;
-                                setSearchQuery('');
-                                searchInput.focus();
-                            }}
-                        >
-                            &#10005;
-                        </span>
+                        {searchQuery && (
+                            <span
+                                className="absolute right-9 cursor-pointer peer-placeholder-shown/search-input:hidden"
+                                onClick={(e) => {
+                                    setSearchQuery('');
+                                    e.currentTarget.previousSibling.focus();
+                                }}
+                            >
+                                &#10005;
+                            </span>
+                        )}
                     </div>
-                    <div className="h-6 w-[1px] bg-[#838383]"></div>
-                    <Link to="/favorites">
+                    <div className="hidden h-6 w-[1px] bg-[#838383] lg:inline-block"></div>
+                    <Link to="/favorites" className="hidden md:inline-block">
                         <CiHeart className="h-6 w-6" />
                     </Link>
                     <Link to="/cart" className="relative cursor-pointer">
@@ -147,7 +208,7 @@ const Header = () => {
                         />
                         {totalProducts > 0 && (
                             <div
-                                className="absolute -right-2 -top-2 z-10 flex size-4 
+                                className="absolute -right-2 -top-2 z-[1] flex size-4 
                             items-center justify-center rounded-full bg-black text-sm text-white ring-1 ring-black"
                             >
                                 <span className="">{totalProducts}</span>
@@ -155,7 +216,7 @@ const Header = () => {
                         )}
                     </Link>
                     {isAuthenticated && (
-                        <div className="relative cursor-pointer">
+                        <div className="relative hidden cursor-pointer md:inline-block">
                             <HiOutlineUserCircle
                                 className="h-6 w-6"
                                 onClick={() => setIsOpen(!isOpen)}
@@ -175,7 +236,7 @@ const Header = () => {
                                             className="flex items-center justify-between hover:bg-slate-200"
                                             onClick={() => setIsOpen(!isOpen)}
                                         >
-                                            <IoIosSettings  />
+                                            <IoIosSettings />
                                             <span>Settings</span>
                                         </Link>
                                         <Link
@@ -210,6 +271,11 @@ const Header = () => {
                     )}
                 </div>
             </div>
+            {isLoading && (
+                <div className="fixed left-0 top-0 z-50 flex h-screen w-screen items-center justify-center bg-[#000000ce]">
+                    <PuffLoader color="#fff" size={80} />
+                </div>
+            )}
         </div>
     );
 };

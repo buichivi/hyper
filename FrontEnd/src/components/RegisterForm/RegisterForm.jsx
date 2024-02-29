@@ -1,6 +1,7 @@
 import { IoEyeOffOutline, IoEyeOutline } from 'react-icons/io5';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 
 const RegisterForm = ({ form = {} }) => {
     const [isShowPass, setIsShowPass] = useState(false);
@@ -190,6 +191,10 @@ const RegisterForm = ({ form = {} }) => {
             </div>
         </div>
     );
+};
+
+RegisterForm.propTypes = {
+    form: PropTypes.object,
 };
 
 export default RegisterForm;

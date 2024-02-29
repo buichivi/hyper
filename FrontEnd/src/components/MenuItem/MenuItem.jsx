@@ -1,18 +1,16 @@
 import { motion, useAnimation } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
-const MenuItem = ({ brand = {}, className = '', isLogin = False }) => {
+const MenuItem = ({ brand = {}, className = '', isLogin = false }) => {
     const controls = useAnimation();
     return (
         <motion.div
             onHoverStart={() => controls.start({ y: 0, opacity: 1 })}
             onHoverEnd={() => controls.start({ y: -20, opacity: 0 })}
             to=""
-            className={`group/menu-item relative flex h-full w-fit items-center justify-center text-lg
-                font-medium before:absolute before:bottom-0 
-                before:left-0 before:h-[2px] before:w-0 before:bg-black
-                before:transition-all before:duration-300 before:content-[''] 
-                hover:before:w-full ${className}`}
+            className={`group/menu-item relative flex h-fit w-fit items-center justify-center text-lg
+                font-medium before:absolute before:bottom-0 before:left-0 before:h-[2px] before:w-0 before:bg-black before:transition-all before:duration-300 before:content-[''] after:absolute after:left-1/2 after:top-full after:hidden after:h-full after:w-[200%] after:-translate-x-1/2 after:bg-transparent after:content-[''] hover:before:w-full hover:after:block ${className}`}
         >
             <Link to={`/${brand.code}`} className="cursor-pointer capitalize">
                 {brand.name}
@@ -74,6 +72,12 @@ const MenuItem = ({ brand = {}, className = '', isLogin = False }) => {
             </motion.div>
         </motion.div>
     );
+};
+
+MenuItem.propTypes = {
+    brand: PropTypes.object,
+    className: PropTypes.string,
+    isLogin: PropTypes.bool,
 };
 
 export default MenuItem;

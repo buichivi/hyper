@@ -2,6 +2,7 @@ import { forwardRef, useEffect, useState } from 'react';
 import axios from 'axios';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import PropTypes from 'prop-types';
 
 const regexName =
     /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s\W|_]+$/;
@@ -14,6 +15,8 @@ const CustomerInfo = forwardRef(function CustomerForm(
     const [provinces, setProvinces] = useState([]);
     const [districts, setDistricts] = useState([]);
     const [wards, setWards] = useState([]);
+
+    console.log(user)
 
     useEffect(() => {
         axios
@@ -711,5 +714,11 @@ const CustomerInfo = forwardRef(function CustomerForm(
         </>
     );
 });
+
+CustomerInfo.propTypes = {
+    user: PropTypes.object,
+    onSubmitForm: PropTypes.func,
+    isAccountPage: PropTypes.bool,
+};
 
 export default CustomerInfo;

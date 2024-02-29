@@ -4,7 +4,7 @@ import request from '../../utils/request';
 import { toast } from 'react-toastify';
 import { clearCart } from '../../store/cartSlice';
 import { useNavigate } from 'react-router-dom';
-// import { PayPalButton } from '@paypal/react-paypal-js';
+import PropTypes from 'prop-types';
 
 const PaypalPayment = ({ info = {}, total = 0, setIsPurchase = () => {} }) => {
     const [paypalReady, setPaypalReady] = useState(false);
@@ -129,6 +129,7 @@ const PaypalPayment = ({ info = {}, total = 0, setIsPurchase = () => {} }) => {
                 })
                 .render('#paypal-button-container');
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [paypalReady]);
 
     return (
@@ -136,6 +137,11 @@ const PaypalPayment = ({ info = {}, total = 0, setIsPurchase = () => {} }) => {
             <div id="paypal-button-container"></div>
         </div>
     );
+};
+PaypalPayment.propTypes = {
+    info: PropTypes.object,
+    total: PropTypes.number,
+    setIsPurchase: PropTypes.func,
 };
 
 export default PaypalPayment;

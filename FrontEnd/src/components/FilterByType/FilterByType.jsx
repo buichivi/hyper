@@ -22,8 +22,7 @@ const FilterByType = ({ isReset, shoeTypes = [], onChange }) => {
 
     return (
         <motion.div
-            className={`h-auto cursor-pointer select-none border-b-[1px]
-            border-b-[#B9B4C7] py-2 transition-all duration-500
+            className={`h-auto cursor-pointer select-none border-b-[1px] border-b-[#B9B4C7] px-[10%] py-2 transition-all duration-500 md:px-0
     `}
         >
             <div
