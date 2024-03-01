@@ -57,7 +57,6 @@ export const checkingLoginUser = () => async (dispatch) => {
         .then((res) => {
             dispatch(checkLogin(res.data));
             dispatch(fetchCart());
-            console.log(res.data.current_user);
         })
         .catch((err) => {
             console.log(err);

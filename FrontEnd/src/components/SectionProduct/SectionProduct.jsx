@@ -9,8 +9,6 @@ const SectionProduct = ({ products = [] }) => {
     const nextBtnRef = useRef();
     const prevBtnRef = useRef();
 
-    console.log(products);
-
     return (
         <div className="h-auto w-full py-4">
             <div className="relative h-auto w-full">

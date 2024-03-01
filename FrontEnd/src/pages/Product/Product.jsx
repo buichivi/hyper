@@ -15,6 +15,7 @@ import request from '../../utils/request';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { addItemToCart } from '../../store/actions';
+import PropTypes from 'prop-types';
 
 const Product = () => {
     const { brand_code, shoe_type_code, product_id } = useParams();
@@ -377,6 +378,10 @@ const FavoriteProduct = ({ product_id }) => {
             )}
         </button>
     );
+};
+
+FavoriteProduct.propTypes = {
+    product_id: PropTypes.number,
 };
 
 export default Product;

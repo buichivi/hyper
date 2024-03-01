@@ -5,7 +5,11 @@ import { FiMinus, FiPlus } from 'react-icons/fi';
 import { filterGroupAnimation } from '../../utils/animation';
 import PropTypes from 'prop-types';
 
-const FilterByType = ({ isReset, shoeTypes = [], onChange }) => {
+const FilterByType = ({
+    isReset = false,
+    shoeTypes = [],
+    onChange = () => {},
+}) => {
     console.log('FilterByType re-render');
 
     const [isOpen, setIsOpen] = useState(true);

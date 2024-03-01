@@ -56,7 +56,7 @@ const Header = () => {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     onKeyDown={(e) => {
-                        if (e.keyCode == 13) {
+                        if (e.keyCode == 13 && searchQuery) {
                             setIsLoading(true);
                             setTimeout(() => {
                                 setIsLoading(false);
@@ -113,7 +113,7 @@ const Header = () => {
                                 <MenuItem
                                     brand={brand}
                                     isLogin={isAuthenticated}
-                                    className='peer/menu-item'
+                                    className="peer/menu-item"
                                 />
                                 <div className="fixed left-0 top-0 -z-10 hidden h-screen w-screen bg-[#eeeeee00] backdrop-blur-sm peer-hover/menu-item:block"></div>
                             </div>
@@ -167,7 +167,7 @@ const Header = () => {
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             onKeyDown={(e) => {
-                                if (e.keyCode == 13) {
+                                if (e.keyCode == 13 && searchQuery != '') {
                                     setIsLoading(true);
                                     setTimeout(() => {
                                         setIsLoading(false);

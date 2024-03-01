@@ -25,7 +25,7 @@ const Filter = ({
     isSearchPage = false,
     className = '',
 }) => {
-    const { brand_id } = useParams();
+    const { brand_code } = useParams();
 
     const [filterTypes, setFilterTypes] = useState([]);
     const [filterBrands, setFilterBrands] = useState([]);
@@ -39,7 +39,6 @@ const Filter = ({
 
     const handleAppyFilter = () => {
         console.log(products);
-
         const [min, max] = rangePrice;
         if (!isSearchPage)
             setProductFilters(
@@ -47,7 +46,7 @@ const Filter = ({
                     .filter((product) => {
                         const productPriceAfterSaleOff =
                             (product.price * (100 - product.discount)) / 100;
-                        if (brand_id)
+                        if (brand_code)
                             return (
                                 filterTypes.includes(product.shoe_type.id) &&
                                 productPriceAfterSaleOff >= min &&

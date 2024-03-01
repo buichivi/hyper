@@ -83,8 +83,8 @@ const Brand = () => {
                 <div className="flex h-[200px] w-full items-center justify-center bg-black">
                     <div className="flex size-40 items-center justify-center text-white">
                         <img
-                            src={brand.img_url}
-                            alt={brand.name}
+                            src={brand?.img_url}
+                            alt={brand?.name}
                             className="size-full object-contain invert"
                         />
                     </div>
@@ -94,7 +94,7 @@ const Brand = () => {
                 >
                     <h4 className="text-4xl font-medium capitalize">
                         {!shoe_type_code
-                            ? `All ${brand.name}`
+                            ? `All ${brand?.name}`
                             : shoe_type?.name}
                     </h4>
                     <label
