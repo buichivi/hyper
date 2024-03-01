@@ -26,6 +26,8 @@
 
 # Fix hover item in header [x]
 
-# Fix Product table add img_preview and Product Image is contain other image of product []
+# Fix Product table add img_preview and Product Image is contain other image of product [x]
 
-# Fix delete image from firebase storage when delete something from database []
+# Fix delete image from firebase storage when delete something from database [x]
+
+# Lazy-loading []

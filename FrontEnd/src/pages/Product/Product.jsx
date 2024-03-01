@@ -23,7 +23,9 @@ const Product = () => {
     const [selectedSize, setSelectedSize] = useState(-1);
     const [quantity, setQuantity] = useState(1);
     const [productImgs, setProductImgs] = useState([]);
-    const [recommendedProducts, setRecommendedProducts] = useState([]);
+    const [recommendedProducts, setRecommendedProducts] = useState(
+        Array(10).fill({}),
+    );
 
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
     const dispatch = useDispatch();
@@ -186,12 +188,14 @@ const Product = () => {
                                                     return (
                                                         <span
                                                             key={index}
-                                                            className={`inline-block cursor-pointer select-none border-[1px] 
-                                                border-black px-4 py-1 text-center transition-all
-                                                hover:bg-black hover:text-white 
-                                                ${sizeItem?.size == selectedSize && 'bg-black text-white'}
-                                                ${sizeItem?.quantity_in_stock <= 0 && 'pointer-events-none opacity-50'}`}
+                                                            className={`inline-block cursor-pointer select-none border-[1px] border-black px-4 py-1 text-center text-black transition-all ${sizeItem?.quantity_in_stock > 0 && 'hover:bg-black hover:text-white'}  ${sizeItem?.size == selectedSize && 'bg-black text-white'} ${sizeItem?.quantity_in_stock <= 0 && '!cursor-not-allowed opacity-50 hover:text-black'}`}
                                                             onClick={() => {
+                                                                if (
+                                                                    sizeItem?.quantity_in_stock <=
+                                                                    0
+                                                                ) {
+                                                                    return;
+                                                                }
                                                                 if (
                                                                     sizeItem?.size ==
                                                                     selectedSize

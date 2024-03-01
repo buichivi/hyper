@@ -8,7 +8,7 @@ const Home = () => {
         window.scrollTo(0, 0);
     }, []);
 
-    const [featuredProds, setFeaturedProds] = useState([]);
+    const [featuredProds, setFeaturedProds] = useState(Array(5).fill({}));
     useEffect(() => {
         request
             .get('/featured')

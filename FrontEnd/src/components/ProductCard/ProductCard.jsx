@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-
 import { IoIosHeart, IoIosHeartEmpty } from 'react-icons/io';
 import { AnimatePresence, motion } from 'framer-motion';
 import { IoBagHandle } from 'react-icons/io5';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import request from '../../utils/request';
-import { useDispatch } from 'react-redux';
-import { addItemToCart } from '../../store/actions';
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
+
+import request from '../../utils/request';
+import { addItemToCart } from '../../store/actions';
 
 const ProductCard = ({ product = {}, isFavorite = false }) => {
     const [isFavor, setIsFavor] = useState(isFavorite);
@@ -66,6 +66,23 @@ const ProductCard = ({ product = {}, isFavorite = false }) => {
         );
         setIsSelected(false);
     };
+
+    if (Object.keys(product).length == 0) {
+        return (
+            <div className="flex w-full animate-pulse flex-col">
+                <div
+                    className="w-full animate-pulse bg-slate-200 p-4"
+                    style={{ aspectRatio: 1 }}
+                >
+                    <div className="size-full bg-slate-100"></div>
+                </div>
+                <div className="flex h-[60px] w-full animate-pulse flex-col gap-2 bg-slate-200 px-4 pb-2">
+                    <div className="w-full flex-1 bg-slate-100"></div>
+                    <div className="w-full flex-1 bg-slate-100"></div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="select-none overflow-hidden border-[1px] border-transparent">

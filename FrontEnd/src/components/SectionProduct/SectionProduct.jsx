@@ -1,12 +1,15 @@
 import { useRef } from 'react';
-import ProductCard from '../ProductCard/ProductCard';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { FaArrowRight, FaArrowLeft } from 'react-icons/fa6';
 import { Navigation } from 'swiper/modules';
 import PropTypes from 'prop-types';
+import ProductCard from '../ProductCard';
+
 const SectionProduct = ({ products = [] }) => {
     const nextBtnRef = useRef();
     const prevBtnRef = useRef();
+
+    console.log(products);
 
     return (
         <div className="h-auto w-full py-4">
@@ -45,12 +48,7 @@ const SectionProduct = ({ products = [] }) => {
                     {products.map((product, index) => {
                         return (
                             <SwiperSlide key={index}>
-                                <ProductCard
-                                    product={product}
-                                    brandName={'nike'}
-                                    rating={4.5}
-                                    sizes={[39, 40, 41, 42, 43, 44, 45, 46, 47]}
-                                />
+                                <ProductCard product={product} />
                             </SwiperSlide>
                         );
                     })}
@@ -61,7 +59,7 @@ const SectionProduct = ({ products = [] }) => {
 };
 
 SectionProduct.propTypes = {
-    products: PropTypes.object
-}
+    products: PropTypes.array,
+};
 
 export default SectionProduct;

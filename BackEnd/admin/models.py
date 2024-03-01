@@ -112,6 +112,15 @@ class BrandView(ModelView):
             model.img_url = url
         else:
             model.img_url = file
+    def on_model_delete(self, model):
+        super().on_model_delete(model)
+
+        # Get the file name want to delete
+        parsed_url = urlparse(model.img_url)
+        file_name = os.path.basename(parsed_url.path)
+
+        # Xoá ảnh từ Firebase Storage
+        delete_image(file_name)
 
     form_extra_fields = {"img_url": ImageUploadField("Image", base_path=file_path)}
 
@@ -164,6 +173,16 @@ class ShoeTypeView(ModelView):
         if brand:
             model.brand_id = brand.id
 
+    def on_model_delete(self, model):
+        super().on_model_delete(model)
+
+        # Get the file name want to delete
+        parsed_url = urlparse(model.img_url)
+        file_name = os.path.basename(parsed_url.path)
+
+        # Xoá ảnh từ Firebase Storage
+        delete_image(file_name)
+
     column_formatters = {
         "brand_name": _get_brand_name,
         "image sample": _get_shoe_type_img,
@@ -215,7 +234,7 @@ class ProductView(ModelView):
         if brand and shoe_type:
             model.brand_id = brand.id
             model.shoe_type_id = shoe_type.id
-        file = form.img_url.data
+        file = form.img_preview.data
         if not isinstance(file, str):
             # Tải lên file vào Firebase Storage
             blob = bucket.blob(file.filename)
@@ -227,9 +246,19 @@ class ProductView(ModelView):
             os.remove(op.join(file_path, file.filename))
 
             # Lưu đường dẫn URL vào trường ImageUploadField
-            model.img_url = url
+            model.img_preview = url
         else:
-            model.img_url = file
+            model.img_preview = file
+
+    def on_model_delete(self, model):
+        super().on_model_delete(model)
+
+        # Get the file name want to delete
+        parsed_url = urlparse(model.img_url)
+        file_name = os.path.basename(parsed_url.path)
+
+        # Xoá ảnh từ Firebase Storage
+        delete_image(file_name)
 
     def _get_brand_name(view, context, model, name):
         brand = Brand.query.get(model.brand_id)
@@ -424,6 +453,15 @@ class SliderView(ModelView):
             model.img_url = url
         else:
             model.img_url = file
+    def on_model_delete(self, model):
+        super().on_model_delete(model)
+
+        # Get the file name want to delete
+        parsed_url = urlparse(model.img_url)
+        file_name = os.path.basename(parsed_url.path)
+
+        # Xoá ảnh từ Firebase Storage
+        delete_image(file_name)
 
     form_extra_fields = {
         "img_url": ImageUploadField("Image", base_path=file_path),

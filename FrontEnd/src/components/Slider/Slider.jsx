@@ -28,7 +28,7 @@ const Slider = () => {
                 }}
                 loop={true}
                 modules={[Navigation, Pagination, Autoplay]}
-                className="relative h-[30vh] w-full xl:h-[85vh]"
+                className="relative h-[30vh] w-full md:h-[50vh] xl:h-[85vh]"
             >
                 {sliders.map((slider, index) => {
                     return (
@@ -41,28 +41,6 @@ const Slider = () => {
                         </SwiperSlide>
                     );
                 })}
-
-                {/* <SwiperSlide className="bg-black">
-                    <img
-                        src="src/assets/sliders/slider-2.jpg"
-                        alt=""
-                        className="h-full w-full object-cover"
-                    />
-                </SwiperSlide>
-                <SwiperSlide className="bg-black">
-                    <img
-                        src="src/assets/sliders/slider-3.jpg"
-                        alt=""
-                        className="h-full w-full object-cover"
-                    />
-                </SwiperSlide>
-                <SwiperSlide className="bg-black">
-                    <img
-                        src="src/assets/sliders/slider-4.jpg"
-                        alt=""
-                        className="h-full w-full object-cover"
-                    />
-                </SwiperSlide> */}
             </Swiper>
         </div>
     );

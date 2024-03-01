@@ -13,12 +13,11 @@ import { SORT_PRODUCT } from '../../constants';
 const Brand = () => {
     const { brand_code, shoe_type_code } = useParams();
     const [brand, setBrand] = useState({});
-    const [products, setProducts] = useState([]);
-    const [productFilters, setProductFilters] = useState([]);
+    const [products, setProducts] = useState(Array(10).fill({}));
+    const [productFilters, setProductFilters] = useState(Array(10).fill({}));
     const [favoriteProducts, setFavoriteProducts] = useState([]);
     const [sort, setSort] = useState({});
     const [path, setPath] = useState([]);
-
 
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
     const favorite_product_ids = favoriteProducts.map((prod) => prod.id);
