@@ -65,7 +65,7 @@ const Payment = ({
                                 >
                                     <Link
                                         to={`/${cartItem?.product?.brand?.code}/${cartItem?.product?.shoe_type?.code}/${cartItem?.product?.id}`}
-                                        className='shrink-0'
+                                        className="shrink-0"
                                     >
                                         <img
                                             className="m-2 size-24  rounded-md border object-cover object-center"
@@ -128,7 +128,7 @@ const Payment = ({
                             >
                                 <img
                                     className="w-14 object-contain"
-                                    src="/src/assets/images/COD-payment.png"
+                                    src="/shoes-store/src/assets/images/COD-payment.png"
                                     alt=""
                                 />
                                 <div className="ml-5">
@@ -160,7 +160,7 @@ const Payment = ({
                             >
                                 <img
                                     className="w-14 object-contain"
-                                    src="/src/assets/images/paypal-logo.png"
+                                    src="/shoes-store/src/assets/images/paypal-logo.png"
                                     alt=""
                                 />
                                 <div className="ml-5">

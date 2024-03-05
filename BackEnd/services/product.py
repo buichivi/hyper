@@ -19,7 +19,9 @@ class ProductResource(Resource):
         if not brand_code:
             return {"message": "brand_code is not provided!"}, 400
         brand = Brand.query.filter_by(code=brand_code).first()
-        shoe_type = ShoeType.query.filter_by(code=shoe_type_code, brand_id = brand.id).first()
+        shoe_type = ShoeType.query.filter_by(
+            code=shoe_type_code, brand_id=brand.id
+        ).first()
 
         if not brand:
             return {"message": "No brand is match with brand_code!"}, 400
@@ -43,7 +45,7 @@ class ProductResource(Resource):
         detail = data.get("detail")
         price = data.get("price")
         discount = data.get("discount")
-        img_preview = data.get('img_preview')
+        img_preview = data.get("img_preview")
         featured = data.get("featured")
         brand_id = data.get("brand_id")
         shoe_type_id = data.get("shoe_type_id")
@@ -63,7 +65,7 @@ class ProductResource(Resource):
             product.set_discount(discount)
         if featured:
             product.set_featured(featured)
-        if img_preview: 
+        if img_preview:
             product.set_img_preview(img_preview)
 
         db.session.add(product)
@@ -98,8 +100,8 @@ class CheckingProductIsInStockResource(Resource):
             ).first()
             if product_size.quantity_in_stock < product_cart["quantity"]:
                 return {
-                    "message": f"The product named {product_cart['product_name']} with size {product_cart["size"]} is no longer in stock",
-                    "cart_id": product_cart['cart_id']
+                    "message": f"The product named {product_cart['product_name']} with size {product_cart['size']} is no longer in stock",
+                    "cart_id": product_cart["cart_id"],
                 }, 400
         return {"message": "All product are still in stock"}, 200
 
@@ -107,25 +109,25 @@ class CheckingProductIsInStockResource(Resource):
 class SearchProductResource(Resource):
     @cross_origin()
     def get(self):
-        query = request.args.get('query')
+        query = request.args.get("query")
         products = Product.query.filter(Product.name.ilike(f"%{query}%")).all()
         products_json = [product.to_json() for product in products]
-        return {
-            "products": products_json
-        }
+        return {"products": products_json}
+
 
 class GetFeaturedProductResource(Resource):
     @cross_origin()
     def get(self):
-        products = Product.query.filter_by(featured = True).limit(8).all()
+        products = Product.query.filter_by(featured=True).limit(8).all()
         return {"products": [product.to_json() for product in products]}, 200
+
 
 class GetOtherProductOfBrandResource(Resource):
     @cross_origin()
     def get(self):
-        brand_id = request.args.get('brand_id')
-        product_id= request.args.get('product_id')
-        number_of_product = request.args.get('number_of_product')
+        brand_id = request.args.get("brand_id")
+        product_id = request.args.get("product_id")
+        number_of_product = request.args.get("number_of_product")
         if not brand_id:
             return {"message": "Brand id is missing"}, 400
         if not product_id:
@@ -133,8 +135,12 @@ class GetOtherProductOfBrandResource(Resource):
         if not number_of_product:
             return {"message": "Number of product is missing"}, 400
 
-        products = Product.query.filter(and_(
-            Product.brand_id == brand_id,
-            Product.id != product_id
-        )).order_by(func.random()).limit(number_of_product).all()
+        products = (
+            Product.query.filter(
+                and_(Product.brand_id == brand_id, Product.id != product_id)
+            )
+            .order_by(func.random())
+            .limit(number_of_product)
+            .all()
+        )
         return {"products": [prod.to_json() for prod in products]}, 200

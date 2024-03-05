@@ -117,7 +117,7 @@ const Search = () => {
                             <div className="relative left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 select-none opacity-60">
                                 <div className="flex items-center justify-center text-center">
                                     <img
-                                        src="/src/assets/images/open-box.png"
+                                        src="/shoes-store/src/assets/images/open-box.png"
                                         alt=""
                                         className="size-60 object-cover"
                                     />

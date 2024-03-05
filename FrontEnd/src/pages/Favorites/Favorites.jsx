@@ -6,9 +6,7 @@ import { Link } from 'react-router-dom';
 
 const Favorites = () => {
     const [favoriteProducts, setFavoriteProducts] = useState([]);
-
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
-
     const favorite_product_ids = favoriteProducts.map((prod) => prod.id);
 
     useEffect(() => {
@@ -46,7 +44,7 @@ const Favorites = () => {
                         <div className="relative left-1/2 top-2/3 w-full -translate-x-1/2 select-none py-20 opacity-60">
                             <div className="flex items-center justify-center text-center">
                                 <img
-                                    src="/src/assets/images/open-box.png"
+                                    src="/shoes-store/src/assets/images/open-box.png"
                                     alt=""
                                     className="size-60 object-cover"
                                 />
@@ -64,7 +62,7 @@ const Favorites = () => {
                 <div className="select-none opacity-60">
                     <div className="flex items-center justify-center text-center">
                         <img
-                            src="/src/assets/images/open-box.png"
+                            src="/shoes-store/src/assets/images/open-box.png"
                             alt=""
                             className="size-60 object-cover"
                         />

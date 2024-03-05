@@ -191,7 +191,7 @@ const Cart = () => {
                                     ) : (
                                         <div className="relative left-1/2 top-0 size-52 -translate-x-1/2">
                                             <img
-                                                src="/src/assets/images/cart-empty.png"
+                                                src="/shoes-store/src/assets/images/cart-empty.png"
                                                 alt=""
                                             />
                                         </div>

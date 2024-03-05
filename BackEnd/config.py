@@ -1,4 +1,5 @@
-SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:" "@127.0.0.1/shoes_store"
+# SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:" "@127.0.0.1/shoes_store"
+SQLALCHEMY_DATABASE_URI = "postgresql://hyper_store_database_user:aMLt4imj0J2fvMSV0R0PF1ZU5rJwv4e6@dpg-cnj8odgl6cac73dnc9m0-a.oregon-postgres.render.com/hyper_store_database"
 SECRET_KEY = "shoes_store"
 CORS_HEADERS = "Content-Type"
 SESSION_COOKIE_SAMESITE = "None"

@@ -45,9 +45,11 @@ const Footer = () => {
     return (
         <div>
             <div className="relative h-[150px] w-full overflow-hidden bg-black xl:h-[250px]">
-                <h5 className="absolute left-0 top-1/2 w-full -translate-y-1/2 select-none text-center font-BebasNeue text-[100px] leading-none tracking-widest text-white xl:text-[250px]">
-                    HYPER
-                </h5>
+                <img
+                    src="/shoes-store/src/assets/images/Hyper-logo.png"
+                    alt=""
+                    className="absolute left-1/2 top-1/2 size-96 -translate-x-1/2 -translate-y-1/2 object-cover object-center invert"
+                />
             </div>
             <div className="flex min-h-[80px] flex-col items-start justify-between gap-2 border-b-[1px] border-b-black pb-6 pt-4 md:min-h-[150px] md:items-center lg:min-h-56 lg:flex-row">
                 <div className="flex h-full w-full shrink-0 grow-0 items-start md:w-3/5 lg:w-2/3">

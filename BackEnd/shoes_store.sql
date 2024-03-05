@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 24, 2024 at 07:10 AM
+-- Generation Time: Mar 05, 2024 at 03:12 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -74,14 +74,6 @@ CREATE TABLE `tb_favorite` (
   `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `tb_favorite`
---
-
-INSERT INTO `tb_favorite` (`id`, `favorite_on`, `product_id`, `user_id`) VALUES
-(1, '23/02/2024', 1, 2),
-(2, '23/02/2024', 5, 2);
-
 -- --------------------------------------------------------
 
 --
@@ -112,7 +104,10 @@ CREATE TABLE `tb_order` (
 INSERT INTO `tb_order` (`id`, `total_amount`, `order_date`, `shipping_address`, `phone_number`, `customer_name`, `email`, `province`, `district`, `ward`, `is_paid`, `payment`, `status_id`, `user_id`) VALUES
 (1, 171, '23/02/2024', 'Xóm 9', '0826127626', 'Bùi Chí Vĩ', 'buichivi04062002@gmail.com', '{\"province_id\": \"34\", \"province_name\": \"T\\u1ec9nh Th\\u00e1i B\\u00ecnh\", \"province_type\": \"T\\u1ec9nh\"}', '{\"district_id\": \"343\", \"district_name\": \"Huy\\u1ec7n Ki\\u1ebfn X\\u01b0\\u01a1ng\", \"district_type\": \"Huy\\u1ec7n\", \"lat\": null, \"lng\": null, \"province_id\": \"34\"}', '{\"district_id\": \"343\", \"ward_id\": \"13144\", \"ward_name\": \"X\\u00e3 Quang B\\u00ecnh\", \"ward_type\": \"X\\u00e3\"}', 1, 'paypal', 2, 2),
 (2, 264, '24/02/2024', 'Xóm 9', '0826127626', 'Bùi Chí Vĩ', 'buichivi04062002@gmail.com', '{\"province_id\": \"34\", \"province_name\": \"T\\u1ec9nh Th\\u00e1i B\\u00ecnh\", \"province_type\": \"T\\u1ec9nh\"}', '{\"district_id\": \"343\", \"district_name\": \"Huy\\u1ec7n Ki\\u1ebfn X\\u01b0\\u01a1ng\", \"district_type\": \"Huy\\u1ec7n\", \"lat\": null, \"lng\": null, \"province_id\": \"34\"}', '{\"district_id\": \"343\", \"ward_id\": \"13144\", \"ward_name\": \"X\\u00e3 Quang B\\u00ecnh\", \"ward_type\": \"X\\u00e3\"}', 1, 'paypal', 1, 2),
-(3, 1280, '24/02/2024', 'hn', '0826127626', 'Bùi Chí minh', 'minh@gmail.com', '{\"province_id\": \"08\", \"province_name\": \"T\\u1ec9nh Tuy\\u00ean Quang\", \"province_type\": \"T\\u1ec9nh\"}', '{\"district_id\": \"074\", \"district_name\": \"Huy\\u1ec7n H\\u00e0m Y\\u00ean\", \"district_type\": \"Huy\\u1ec7n\", \"lat\": null, \"lng\": null, \"province_id\": \"08\"}', '{\"district_id\": \"074\", \"ward_id\": \"02407\", \"ward_name\": \"X\\u00e3 Th\\u00e1i S\\u01a1n\", \"ward_type\": \"X\\u00e3\"}', 0, 'COD', 1, 5);
+(3, 1280, '24/02/2024', 'hn', '0826127626', 'Bùi Chí minh', 'minh@gmail.com', '{\"province_id\": \"08\", \"province_name\": \"T\\u1ec9nh Tuy\\u00ean Quang\", \"province_type\": \"T\\u1ec9nh\"}', '{\"district_id\": \"074\", \"district_name\": \"Huy\\u1ec7n H\\u00e0m Y\\u00ean\", \"district_type\": \"Huy\\u1ec7n\", \"lat\": null, \"lng\": null, \"province_id\": \"08\"}', '{\"district_id\": \"074\", \"ward_id\": \"02407\", \"ward_name\": \"X\\u00e3 Th\\u00e1i S\\u01a1n\", \"ward_type\": \"X\\u00e3\"}', 0, 'COD', 1, 5),
+(4, 144, '24/02/2024', 'Xóm 9', '0826127626', 'Bùi Chí Vĩ', 'buichivi04062002@gmail.com', '{\"province_id\": \"34\", \"province_name\": \"T\\u1ec9nh Th\\u00e1i B\\u00ecnh\", \"province_type\": \"T\\u1ec9nh\"}', '{\"district_id\": \"343\", \"district_name\": \"Huy\\u1ec7n Ki\\u1ebfn X\\u01b0\\u01a1ng\", \"district_type\": \"Huy\\u1ec7n\", \"lat\": null, \"lng\": null, \"province_id\": \"34\"}', '{\"district_id\": \"343\", \"ward_id\": \"13144\", \"ward_name\": \"X\\u00e3 Quang B\\u00ecnh\", \"ward_type\": \"X\\u00e3\"}', 0, 'COD', 4, 2),
+(5, 126, '28/02/2024', 'Xóm 9', '0826127626', 'Bùi Chí Vĩ', 'buichivi04062002@gmail.com', '{\"province_id\": \"34\", \"province_name\": \"T\\u1ec9nh Th\\u00e1i B\\u00ecnh\", \"province_type\": \"T\\u1ec9nh\"}', '{\"district_id\": \"343\", \"district_name\": \"Huy\\u1ec7n Ki\\u1ebfn X\\u01b0\\u01a1ng\", \"district_type\": \"Huy\\u1ec7n\", \"lat\": null, \"lng\": null, \"province_id\": \"34\"}', '{\"district_id\": \"343\", \"ward_id\": \"13144\", \"ward_name\": \"X\\u00e3 Quang B\\u00ecnh\", \"ward_type\": \"X\\u00e3\"}', 0, 'COD', 1, 2),
+(6, 72, '28/02/2024', 'Xóm 9', '0826127626', 'Bùi Chí Vĩ', 'buichivi04062002@gmail.com', '{\"province_id\": \"34\", \"province_name\": \"T\\u1ec9nh Th\\u00e1i B\\u00ecnh\", \"province_type\": \"T\\u1ec9nh\"}', '{\"district_id\": \"343\", \"district_name\": \"Huy\\u1ec7n Ki\\u1ebfn X\\u01b0\\u01a1ng\", \"district_type\": \"Huy\\u1ec7n\", \"lat\": null, \"lng\": null, \"province_id\": \"34\"}', '{\"district_id\": \"343\", \"ward_id\": \"13144\", \"ward_name\": \"X\\u00e3 Quang B\\u00ecnh\", \"ward_type\": \"X\\u00e3\"}', 0, 'COD', 1, 2);
 
 -- --------------------------------------------------------
 
@@ -139,7 +134,10 @@ INSERT INTO `tb_order_detail` (`id`, `size`, `quantity`, `price`, `total_price`,
 (2, '41', 1, 99, 99, 1, 4),
 (3, '39', 2, 89, 144, 2, 1),
 (4, '39', 1, 120, 120, 2, 2),
-(5, '41', 10, 150, 1280, 3, 10);
+(5, '41', 10, 150, 1280, 3, 10),
+(6, '39', 2, 89, 144, 4, 1),
+(7, '40', 1, 140, 126, 5, 3),
+(8, '39', 1, 89, 72, 6, 1);
 
 -- --------------------------------------------------------
 
@@ -174,6 +172,7 @@ CREATE TABLE `tb_product` (
   `description` text NOT NULL,
   `price` int(11) NOT NULL,
   `discount` int(11) NOT NULL,
+  `img_preview` text NOT NULL,
   `featured` tinyint(1) NOT NULL,
   `manufacture_date` varchar(255) NOT NULL,
   `brand_id` int(11) NOT NULL,
@@ -184,21 +183,21 @@ CREATE TABLE `tb_product` (
 -- Dumping data for table `tb_product`
 --
 
-INSERT INTO `tb_product` (`id`, `name`, `description`, `price`, `discount`, `featured`, `manufacture_date`, `brand_id`, `shoe_type_id`) VALUES
-(1, 'Air Jordan 1 Low G', 'AN \'85 ICON REMADE FOR THE COURSE.\r\n\r\n\r\nFeel unbeatable, from the tee box to the final putt. Inspired by one of the most iconic sneakers of all time, the Air Jordan 1 G is an instant classic on the course. With Air cushioning underfoot, a Wings logo on the heel and an integrated traction pattern to help you power through your swing, it delivers all the clubhouse cool of the original AJ1—plus everything you need to play 18 holes in comfort.\r\n\r\n\r\nStitch-for-Stitch Construction\r\n\r\nGenuine leather and bold colour-blocking recreate the classic look.\r\n\r\n\r\nAir Cushioning\r\n\r\nEncapsulated Air in the heel cushions every step.\r\n\r\n\r\nHeritage Traction\r\n\r\nBased on the design of the original outsole, the integrated traction pattern includes a forefoot pivot circle.\r\n\r\n\r\nProduct Details\r\n\r\nOne-year waterproof warranty\r\nColour Shown: White/Varsity Red/Obsidian\r\nStyle: DD9315-113\r\nCountry/Region of Origin: China', 89, 20, 1, '23/02/2024', 1, 1),
-(2, 'Jordan Spizike Low', 'The Spizike takes elements of four classic Jordans, combines them and gives you one iconic sneaker. It\'s an homage to Spike Lee formally introducing Hollywood and hoops in a culture moment. You get a great-looking pair of kicks with some history. What more can you ask for? Ya dig?\r\n\r\n\r\nBenefits\r\n\r\nThe real and synthetic leather and textile upper adds durability.\r\nNike Air technology absorbs impact for cushioning with every step.\r\nSolid rubber outsole provides durability and traction.\r\nColour Shown: Black/Cool Grey/Sail/Gym Red\r\nStyle: FQ1759-006\r\nCountry/Region of Origin: Vietnam', 120, 0, 1, '23/02/2024', 1, 1),
-(3, 'Jordan Max Aura 5', 'Whenyou need a shoe that\'s ready 24/7, it\'s gotta be the Max Aura 5. Inspired by the AJ3, this pair of kicks puts a modern spin on the classic. They\'re made from durable leather and textiles that sit atop a heel of Nike Air cushioning so you can walk, run or skate all day and still have fresh-feeling soles.', 140, 10, 1, '23/02/2024', 1, 1),
-(4, 'Nike Air Force 1 \'07', 'The radiance lives on in the Nike Air Force 1 \'07, the basketball original that puts a fresh spin on what you know best: durably stitched overlays, clean finishes and the perfect amount of flash to make you shine.\r\n\r\nColour Shown: White/White\r\nStyle: CW2288-111', 99, 0, 1, '23/02/2024', 1, 2),
-(5, 'Nike Air Force 1 Shadow', 'Everything you love about the AF-1—but doubled! The Air Force 1 Shadow puts a playful twist on a hoops icon to highlight the best of AF-1 DNA. With 2 eyestays, 2 mudguards, 2 backtabs and 2 Swoosh logos, you get a layered look with double the branding.\r\n\r\nColour Shown: White/Malachite/Sesame/Midnight Navy\r\nStyle: DZ1847-102', 140, 15, 1, '23/02/2024', 1, 2),
-(6, 'Nike G.T. Cut 3 ASW EP', 'How can you separate your game when it\'s winning time? Start by lacing up in the G.T. Cut 3. Designed to help you create space for stepback jumpers and backdoor cuts, its sticky multi-court traction helps you stop in an instant and shift gears at will. And when you\'re making all those game-changing plays, the newly added, ultra-responsive ZoomX foam helps keep you fresh for all four quarters. This design straps you into the wayback machine and teleports you to one of Nike\'s golden eras of hoops, with direct inspiration derived from the famed Air Zoom Flight 5. Donned by the legends, destined to help take your game to the next level. With its extra-durable rubber outsole, this version gives you traction for outdoor courts.', 160, 20, 1, '23/02/2024', 1, 3),
-(7, 'Nike Air Force 1 \'07 LV8', 'The radiance lives on in the Air Force 1 \'07 LV8. This b-ball original puts a fresh spin on what you know best: durably stitched overlays, clean finishes and the perfect amount of flash to make you shine. This winter-ready version helps keep you warm and has traction to beat the elements.', 100, 0, 1, '23/02/2024', 1, 2),
-(8, 'Zion 3 \'Z-3D\' PF', 'Zion\'s got a thing for nostalgia, and the Z-3D brings that love to life. The shoe itself is designed with court-ready tech designed to help you stay low, stay contained and explode skywards with a cushioned return to earth.\r\n\r\n', 210, 0, 1, '23/02/2024', 1, 3),
-(9, 'Jordan Stay Loyal 3', 'You gotta know where you\'ve been to know where you\'re going. We took that to heart when creating the Stay Loyal 3, a modern shoe built on the Air Jordan legacy. Inside and out, they\'re made for versatility, with minimalist looks, cloud-like cushioning and design elements that echo the AJ4. In other words, style with proven lasting power.', 300, 50, 1, '24/02/2024', 1, 1),
-(10, 'PREDATOR LEAGUE FIRM GROUND FOOTBALL BOOTS', 'The game\'s all about goals, and these football boots are crafted to find the net. Every. Time. Target perfection in all-new adidas Predator. Covered in a 3D texture and featuring grippy Strikescale fins on its medial side, the Hybridfeel upper is optimised for accurate shooting. Down below, a full-length Controlplate 2.0 tooling offers stability to cut, swerve and score on firm ground.\r\n\r\nThis product features at least 20% recycled materials. By reusing materials that have already been created, we help to reduce waste and our reliance on finite resources and reduce the footprint of the products we make.', 150, 15, 1, '24/02/2024', 2, 5),
-(11, 'COPA PURE II LEAGUE TURF BOOTS', 'To truly run a game, you need to keep your teammates close and the ball closer. Find the freedom to conduct play in comfortable, classy adidas Copa Pure II. Boasting heritage details and a cow leather forefoot, these football boots look and feel iconic. The lug rubber outsole keeps your play stylish on artificial turf.\r\n\r\nThis product features at least 20% recycled materials. By reusing materials that have already been created, we help to reduce waste and our reliance on finite resources and reduce the footprint of the products we make.', 150, 25, 1, '24/02/2024', 2, 5),
-(12, 'PREDATOR ACCURACY.4 TURF BOOTS', 'Top corner. Bottom corner. All the corners. adidas Predator Accuracy is crafted for goalscoring, so you know the ball will find the net. The fun\'s in choosing how it gets there. The comfortable synthetic upper on these football boots has a slightly textured finish. The lug rubber outsole is designed to keep you in control on artificial turf courts.\r\n\r\nMade with a series of recycled materials, this upper features at least 50% recycled content. This product represents just one of our solutions to help end plastic waste.', 150, 35, 1, '24/02/2024', 2, 5),
-(15, 'D.O.N. ISSUE 5 SHOES', 'From the moment he first stepped onto the hardwood, Donovan Mitchell has been a game changer, and that\'s continued even as his game has grown and evolved. These D.O.N. Issue 5 signature shoes from adidas Basketball continue to build on Spida\'s on-court persona as well as his off-court social activism. Riding an ultra-lightweight Lightstrike midsole and a unique rubber outsole with an elevated traction pattern, these basketball trainers help you dominate the game just like one of the sport\'s very best.\r\n\r\n', 180, 25, 0, '24/02/2024', 2, 6),
-(16, 'TRAE YOUNG 3 LOW TRAINERS', 'SIGNATURE SNEAKERS FROM TRAE YOUNG AND ADIDAS BASKETBALL.\r\nGet ready for what\'s next. This iteration of the signature trainers from Trae Young and adidas Basketball is all about the future of the game. Celebrating Trae\'s unique look, crowd-pleasing bravado and expressive, futuristic style of play, these shoes are built for optimised motion and stability, two elements of Trae\'s game that have elevated him to superstar status. The midsole ensures your most explosive moves can be done at top speed while a rubber outsole adds support on hard plants and cuts.', 210, 30, 0, '24/02/2024', 2, 6);
+INSERT INTO `tb_product` (`id`, `name`, `description`, `price`, `discount`, `img_preview`, `featured`, `manufacture_date`, `brand_id`, `shoe_type_id`) VALUES
+(1, 'Air Jordan 1 Low G', 'AN \'85 ICON REMADE FOR THE COURSE.\r\n\r\n\r\nFeel unbeatable, from the tee box to the final putt. Inspired by one of the most iconic sneakers of all time, the Air Jordan 1 G is an instant classic on the course. With Air cushioning underfoot, a Wings logo on the heel and an integrated traction pattern to help you power through your swing, it delivers all the clubhouse cool of the original AJ1—plus everything you need to play 18 holes in comfort.\r\n\r\n\r\nStitch-for-Stitch Construction\r\n\r\nGenuine leather and bold colour-blocking recreate the classic look.\r\n\r\n\r\nAir Cushioning\r\n\r\nEncapsulated Air in the heel cushions every step.\r\n\r\n\r\nHeritage Traction\r\n\r\nBased on the design of the original outsole, the integrated traction pattern includes a forefoot pivot circle.\r\n\r\n\r\nProduct Details\r\n\r\nOne-year waterproof warranty\r\nColour Shown: White/Varsity Red/Obsidian\r\nStyle: DD9315-113\r\nCountry/Region of Origin: China', 89, 20, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/jordan.jpg', 1, '23/02/2024', 1, 1),
+(2, 'Jordan Spizike Low', 'The Spizike takes elements of four classic Jordans, combines them and gives you one iconic sneaker. It\'s an homage to Spike Lee formally introducing Hollywood and hoops in a culture moment. You get a great-looking pair of kicks with some history. What more can you ask for? Ya dig?\r\n\r\n\r\nBenefits\r\n\r\nThe real and synthetic leather and textile upper adds durability.\r\nNike Air technology absorbs impact for cushioning with every step.\r\nSolid rubber outsole provides durability and traction.\r\nColour Shown: Black/Cool Grey/Sail/Gym Red\r\nStyle: FQ1759-006\r\nCountry/Region of Origin: Vietnam', 120, 0, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/jordan-spizike-low-shoes-pBZk7c.jpg', 1, '23/02/2024', 1, 1),
+(3, 'Jordan Max Aura 5', 'Whenyou need a shoe that\'s ready 24/7, it\'s gotta be the Max Aura 5. Inspired by the AJ3, this pair of kicks puts a modern spin on the classic. They\'re made from durable leather and textiles that sit atop a heel of Nike Air cushioning so you can walk, run or skate all day and still have fresh-feeling soles.', 140, 10, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/jordan-max-aura-5-shoes-ZBZ4Pz.jpg', 1, '23/02/2024', 1, 1),
+(4, 'Nike Air Force 1 \'07', 'The radiance lives on in the Nike Air Force 1 \'07, the basketball original that puts a fresh spin on what you know best: durably stitched overlays, clean finishes and the perfect amount of flash to make you shine.\r\n\r\nColour Shown: White/White\r\nStyle: CW2288-111', 99, 0, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/air-force-1-07-shoes-WrLlWX.jpg', 1, '23/02/2024', 1, 2),
+(5, 'Nike Air Force 1 Shadow', 'Everything you love about the AF-1—but doubled! The Air Force 1 Shadow puts a playful twist on a hoops icon to highlight the best of AF-1 DNA. With 2 eyestays, 2 mudguards, 2 backtabs and 2 Swoosh logos, you get a layered look with double the branding.\r\n\r\nColour Shown: White/Malachite/Sesame/Midnight Navy\r\nStyle: DZ1847-102', 140, 15, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/air-force-1-shadow-shoes-3d774m.jpg', 1, '23/02/2024', 1, 2),
+(6, 'Nike G.T. Cut 3 ASW EP', 'How can you separate your game when it\'s winning time? Start by lacing up in the G.T. Cut 3. Designed to help you create space for stepback jumpers and backdoor cuts, its sticky multi-court traction helps you stop in an instant and shift gears at will. And when you\'re making all those game-changing plays, the newly added, ultra-responsive ZoomX foam helps keep you fresh for all four quarters. This design straps you into the wayback machine and teleports you to one of Nike\'s golden eras of hoops, with direct inspiration derived from the famed Air Zoom Flight 5. Donned by the legends, destined to help take your game to the next level. With its extra-durable rubber outsole, this version gives you traction for outdoor courts.', 160, 20, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/basketball-nike.jpg', 1, '23/02/2024', 1, 3),
+(7, 'Nike Air Force 1 \'07 LV8', 'The radiance lives on in the Air Force 1 \'07 LV8. This b-ball original puts a fresh spin on what you know best: durably stitched overlays, clean finishes and the perfect amount of flash to make you shine. This winter-ready version helps keep you warm and has traction to beat the elements.', 100, 0, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/air-force-1-07-lv8-shoes-hHz3rg.jpg', 1, '23/02/2024', 1, 2),
+(8, 'Zion 3 \'Z-3D\' PF', 'Zion\'s got a thing for nostalgia, and the Z-3D brings that love to life. The shoe itself is designed with court-ready tech designed to help you stay low, stay contained and explode skywards with a cushioned return to earth.\r\n\r\n', 210, 0, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/zion-3-z-3d-pf-basketball-shoes-165ZqH.jpg', 1, '23/02/2024', 1, 3),
+(9, 'Jordan Stay Loyal 3', 'You gotta know where you\'ve been to know where you\'re going. We took that to heart when creating the Stay Loyal 3, a modern shoe built on the Air Jordan legacy. Inside and out, they\'re made for versatility, with minimalist looks, cloud-like cushioning and design elements that echo the AJ4. In other words, style with proven lasting power.', 300, 50, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/jordan-stay-loyal-3-shoes-GNHN2X.jpg', 1, '24/02/2024', 1, 1),
+(10, 'PREDATOR LEAGUE FIRM GROUND FOOTBALL BOOTS', 'The game\'s all about goals, and these football boots are crafted to find the net. Every. Time. Target perfection in all-new adidas Predator. Covered in a 3D texture and featuring grippy Strikescale fins on its medial side, the Hybridfeel upper is optimised for accurate shooting. Down below, a full-length Controlplate 2.0 tooling offers stability to cut, swerve and score on firm ground.\r\n\r\nThis product features at least 20% recycled materials. By reusing materials that have already been created, we help to reduce waste and our reliance on finite resources and reduce the footprint of the products we make.', 150, 15, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/adidas-football.png', 1, '24/02/2024', 2, 5),
+(11, 'COPA PURE II LEAGUE TURF BOOTS', 'To truly run a game, you need to keep your teammates close and the ball closer. Find the freedom to conduct play in comfortable, classy adidas Copa Pure II. Boasting heritage details and a cow leather forefoot, these football boots look and feel iconic. The lug rubber outsole keeps your play stylish on artificial turf.\r\n\r\nThis product features at least 20% recycled materials. By reusing materials that have already been created, we help to reduce waste and our reliance on finite resources and reduce the footprint of the products we make.', 150, 25, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/Copa_Pure_II_League_Turf_Boots_Beige_IE4986_01_standard_hover.png', 1, '24/02/2024', 2, 5),
+(12, 'PREDATOR ACCURACY.4 TURF BOOTS', 'Top corner. Bottom corner. All the corners. adidas Predator Accuracy is crafted for goalscoring, so you know the ball will find the net. The fun\'s in choosing how it gets there. The comfortable synthetic upper on these football boots has a slightly textured finish. The lug rubber outsole is designed to keep you in control on artificial turf courts.\r\n\r\nMade with a series of recycled materials, this upper features at least 50% recycled content. This product represents just one of our solutions to help end plastic waste.', 150, 35, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/Predator_Accuracy.4_Turf_Boots_Blue_GY9996_01_standard_hover.png', 1, '24/02/2024', 2, 5),
+(15, 'D.O.N. ISSUE 5 SHOES', 'From the moment he first stepped onto the hardwood, Donovan Mitchell has been a game changer, and that\'s continued even as his game has grown and evolved. These D.O.N. Issue 5 signature shoes from adidas Basketball continue to build on Spida\'s on-court persona as well as his off-court social activism. Riding an ultra-lightweight Lightstrike midsole and a unique rubber outsole with an elevated traction pattern, these basketball trainers help you dominate the game just like one of the sport\'s very best.\r\n\r\n', 180, 25, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/D.O.N._Issue_5_Shoes_White_IE7799_01_standard.png', 0, '24/02/2024', 2, 6),
+(16, 'TRAE YOUNG 3 LOW TRAINERS', 'SIGNATURE SNEAKERS FROM TRAE YOUNG AND ADIDAS BASKETBALL.\r\nGet ready for what\'s next. This iteration of the signature trainers from Trae Young and adidas Basketball is all about the future of the game. Celebrating Trae\'s unique look, crowd-pleasing bravado and expressive, futuristic style of play, these shoes are built for optimised motion and stability, two elements of Trae\'s game that have elevated him to superstar status. The midsole ensures your most explosive moves can be done at top speed while a rubber outsole adds support on hard plants and cuts.', 210, 30, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/Trae_Young_3_Low_Trainers_White_IE2704_01_standard.png', 0, '24/02/2024', 2, 6);
 
 -- --------------------------------------------------------
 
@@ -209,7 +208,6 @@ INSERT INTO `tb_product` (`id`, `name`, `description`, `price`, `discount`, `fea
 CREATE TABLE `tb_product_image` (
   `id` int(11) NOT NULL,
   `img_url` varchar(255) NOT NULL,
-  `is_preview` tinyint(1) NOT NULL,
   `product_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -217,33 +215,46 @@ CREATE TABLE `tb_product_image` (
 -- Dumping data for table `tb_product_image`
 --
 
-INSERT INTO `tb_product_image` (`id`, `img_url`, `is_preview`, `product_id`) VALUES
-(1, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/air-jordan-1-low-g-golf-shoes-8bKbqs.jpg', 1, 1),
-(2, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/jordan-spizike-low-shoes-pBZk7c.jpg', 1, 2),
-(3, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/jordan-max-aura-5-shoes-ZBZ4Pz.jpg', 1, 3),
-(4, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/air-force-1-07-shoes-WrLlWX.jpg', 1, 4),
-(5, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/air-force-1-shadow-shoes-3d774m.jpg', 1, 5),
-(6, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/basketball-nike.jpg', 1, 6),
-(7, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/air-force-1-07-lv8-shoes-hHz3rg.jpg', 1, 7),
-(8, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/zion-3-z-3d-pf-basketball-shoes-165ZqH.jpg', 1, 8),
-(9, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/jordan-stay-loyal-3-shoes-GNHN2X.jpg', 1, 9),
-(10, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/gt-cut-3-asw-ep-basketball-shoes-hMM20h.jpg', 0, 6),
-(11, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/gt-cut-3-asw-ep-basketball-shoes-hMM20h_1.jpg', 0, 6),
-(13, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/gt-cut-3-asw-ep-basketball-shoes-hMM20h_3.jpg', 0, 6),
-(14, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/gt-cut-3-asw-ep-basketball-shoes-hMM20h_2.jpg', 0, 6),
-(15, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/adidas-football.png', 1, 10),
-(16, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/Predator_League_Firm_Ground_Football_Boots_Black_IG7763_22_model.png', 0, 10),
-(17, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/Predator_League_Firm_Ground_Football_Boots_Black_IG7763_02_standard.png', 0, 10),
-(18, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/Copa_Pure_II_League_Turf_Boots_Beige_IE4986_01_standard_hover.png', 1, 11),
-(19, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/Copa_Pure_II_League_Turf_Boots_Beige_IE4986_22_model.png', 0, 11),
-(20, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/Predator_Accuracy.4_Turf_Boots_Blue_GY9996_01_standard_hover.png', 1, 12),
-(21, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/Predator_Accuracy.4_Turf_Boots_Blue_GY9996_22_model.png', 0, 12),
-(24, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/D.O.N._Issue_5_Shoes_White_IE7799_01_standard.png', 1, 15),
-(25, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/D.O.N._Issue_5_Shoes_White_IE7799_02_standard_hover.png', 0, 15),
-(26, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/D.O.N._Issue_5_Shoes_White_IE7799_03_standard.png', 0, 15),
-(27, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/Trae_Young_3_Low_Trainers_White_IE2704_01_standard.png', 1, 16),
-(28, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/Trae_Young_3_Low_Trainers_White_IE2704_41_detail.png', 0, 16),
-(29, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/Trae_Young_3_Low_Trainers_White_IE2704_09_standard.png', 0, 16);
+INSERT INTO `tb_product_image` (`id`, `img_url`, `product_id`) VALUES
+(35, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/air-jordan-1-low-g-golf-shoes-8bKbqs1.jpg', 1),
+(36, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/air-jordan-1-low-g-golf-shoes-8bKbqs_2.jpg', 1),
+(37, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/air-jordan-1-low-g-golf-shoes-8bKbqs3.jpg', 1),
+(38, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/air-jordan-1-low-g-golf-shoes-8bKbqs4.jpg', 1),
+(39, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/jordan-spizike-low-shoes-pBZk7c1.jpg', 2),
+(40, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/jordan-spizike-low-shoes-pBZk7c2.jpg', 2),
+(41, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/jordan-spizike-low-shoes-pBZk7c_3.jpg', 2),
+(42, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/jordan-spizike-low-shoes-pBZk7c_4.jpg', 2),
+(43, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/jordan-spizike-low-shoes-pBZk7c_5.jpg', 2),
+(44, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/jordan-max-aura-5-shoes-ZBZ4Pz1.jpg', 3),
+(45, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/jordan-max-aura-5-shoes-ZBZ4Pz2.jpg', 3),
+(46, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/jordan-max-aura-5-shoes-ZBZ4Pz3.jpg', 3),
+(47, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/jordan-max-aura-5-shoes-ZBZ4Pz4.jpg', 3),
+(48, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/air-force-1-07-shoes-WrLlWX_1.jpg', 4),
+(49, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/air-force-1-07-shoes-WrLlWX_2.jpg', 4),
+(50, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/air-force-1-07-shoes-WrLlWX_3.jpg', 4),
+(51, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/air-force-1-07-shoes-WrLlWX_4.jpg', 4),
+(52, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/air-force-1-shadow-shoes-3d774m_1.jpg', 5),
+(53, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/air-force-1-shadow-shoes-3d774m_2.jpg', 5),
+(54, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/air-force-1-shadow-shoes-3d774m_3.jpg', 5),
+(55, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/air-force-1-shadow-shoes-3d774m_4.jpg', 5),
+(56, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/air-force-1-shadow-shoes-3d774m_5.jpg', 5),
+(57, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/gt-cut-3-asw-ep-basketball-shoes-hMM20h_1.jpg', 6),
+(58, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/gt-cut-3-asw-ep-basketball-shoes-hMM20h_2.jpg', 6),
+(59, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/gt-cut-3-asw-ep-basketball-shoes-hMM20h_3.jpg', 6),
+(60, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/gt-cut-3-asw-ep-basketball-shoes-hMM20h_4.jpg', 6),
+(61, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/air-force-1-07-lv8-shoes-hHz3rg1.jpg', 7),
+(62, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/air-force-1-07-lv8-shoes-hHz3rg_2.jpg', 7),
+(63, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/air-force-1-07-lv8-shoes-hHz3rg3.jpg', 7),
+(64, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/air-force-1-07-lv8-shoes-hHz3rg4.jpg', 7),
+(65, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/zion-3-z-3d-pf-basketball-shoes-165ZqH_1.jpg', 8),
+(66, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/zion-3-z-3d-pf-basketball-shoes-165ZqH_2.jpg', 8),
+(67, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/zion-3-z-3d-pf-basketball-shoes-165ZqH_3.jpg', 8),
+(68, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/zion-3-z-3d-pf-basketball-shoes-165ZqH_4.jpg', 8),
+(69, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/zion-3-z-3d-pf-basketball-shoes-165ZqH_5.jpg', 8),
+(70, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/jordan-stay-loyal-3-shoes-GNHN2X_1.jpg', 9),
+(71, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/jordan-stay-loyal-3-shoes-GNHN2X_2.jpg', 9),
+(72, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/jordan-stay-loyal-3-shoes-GNHN2X_3.jpg', 9),
+(73, 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/jordan-stay-loyal-3-shoes-GNHN2X4.jpg', 9);
 
 -- --------------------------------------------------------
 
@@ -340,7 +351,8 @@ CREATE TABLE `tb_review` (
 --
 
 INSERT INTO `tb_review` (`id`, `rating`, `title`, `comment`, `comment_on`, `product_id`, `user_id`) VALUES
-(1, 5, 'Nice', 'Good shoe!!!', '23/02/2024', 1, 2);
+(1, 5, 'Nice', 'Good shoe!!!', '23/02/2024', 1, 2),
+(2, 5, 'awfawf', 'awfawfawf', '24/02/2024', 1, 2);
 
 -- --------------------------------------------------------
 
@@ -541,25 +553,25 @@ ALTER TABLE `tb_brand`
 -- AUTO_INCREMENT for table `tb_cart`
 --
 ALTER TABLE `tb_cart`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `tb_favorite`
 --
 ALTER TABLE `tb_favorite`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `tb_order`
 --
 ALTER TABLE `tb_order`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `tb_order_detail`
 --
 ALTER TABLE `tb_order_detail`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `tb_order_status`
@@ -577,7 +589,7 @@ ALTER TABLE `tb_product`
 -- AUTO_INCREMENT for table `tb_product_image`
 --
 ALTER TABLE `tb_product_image`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
 
 --
 -- AUTO_INCREMENT for table `tb_product_size`
@@ -589,7 +601,7 @@ ALTER TABLE `tb_product_size`
 -- AUTO_INCREMENT for table `tb_review`
 --
 ALTER TABLE `tb_review`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `tb_shoe_type`

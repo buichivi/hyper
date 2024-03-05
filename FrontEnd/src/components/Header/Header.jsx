@@ -93,14 +93,16 @@ const Header = () => {
             )}
             <div className="relative flex h-[72px] items-center justify-between bg-white px-4 shadow-sm md:px-14 2xl:px-[15%]">
                 <MenuMobile />
-                <div className="flex flex-1 items-center justify-center lg:block">
+                <div className="flex h-full over flex-1 shrink-0 items-center justify-center lg:block">
                     <Link
                         className="flex h-full w-fit items-center justify-center lg:justify-normal"
                         to="/"
                     >
-                        <h3 className="font-BebasNeue text-3xl font-bold">
-                            HYPER
-                        </h3>
+                        <img
+                            src="/shoes-store/src/assets/images/Hyper-logo.png"
+                            alt=""
+                            className="size-40 object-cover object-center"
+                        />
                     </Link>
                 </div>
                 <div className="hidden h-full flex-[2] items-center justify-center gap-10 lg:flex">

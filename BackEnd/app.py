@@ -1,16 +1,12 @@
-import firebase_admin
-from firebase_admin import credentials
-from flask import Flask, redirect, render_template, url_for
+import config
+from admin.models import *
+from database import db
+from flask import Flask, redirect
 from flask_admin import Admin
 from flask_cors import CORS
 from flask_login import LoginManager
 from flask_mail import Mail, Message
 from flask_restful import Api
-from sqlalchemy.sql import text
-
-import config
-from admin.models import *
-from database import db
 from models.slider import Slider
 from services.brand import *
 from services.cart import *
@@ -21,6 +17,7 @@ from services.review import *
 from services.shoe_type import *
 from services.slider import *
 from services.user import *
+from sqlalchemy.sql import text
 
 app = Flask(__name__)
 app.config.from_object(config)
@@ -70,7 +67,7 @@ def after_request(response):
     if not "Access-Control-Allow-Credentials" in response.headers:
         response.headers.add("Access-Control-Allow-Credentials", "true")
     if not "Access-Control-Allow-Origin" in response.headers:
-        response.headers.add("Access-Control-Allow-Origin", "http://localhost:5173")
+        response.headers.add("Access-Control-Allow-Origin", "*")
     if not "Access-Control-Allow-Headers" in response.headers:
         response.headers.add(
             "Access-Control-Allow-Headers", "Access-Control-Allow-Headers, content-type"
@@ -157,8 +154,6 @@ def send_email(subject, sender, recipients, body):
 
 def insert_order_statuses():
     # Thêm các trạng thái cho đơn hàng vào cơ sở dữ liệu
-    db.session.execute(text("ALTER TABLE tb_order_status AUTO_INCREMENT = 1"))
-    db.session.commit()
     order_statuses = [
         {"name": "Pending"},
         {"name": "Processing"},

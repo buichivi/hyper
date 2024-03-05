@@ -102,7 +102,7 @@ const Order = () => {
                             >
                                 <img
                                     className="w-14 object-contain"
-                                    src="/src/assets/images/COD-payment.png"
+                                    src="/shoes-store/src/assets/images/COD-payment.png"
                                     alt=""
                                 />
                                 <div className="ml-5">
@@ -130,7 +130,7 @@ const Order = () => {
                             >
                                 <img
                                     className="w-14 object-contain"
-                                    src="/src/assets/images/paypal-logo.png"
+                                    src="/shoes-store/src/assets/images/paypal-logo.png"
                                     alt=""
                                 />
                                 <div className="ml-5">

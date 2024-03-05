@@ -2,7 +2,7 @@
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, HashRouter, Route, Routes } from 'react-router-dom';
 
 // Import Tippy css
 import 'tippy.js/dist/tippy.css';
@@ -27,7 +27,7 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     return (
-        <BrowserRouter>
+        <HashRouter>
             <Routes>
                 {publicRoutes.map(
                     ({ component: Component, path, authRequired }, index) => {
@@ -49,7 +49,7 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<SignUp />} />
             </Routes>
-        </BrowserRouter>
+        </HashRouter>
     );
 }
 
