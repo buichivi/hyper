@@ -1,12 +1,13 @@
-import config
-from admin.models import *
-from database import db
 from flask import Flask, redirect
 from flask_admin import Admin
 from flask_cors import CORS
 from flask_login import LoginManager
 from flask_mail import Mail, Message
 from flask_restful import Api
+
+import config
+from admin.models import *
+from database import db
 from models.slider import Slider
 from services.brand import *
 from services.cart import *
@@ -63,7 +64,9 @@ def after_request(response):
     if not "Access-Control-Allow-Credentials" in response.headers:
         response.headers.add("Access-Control-Allow-Credentials", "true")
     if not "Access-Control-Allow-Origin" in response.headers:
-        response.headers.add("Access-Control-Allow-Origin", "*")
+        response.headers.add(
+            "Access-Control-Allow-Origin", "https://buichivi.github.io"
+        )
     if not "Access-Control-Allow-Headers" in response.headers:
         response.headers.add(
             "Access-Control-Allow-Headers", "Access-Control-Allow-Headers, content-type"
