@@ -102,7 +102,7 @@ const Order = () => {
                             >
                                 <img
                                     className="w-14 object-contain"
-                                    src="/shoes-store/src/assets/images/COD-payment.png"
+                                    src="https://firebasestorage.googleapis.com/v0/b/shoes-store-4cb03.appspot.com/o/COD-payment.png?alt=media&token=b840949b-9cc9-48ab-91c9-1b0b8cca139d"
                                     alt=""
                                 />
                                 <div className="ml-5">
@@ -130,7 +130,7 @@ const Order = () => {
                             >
                                 <img
                                     className="w-14 object-contain"
-                                    src="/shoes-store/src/assets/images/paypal-logo.png"
+                                    src="https://firebasestorage.googleapis.com/v0/b/shoes-store-4cb03.appspot.com/o/paypal-logo.png?alt=media&token=a0117bb0-7687-4d26-9579-23bdd2234bdd"
                                     alt=""
                                 />
                                 <div className="ml-5">

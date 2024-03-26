@@ -5,21 +5,18 @@ from urllib.parse import urlparse
 import firebase_admin
 from firebase_admin import credentials, storage
 from flask import redirect
-from flask_admin import BaseView, expose, form
+from flask_admin import BaseView, expose
 from flask_admin.contrib.sqla import ModelView, fields
-from flask_admin.form import ImageUploadField, Select2Field, Select2Widget
+from flask_admin.form import ImageUploadField, Select2Widget
 from flask_login import current_user, login_required, logout_user
 from markupsafe import Markup
-from models.brand import Brand, db
-from models.order_status import OrderStatus
-from models.product import Product
-from models.product_image import ProductImage
-from models.shoe_type import ShoeType
-from models.user import User
 from werkzeug.security import generate_password_hash
 from wtforms import SelectField
-from wtforms.fields import DateField
-from wtforms.widgets import DateInput
+
+from models.brand import Brand
+from models.order_status import OrderStatus
+from models.product import Product
+from models.shoe_type import ShoeType
 
 cred = credentials.Certificate(
     {
@@ -38,7 +35,6 @@ cred = credentials.Certificate(
 )
 firebase_admin.initialize_app(cred, {"storageBucket": "shoes-store-4cb03.appspot.com"})
 bucket = storage.bucket()
-
 
 def delete_image(image_url):
     try:
@@ -269,7 +265,7 @@ class ProductView(ModelView):
         super().on_model_delete(model)
 
         # Get the file name want to delete
-        parsed_url = urlparse(model.img_url)
+        parsed_url = urlparse(model.img_preview)
         file_name = os.path.basename(parsed_url.path)
 
         # Xoá ảnh từ Firebase Storage
@@ -296,6 +292,8 @@ class ProductView(ModelView):
         "image preview": _get_product_img,
         "price": _get_price,
     }
+    create_template = "admin/edit.html"
+    edit_template = "admin/edit.html"
 
 
 class ProductImageView(ModelView):

@@ -99,7 +99,7 @@ const Header = () => {
                         to="/"
                     >
                         <img
-                            src="/shoes-store/src/assets/images/Hyper-logo.png"
+                            src="https://firebasestorage.googleapis.com/v0/b/shoes-store-4cb03.appspot.com/o/Hyper-logo.png?alt=media&token=85290c20-7044-4f89-83e9-6ab06d9975e4"
                             alt=""
                             className="size-40 object-cover object-center"
                         />

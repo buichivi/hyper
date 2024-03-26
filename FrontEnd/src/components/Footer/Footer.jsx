@@ -46,7 +46,7 @@ const Footer = () => {
         <div>
             <div className="relative h-[150px] w-full overflow-hidden bg-black xl:h-[250px]">
                 <img
-                    src="/shoes-store/src/assets/images/Hyper-logo.png"
+                    src="https://firebasestorage.googleapis.com/v0/b/shoes-store-4cb03.appspot.com/o/Hyper-logo.png?alt=media&token=85290c20-7044-4f89-83e9-6ab06d9975e4"
                     alt=""
                     className="absolute left-1/2 top-1/2 size-96 -translate-x-1/2 -translate-y-1/2 object-cover object-center invert"
                 />

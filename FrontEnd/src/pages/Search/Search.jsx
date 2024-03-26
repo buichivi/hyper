@@ -117,7 +117,7 @@ const Search = () => {
                             <div className="relative left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 select-none opacity-60">
                                 <div className="flex items-center justify-center text-center">
                                     <img
-                                        src="/shoes-store/src/assets/images/open-box.png"
+                                        src="https://firebasestorage.googleapis.com/v0/b/shoes-store-4cb03.appspot.com/o/open-box.png?alt=media&token=9daed83b-63bc-4ffa-a54c-6163a20772e8"
                                         alt=""
                                         className="size-60 object-cover"
                                     />
