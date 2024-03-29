@@ -66,6 +66,7 @@ def after_request(response):
     if not "Access-Control-Allow-Origin" in response.headers:
         response.headers.add(
             "Access-Control-Allow-Origin", "https://buichivi.github.io"
+            # "Access-Control-Allow-Origin", "http://localhost:5173"
         )
     if not "Access-Control-Allow-Headers" in response.headers:
         response.headers.add(

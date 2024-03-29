@@ -23,7 +23,7 @@ const Order = () => {
         <div className="py-8 pt-4">
             <Link
                 to="/profile#2"
-                className="flex items-center gap-2 p-2 hover:opacity-60"
+                className="flex w-fit items-center gap-2 p-2 hover:opacity-60"
             >
                 <IoReturnUpBackSharp />
                 <span className="text-lg">Back</span>
@@ -54,8 +54,7 @@ const Order = () => {
                                         <img
                                             className="m-2 size-24 rounded-md border object-cover object-center"
                                             src={
-                                                orderItem?.product
-                                                    ?.img_preview_url
+                                                orderItem?.product?.img_preview
                                             }
                                             alt=""
                                         />

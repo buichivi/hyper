@@ -54,7 +54,7 @@ class CartResource(Resource):
             }, 400
 
         existed_cart = Cart.query.filter_by(
-            user_id=current_user.id, product_id=product_id, size=size
+            user_id=str(current_user.id), product_id=str(product_id), size=str(size)
         ).first()
         print(product.name)
         if not existed_cart:

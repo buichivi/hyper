@@ -191,7 +191,7 @@ const Cart = () => {
                                     ) : (
                                         <div className="relative left-1/2 top-0 size-52 -translate-x-1/2">
                                             <img
-                                                src="/shoes-store/src/assets/images/cart-empty.png"
+                                                src="https://firebasestorage.googleapis.com/v0/b/shoes-store-4cb03.appspot.com/o/cart-empty.png?alt=media"
                                                 alt=""
                                             />
                                         </div>

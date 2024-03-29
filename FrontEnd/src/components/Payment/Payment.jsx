@@ -69,10 +69,7 @@ const Payment = ({
                                     >
                                         <img
                                             className="m-2 size-24  rounded-md border object-cover object-center"
-                                            src={
-                                                cartItem?.product
-                                                    ?.img_preview_url
-                                            }
+                                            src={cartItem?.product?.img_preview}
                                             alt=""
                                         />
                                     </Link>

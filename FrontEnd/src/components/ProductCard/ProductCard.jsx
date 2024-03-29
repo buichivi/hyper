@@ -20,6 +20,18 @@ const ProductCard = ({ product = {}, isFavorite = false }) => {
     const { ref, inView } = useInView();
 
     useEffect(() => {
+        if (isAuthenticated) {
+            request.get('/me/favorites').then((res) => {
+                setIsFavor(
+                    res.data.favorite_products
+                        .map((prod) => prod?.id)
+                        .includes(Number(product?.id)),
+                );
+            });
+        }
+    }, [isAuthenticated, product?.id]);
+
+    useEffect(() => {
         setIsFavor(isFavorite);
     }, [isFavorite]);
 

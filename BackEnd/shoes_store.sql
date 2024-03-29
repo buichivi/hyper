@@ -34,22 +34,6 @@ CREATE TABLE `tb_brand` (
   `img_url` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `tb_brand`
---
-
-INSERT INTO `tb_brand` (`id`, `name`, `code`, `img_url`) VALUES
-(1, 'Nike', 'nike', 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/nike-logo-49337.png'),
-(2, 'Adidas', 'adidas', 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/pngwing.com.png'),
-(3, 'Converse', 'converse', 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/pngwing.com_1.png'),
-(4, 'New Balance', 'newbalance', 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/dark-emblem-new-balance-logo-png-3.png');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tb_cart`
---
-
 CREATE TABLE `tb_cart` (
   `id` int(11) NOT NULL,
   `size` varchar(255) NOT NULL,
@@ -60,13 +44,9 @@ CREATE TABLE `tb_cart` (
   `product_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
 --
--- Table structure for table `tb_favorite`
+-- Dumping data for table `tb_brand`
 --
-
 CREATE TABLE `tb_favorite` (
   `id` int(11) NOT NULL,
   `favorite_on` varchar(255) NOT NULL,
@@ -74,12 +54,7 @@ CREATE TABLE `tb_favorite` (
   `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `tb_order`
---
-
+-- -----------------------------
 CREATE TABLE `tb_order` (
   `id` int(11) NOT NULL,
   `total_amount` float NOT NULL,
@@ -98,6 +73,116 @@ CREATE TABLE `tb_order` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+CREATE TABLE `tb_order_detail` (
+  `id` int(11) NOT NULL,
+  `size` varchar(255) NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `price` float NOT NULL,
+  `total_price` float NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+CREATE TABLE `tb_order_status` (
+  `id` int(11) NOT NULL,
+  `status` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE `tb_product` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `description` text NOT NULL,
+  `price` int(11) NOT NULL,
+  `discount` int(11) NOT NULL,
+  `img_preview` text NOT NULL,
+  `featured` tinyint(1) NOT NULL,
+  `manufacture_date` varchar(255) NOT NULL,
+  `brand_id` int(11) NOT NULL,
+  `shoe_type_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE `tb_product_image` (
+  `id` int(11) NOT NULL,
+  `img_url` varchar(255) NOT NULL,
+  `product_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE `tb_product_size` (
+  `id` int(11) NOT NULL,
+  `size` int(11) NOT NULL,
+  `quantity_in_stock` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE `tb_review` (
+  `id` int(11) NOT NULL,
+  `rating` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `comment` varchar(255) NOT NULL,
+  `comment_on` varchar(255) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE `tb_shoe_type` (
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `code` varchar(100) NOT NULL,
+  `img_url` text DEFAULT NULL,
+  `brand_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE `tb_slider` (
+  `id` int(11) NOT NULL,
+  `img_url` text NOT NULL,
+  `order` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE `tb_users` (
+  `id` int(11) NOT NULL,
+  `firstName` varchar(50) NOT NULL,
+  `lastName` varchar(50) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `role` varchar(255) NOT NULL,
+  `dateOfBirth` varchar(50) DEFAULT NULL,
+  `phoneNumber` varchar(10) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `province` varchar(255) DEFAULT NULL,
+  `district` varchar(255) DEFAULT NULL,
+  `ward` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+
+INSERT INTO `tb_brand` (`id`, `name`, `code`, `img_url`) VALUES
+(1, 'Nike', 'nike', 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/nike-logo-49337.png'),
+(2, 'Adidas', 'adidas', 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/pngwing.com.png'),
+(3, 'Converse', 'converse', 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/pngwing.com_1.png'),
+(4, 'New Balance', 'newbalance', 'https://storage.googleapis.com/shoes-store-4cb03.appspot.com/dark-emblem-new-balance-logo-png-3.png');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tb_cart`
+--
+
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tb_favorite`
+--
+
+---------------------------
+
+--
+-- Table structure for table `tb_order`
+--
+
+
 -- Dumping data for table `tb_order`
 --
 
@@ -115,15 +200,6 @@ INSERT INTO `tb_order` (`id`, `total_amount`, `order_date`, `shipping_address`, 
 -- Table structure for table `tb_order_detail`
 --
 
-CREATE TABLE `tb_order_detail` (
-  `id` int(11) NOT NULL,
-  `size` varchar(255) NOT NULL,
-  `quantity` int(11) NOT NULL,
-  `price` float NOT NULL,
-  `total_price` float NOT NULL,
-  `order_id` int(11) NOT NULL,
-  `product_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tb_order_detail`
@@ -145,11 +221,6 @@ INSERT INTO `tb_order_detail` (`id`, `size`, `quantity`, `price`, `total_price`,
 -- Table structure for table `tb_order_status`
 --
 
-CREATE TABLE `tb_order_status` (
-  `id` int(11) NOT NULL,
-  `status` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
 --
 -- Dumping data for table `tb_order_status`
 --
@@ -166,18 +237,6 @@ INSERT INTO `tb_order_status` (`id`, `status`) VALUES
 -- Table structure for table `tb_product`
 --
 
-CREATE TABLE `tb_product` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `description` text NOT NULL,
-  `price` int(11) NOT NULL,
-  `discount` int(11) NOT NULL,
-  `img_preview` text NOT NULL,
-  `featured` tinyint(1) NOT NULL,
-  `manufacture_date` varchar(255) NOT NULL,
-  `brand_id` int(11) NOT NULL,
-  `shoe_type_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tb_product`
@@ -206,11 +265,6 @@ INSERT INTO `tb_product` (`id`, `name`, `description`, `price`, `discount`, `img
 -- Table structure for table `tb_product_image`
 --
 
-CREATE TABLE `tb_product_image` (
-  `id` int(11) NOT NULL,
-  `img_url` varchar(255) NOT NULL,
-  `product_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tb_product_image`
@@ -263,12 +317,6 @@ INSERT INTO `tb_product_image` (`id`, `img_url`, `product_id`) VALUES
 -- Table structure for table `tb_product_size`
 --
 
-CREATE TABLE `tb_product_size` (
-  `id` int(11) NOT NULL,
-  `size` int(11) NOT NULL,
-  `quantity_in_stock` int(11) NOT NULL,
-  `product_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tb_product_size`
@@ -337,15 +385,6 @@ INSERT INTO `tb_product_size` (`id`, `size`, `quantity_in_stock`, `product_id`) 
 -- Table structure for table `tb_review`
 --
 
-CREATE TABLE `tb_review` (
-  `id` int(11) NOT NULL,
-  `rating` int(11) NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `comment` varchar(255) NOT NULL,
-  `comment_on` varchar(255) NOT NULL,
-  `product_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tb_review`
@@ -361,13 +400,6 @@ INSERT INTO `tb_review` (`id`, `rating`, `title`, `comment`, `comment_on`, `prod
 -- Table structure for table `tb_shoe_type`
 --
 
-CREATE TABLE `tb_shoe_type` (
-  `id` int(11) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `code` varchar(100) NOT NULL,
-  `img_url` text DEFAULT NULL,
-  `brand_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tb_shoe_type`
@@ -393,13 +425,7 @@ INSERT INTO `tb_shoe_type` (`id`, `name`, `code`, `img_url`, `brand_id`) VALUES
 -- Table structure for table `tb_slider`
 --
 
-CREATE TABLE `tb_slider` (
-  `id` int(11) NOT NULL,
-  `img_url` text NOT NULL,
-  `order` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
 -- Dumping data for table `tb_slider`
 --
 
@@ -413,20 +439,6 @@ INSERT INTO `tb_slider` (`id`, `img_url`, `order`) VALUES
 -- Table structure for table `tb_users`
 --
 
-CREATE TABLE `tb_users` (
-  `id` int(11) NOT NULL,
-  `firstName` varchar(50) NOT NULL,
-  `lastName` varchar(50) NOT NULL,
-  `email` varchar(50) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `role` varchar(255) NOT NULL,
-  `dateOfBirth` varchar(50) DEFAULT NULL,
-  `phoneNumber` varchar(10) DEFAULT NULL,
-  `address` varchar(255) DEFAULT NULL,
-  `province` varchar(255) DEFAULT NULL,
-  `district` varchar(255) DEFAULT NULL,
-  `ward` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tb_users`

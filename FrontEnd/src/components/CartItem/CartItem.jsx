@@ -56,7 +56,7 @@ const CartItem = ({ cartItem = {} }) => {
                 style={{ aspectRatio: 1 }}
             >
                 <img
-                    src={cartItem?.product?.img_preview_url}
+                    src={cartItem?.product?.img_preview}
                     alt=""
                     className="size-full object-cover"
                 />

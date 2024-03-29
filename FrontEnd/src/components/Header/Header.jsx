@@ -93,9 +93,9 @@ const Header = () => {
             )}
             <div className="relative flex h-[72px] items-center justify-between bg-white px-4 shadow-sm md:px-14 2xl:px-[15%]">
                 <MenuMobile />
-                <div className="flex h-full over flex-1 shrink-0 items-center justify-center lg:block">
+                <div className="over flex h-full flex-1 shrink-0 items-center justify-center lg:block">
                     <Link
-                        className="flex h-full w-fit items-center justify-center lg:justify-normal"
+                        className="flex h-full w-fit items-center justify-center overflow-hidden lg:justify-normal"
                         to="/"
                     >
                         <img
