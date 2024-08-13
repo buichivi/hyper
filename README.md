@@ -1,7 +1,7 @@
-
 # Shoe Store 
 
 This repository contains the codebase for the Shoe Store application, divided into two main parts: Frontend and Backend. 
+![Hyper Store](https://i.ibb.co/sjpwK1B/image.png)
 
 ## Tech Stack
 
